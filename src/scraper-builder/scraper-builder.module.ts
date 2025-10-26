@@ -4,6 +4,6 @@ import { ScraperBuilderService } from './scraper-builder.service';
 
 @Module({
   controllers: [ScraperBuilderController],
-  providers: [ScraperBuilderService]
+  providers: [ScraperBuilderService],
 })
 export class ScraperBuilderModule {}
