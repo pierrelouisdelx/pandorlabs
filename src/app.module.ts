@@ -8,7 +8,7 @@ import { ScrapersModule } from './scrapers/scrapers.module';
 import { ScraperBuilderModule } from './scraper-builder/scraper-builder.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-import { configurations } from './config';
+import { configurations, validationSchema } from './config';
 
 @Module({
   imports: [
@@ -16,6 +16,11 @@ import { configurations } from './config';
       isGlobal: true,
       load: configurations,
       envFilePath: '.env',
+      validationSchema: validationSchema,
+      validationOptions: {
+        allowUnknown: true,
+        abortEarly: false,
+      },
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

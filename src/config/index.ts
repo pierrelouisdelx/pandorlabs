@@ -5,7 +5,10 @@
 
 import appConfig from './app.config';
 import databaseConfig from './database.config';
+import aiConfig from './ai.config';
 
-export const configurations = [appConfig, databaseConfig];
+export const configurations = [appConfig, databaseConfig, aiConfig];
 
-export { appConfig, databaseConfig };
+export { appConfig, databaseConfig, aiConfig };
+export { validationSchema } from './validation.schema';
+export * from './environments';
