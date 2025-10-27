@@ -1,18 +1,25 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ScrapersController } from './scrapers.controller';
 import { ScrapersService } from './scrapers.service';
-import { ScraperFactory } from './scraper.factory';
-import { RealEstateAdapter } from './adapters/real-estate/real-estate.adapter';
-import { LeadGenerationAdapter } from './adapters/lead-generation/lead-generation.adapter';
+import { CategoryOrchestrator } from './category-orchestrator';
+import {
+  ScraperConfigEntity,
+  ScraperConfigSchema,
+  ScraperExecutionEntity,
+  ScraperExecutionSchema,
+} from './schemas';
+import { RealEstateAdapter } from './adapters';
 
 @Module({
-  controllers: [ScrapersController],
-  providers: [
-    ScrapersService,
-    ScraperFactory,
-    RealEstateAdapter,
-    LeadGenerationAdapter,
+  imports: [
+    MongooseModule.forFeature([
+      { name: ScraperConfigEntity.name, schema: ScraperConfigSchema },
+      { name: ScraperExecutionEntity.name, schema: ScraperExecutionSchema },
+    ]),
   ],
-  exports: [ScraperFactory],
+  controllers: [ScrapersController],
+  providers: [ScrapersService, CategoryOrchestrator, RealEstateAdapter],
+  exports: [ScrapersService, CategoryOrchestrator],
 })
 export class ScrapersModule {}

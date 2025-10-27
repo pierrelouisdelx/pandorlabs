@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AiQueryModule } from './ai-query/ai-query.module';
 import { ScrapersModule } from './scrapers/scrapers.module';
-import { ScraperBuilderModule } from './scraper-builder/scraper-builder.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
 import { configurations, validationSchema } from './config';
@@ -74,7 +73,6 @@ import { configurations, validationSchema } from './config';
     HealthModule,
     AiQueryModule,
     ScrapersModule,
-    ScraperBuilderModule,
     UsersModule,
   ],
   controllers: [AppController],
