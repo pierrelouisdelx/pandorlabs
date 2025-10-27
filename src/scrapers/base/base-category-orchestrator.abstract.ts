@@ -11,13 +11,13 @@ import { IScraperConfig } from '../interfaces/scraper-config.interface';
 
 /**
  * Abstract base class for category orchestrators
- * Manages all category factories and provides caching
+ * Manages all categories and provides caching
  */
 export abstract class BaseCategoryOrchestrator
   implements ICategoryOrchestrator
 {
   protected readonly logger: Logger;
-  protected readonly categoryFactories = new Map<ScraperCategory, ICategory>();
+  protected readonly categories = new Map<ScraperCategory, ICategory>();
   protected readonly scraperCache = new Map<string, IScraper>();
   protected readonly cacheEnabled: boolean = true;
   protected readonly maxCacheSize: number = 100;
@@ -27,13 +27,13 @@ export abstract class BaseCategoryOrchestrator
   }
 
   registerCategory(categoryFactory: ICategory): void {
-    if (this.categoryFactories.has(categoryFactory.category)) {
+    if (this.categories.has(categoryFactory.category)) {
       this.logger.warn(
         `Category factory for ${categoryFactory.category} already registered. Replacing...`,
       );
     }
 
-    this.categoryFactories.set(categoryFactory.category, categoryFactory);
+    this.categories.set(categoryFactory.category, categoryFactory);
     this.logger.log(
       `Registered category factory: ${categoryFactory.category}, supports: [${categoryFactory.listSupportedScrapers().join(', ')}]`,
     );
@@ -43,7 +43,7 @@ export abstract class BaseCategoryOrchestrator
    * Get a category factory for a specific category
    */
   getCategory(category: ScraperCategory): ICategory {
-    const factory = this.categoryFactories.get(category);
+    const factory = this.categories.get(category);
     if (!factory) {
       throw new CategoryNotFoundException(category);
     }
@@ -54,14 +54,14 @@ export abstract class BaseCategoryOrchestrator
    * Check if a category factory is registered
    */
   hasCategory(category: ScraperCategory): boolean {
-    return this.categoryFactories.has(category);
+    return this.categories.has(category);
   }
 
   /**
    * Get all registered categories
    */
   getRegisteredCategories(): ScraperCategory[] {
-    return Array.from(this.categoryFactories.keys());
+    return Array.from(this.categories.keys());
   }
 
   /**
@@ -80,7 +80,7 @@ export abstract class BaseCategoryOrchestrator
 
     // Find which category supports this scraper
     let foundCategory: ICategory | undefined;
-    for (const [, category] of this.categoryFactories) {
+    for (const [, category] of this.categories) {
       if (category.supports(scraperId)) {
         foundCategory = category;
         break;
@@ -109,7 +109,7 @@ export abstract class BaseCategoryOrchestrator
    */
   getAllSupportedScrapers(): Map<ScraperCategory, string[]> {
     const result = new Map<ScraperCategory, string[]>();
-    this.categoryFactories.forEach((factory, category) => {
+    this.categories.forEach((factory, category) => {
       result.set(category, factory.listSupportedScrapers());
     });
     return result;

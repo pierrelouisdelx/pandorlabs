@@ -18,9 +18,7 @@ export class CategoryOrchestrator
     this.registerAllCategory();
 
     this.logger.log('CategoryOrchestrator module initialization complete');
-    this.logger.log(
-      `Registered category factories: ${this.categoryFactories.size}`,
-    );
+    this.logger.log(`Registered categories: ${this.categories.size}`);
     this.logger.log(`Cache enabled: ${this.cacheEnabled}`);
     this.logger.log(`Max cache size: ${this.maxCacheSize}`);
 

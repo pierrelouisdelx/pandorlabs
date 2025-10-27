@@ -12,10 +12,9 @@ export interface ICategory {
 
   /**
    * Register a scraper for a specific scraper ID
-   * @param scraperId Unique identifier for the scraper
    * @param scraper Scraper instance
    */
-  registerScraper(scraperId: string, scraper: IScraper): void;
+  registerScraper(scraper: IScraper): void;
 
   /**
    * Get a scraper for the given scraper ID

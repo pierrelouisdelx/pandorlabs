@@ -5,8 +5,8 @@ import { ScraperCategory } from '../enums';
 import { CategoryScraperNotFoundException } from '../exceptions';
 
 /**
- * Abstract base class for category factories
- * Manages scraper factories within a specific category
+ * Abstract base class for categories
+ * Manages scrapers within a specific category
  */
 export abstract class BaseCategory implements ICategory {
   protected readonly logger: Logger;
@@ -18,21 +18,23 @@ export abstract class BaseCategory implements ICategory {
   }
 
   /**
-   * Register a scraper factory for a specific scraper ID
+   * Register a scraper
    */
-  registerScraper(id: string, scraper: IScraper): void {
-    if (this.scrapers.has(id)) {
-      this.logger.warn(`Scraper for ${id} already registered. Replacing...`);
+  registerScraper(scraper: IScraper): void {
+    if (this.scrapers.has(scraper.id)) {
+      this.logger.warn(
+        `Scraper for ${scraper.id} already registered. Replacing...`,
+      );
     }
 
-    this.scrapers.set(id, scraper);
+    this.scrapers.set(scraper.id, scraper);
     this.logger.log(
-      `Registered scraper: ${id} (collection: ${scraper.config.collectionName})`,
+      `Registered scraper: ${scraper.id} (collection: ${scraper.config.collectionName})`,
     );
   }
 
   /**
-   * Get a scraper for the given scraper ID
+   * Get a scraper
    */
   getScraper(id: string): IScraper {
     const scraper = this.scrapers.get(id);
@@ -43,21 +45,21 @@ export abstract class BaseCategory implements ICategory {
   }
 
   /**
-   * Check if this category supports the given scraper ID
+   * Check if this category supports the given scraper
    */
   supports(id: string): boolean {
     return this.scrapers.has(id);
   }
 
   /**
-   * List all scraper IDs supported by this category
+   * List all scrapers supported by this category
    */
   listSupportedScrapers(): string[] {
     return Array.from(this.scrapers.keys());
   }
 
   /**
-   * Validate category-specific configuration
+   * Validate scraper
    */
   async validateScraper(id: string): Promise<boolean> {
     const scraper = this.getScraper(id);
@@ -65,7 +67,7 @@ export abstract class BaseCategory implements ICategory {
   }
 
   /**
-   * Register all scrapers supported by this category
+   * Register all scrapers
    * Called during category construction
    */
   protected abstract registerScrapers(): void;

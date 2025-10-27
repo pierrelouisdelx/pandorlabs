@@ -11,7 +11,7 @@ export class RealEstateCategory extends BaseCategory {
    * Register all real estate scrapers
    */
   protected registerScrapers(): void {
-    this.registerScraper('zillow', new scrapers.AuctionScraper());
+    this.registerScraper(new scrapers.AuctionScraper());
 
     this.logger.log(`Registered ${this.scrapers.size} real estate scrapers`);
   }
