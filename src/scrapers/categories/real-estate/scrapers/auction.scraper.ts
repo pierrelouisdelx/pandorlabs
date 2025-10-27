@@ -3,7 +3,16 @@ import { ScraperCategory } from '@scrapers/enums';
 
 export class AuctionScraper extends BaseScraper {
   constructor() {
-    super('auction', ScraperCategory.REAL_ESTATE, {});
+    super('auction', ScraperCategory.REAL_ESTATE, {
+      url: 'https://www.auction.com/',
+      metadata: {
+        name: 'Auction Property Scraper',
+        description: 'Scrapes property listings from auction platforms',
+        tags: ['auction', 'real-estate', 'properties'],
+      },
+      collectionName: 'auction',
+      isActive: true,
+    });
   }
 
   protected async onInitialize(): Promise<void> {
