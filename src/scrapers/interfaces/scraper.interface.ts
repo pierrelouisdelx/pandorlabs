@@ -1,6 +1,4 @@
 import { ScraperStatus, ScraperCategory } from '../enums';
-import { ScraperConfig } from './scraper-config.interface';
-import { ScraperResult } from './scraper-result.interface';
 
 /**
  * Base interface for all scrapers
@@ -24,7 +22,7 @@ export interface IScraper {
   /**
    * Configuration used to create this scraper
    */
-  readonly config: ScraperConfig;
+  readonly config: any;
 
   /**
    * Initialize the scraper with necessary resources
@@ -34,27 +32,12 @@ export interface IScraper {
   /**
    * Execute the scraping operation
    */
-  execute(): Promise<ScraperResult>;
-
-  /**
-   * Pause the scraping operation
-   */
-  pause(): Promise<void>;
-
-  /**
-   * Resume a paused scraping operation
-   */
-  resume(): Promise<void>;
+  execute(): Promise<any>;
 
   /**
    * Cancel the scraping operation
    */
   cancel(): Promise<void>;
-
-  /**
-   * Clean up resources used by the scraper
-   */
-  cleanup(): Promise<void>;
 
   /**
    * Validate the scraper configuration

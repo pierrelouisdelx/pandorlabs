@@ -2,8 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Delete,
   Body,
   Param,
   Query,
@@ -14,12 +12,10 @@ import {
 } from '@nestjs/common';
 import { ScrapersService } from './scrapers.service';
 import {
-  CreateScraperConfigDto,
-  UpdateScraperConfigDto,
-  QueryScraperConfigDto,
+  QueryScraperDto,
   QueryExecutionDto,
   ExecuteScraperDto,
-  ScraperConfigResponseDto,
+  ScraperResponseDto,
   ExecutionResponseDto,
   PaginatedResponseDto,
 } from './dto';
@@ -30,40 +26,16 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 export class ScrapersController {
   constructor(private readonly scrapersService: ScrapersService) {}
 
-  @Post('configs')
-  @HttpCode(HttpStatus.CREATED)
-  async createConfig(
-    @Body() dto: CreateScraperConfigDto,
-  ): Promise<ScraperConfigResponseDto> {
-    return this.scrapersService.createConfig(dto);
-  }
-
-  @Get('configs')
-  async findAllConfigs(
-    @Query() query: QueryScraperConfigDto,
-  ): Promise<PaginatedResponseDto<ScraperConfigResponseDto>> {
-    return this.scrapersService.findAllConfigs(query);
+  @Get('all')
+  async findAll(
+    @Query() query: QueryScraperDto,
+  ): Promise<PaginatedResponseDto<ScraperResponseDto>> {
+    return this.scrapersService.findAll(query);
   }
 
   @Get('configs/:id')
-  async findConfigById(
-    @Param('id') id: string,
-  ): Promise<ScraperConfigResponseDto> {
-    return this.scrapersService.findConfigById(id);
-  }
-
-  @Put('configs/:id')
-  async updateConfig(
-    @Param('id') id: string,
-    @Body() dto: UpdateScraperConfigDto,
-  ): Promise<ScraperConfigResponseDto> {
-    return this.scrapersService.updateConfig(id, dto);
-  }
-
-  @Delete('configs/:id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteConfig(@Param('id') id: string): Promise<void> {
-    return this.scrapersService.deleteConfig(id);
+  async findById(@Param('id') id: string): Promise<ScraperResponseDto> {
+    return this.scrapersService.findById(id);
   }
 
   @Post('execute')

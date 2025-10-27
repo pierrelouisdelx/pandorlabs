@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { IScraper } from '../interfaces/scraper.interface';
-import { ScraperConfig, ScraperResult } from '../interfaces';
 import { ScraperStatus, ScraperCategory } from '../enums';
+import { IScraperConfig } from '../interfaces/scraper-config.interface';
 
 /**
  * Abstract base class for all scrapers
@@ -14,7 +14,7 @@ export abstract class BaseScraper implements IScraper {
   constructor(
     public readonly id: string,
     public readonly category: ScraperCategory,
-    public readonly config: ScraperConfig,
+    public readonly config: IScraperConfig,
   ) {
     this.logger = new Logger(`${this.constructor.name}:${id}`);
   }
@@ -34,7 +34,7 @@ export abstract class BaseScraper implements IScraper {
     await this.onInitialize();
   }
 
-  async execute(): Promise<ScraperResult> {
+  async execute(): Promise<any> {
     this.logger.log('Starting execution');
     const startTime = Date.now();
     this.setStatus(ScraperStatus.RUNNING);
@@ -59,7 +59,8 @@ export abstract class BaseScraper implements IScraper {
     } catch (error) {
       const executionTime = Date.now() - startTime;
       this.setStatus(ScraperStatus.FAILED);
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
       this.logger.error(`Execution failed: ${errorMessage}`, errorStack);
 
@@ -76,33 +77,10 @@ export abstract class BaseScraper implements IScraper {
     }
   }
 
-  async pause(): Promise<void> {
-    if (this._status !== ScraperStatus.RUNNING) {
-      throw new Error(`Cannot pause scraper in ${this._status} state`);
-    }
-    this.logger.log('Pausing scraper');
-    this.setStatus(ScraperStatus.PAUSED);
-    await this.onPause();
-  }
-
-  async resume(): Promise<void> {
-    if (this._status !== ScraperStatus.PAUSED) {
-      throw new Error(`Cannot resume scraper in ${this._status} state`);
-    }
-    this.logger.log('Resuming scraper');
-    this.setStatus(ScraperStatus.RUNNING);
-    await this.onResume();
-  }
-
   async cancel(): Promise<void> {
     this.logger.log('Cancelling scraper');
     this.setStatus(ScraperStatus.CANCELLED);
     await this.onCancel();
-  }
-
-  async cleanup(): Promise<void> {
-    this.logger.log('Cleaning up resources');
-    await this.onCleanup();
   }
 
   async validate(): Promise<boolean> {
@@ -113,9 +91,6 @@ export abstract class BaseScraper implements IScraper {
   // Abstract methods to be implemented by concrete scrapers
   protected abstract onInitialize(): Promise<void>;
   protected abstract onExecute(): Promise<any>;
-  protected abstract onPause(): Promise<void>;
-  protected abstract onResume(): Promise<void>;
   protected abstract onCancel(): Promise<void>;
-  protected abstract onCleanup(): Promise<void>;
   protected abstract onValidate(): Promise<boolean>;
 }

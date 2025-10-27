@@ -9,7 +9,6 @@ import {
   ScraperExecutionEntity,
   ScraperExecutionSchema,
 } from './schemas';
-import { RealEstateAdapter } from './adapters';
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { RealEstateAdapter } from './adapters';
     ]),
   ],
   controllers: [ScrapersController],
-  providers: [ScrapersService, CategoryOrchestrator, RealEstateAdapter],
+  providers: [ScrapersService, CategoryOrchestrator],
   exports: [ScrapersService, CategoryOrchestrator],
 })
 export class ScrapersModule {}

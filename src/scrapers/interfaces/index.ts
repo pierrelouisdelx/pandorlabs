@@ -1,4 +1,3 @@
 export * from './scraper.interface';
-export * from './adapter.interface';
-export * from './scraper-config.interface';
-export * from './scraper-result.interface';
+export * from './category-orchestrator.interface';
+export * from './category.interface';
