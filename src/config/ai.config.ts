@@ -1,11 +1,11 @@
 import { registerAs } from '@nestjs/config';
+import { ScraperCategory } from '@scrapers/enums';
 
 /**
  * AI Services Configuration
  * Manages configuration for multiple AI providers (Anthropic, OpenAI)
  */
 export default registerAs('ai', () => ({
-  // Anthropic (Claude) Configuration - Primary Provider
   anthropic: {
     apiKey: process.env.ANTHROPIC_API_KEY,
     model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022',
@@ -14,7 +14,6 @@ export default registerAs('ai', () => ({
     enabled: !!process.env.ANTHROPIC_API_KEY,
   },
 
-  // OpenAI Configuration - Optional Secondary Provider
   openai: {
     apiKey: process.env.OPENAI_API_KEY,
     model: process.env.OPENAI_MODEL || 'gpt-4-turbo-preview',
@@ -23,20 +22,16 @@ export default registerAs('ai', () => ({
     enabled: !!process.env.OPENAI_API_KEY,
   },
 
-  // Default Provider Configuration
-  defaultProvider: 'anthropic',
+  defaultProvider: process.env.DEFAULT_PROVIDER || 'openai',
 
-  // Retry Configuration
-  retry: {
-    maxAttempts: 3,
-    backoffMs: 1000,
-    maxBackoffMs: 10000,
-  },
-
-  // Cache Configuration
-  cache: {
-    enabled: true,
-    ttlSeconds: 3600,
-    maxSize: 100,
+  agentic: {
+    systemPrompt: `You are PandoraLabs AI assistant. Process user queries by:
+1. Analyze the query and determine the category among the following: ${Object.values(ScraperCategory).join(', ')}
+2. Use list_scrapers_for_category to see available scrapers
+3. Select the best scraper(s) based on descriptions
+4. Use fetch_scraped_data to get the data
+5. If no scraper exists, use build_new_scraper
+Always follow this workflow systematically.`,
+    streamingEnabled: true,
   },
 }));

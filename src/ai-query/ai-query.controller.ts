@@ -1,6 +1,6 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AiQueryService } from './ai-query.service';
-import { AnalyzeQueryDto } from './dto/analyze-query.dto';
+import { AnalyzeQueryDto } from './dto';
 import { AnalysisResultDto } from './dto/analysis-result.dto';
 
 @Controller('ai-query')
