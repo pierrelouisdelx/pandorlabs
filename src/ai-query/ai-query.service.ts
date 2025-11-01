@@ -1,26 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  HumanMessage,
-  AIMessage,
-  SystemMessage,
-  ToolMessage,
-} from '@langchain/core/messages';
-import { AnalyzeQueryDto } from './dto/analyze-query.dto';
+
 import { AnalysisResultDto } from './dto/analysis-result.dto';
-import {
-  ProcessQueryDto,
-  AgenticResultDto,
-  MessageEntry,
-  ToolResult,
-} from './dto';
-import {
-  LLMProviderService,
-  LLMProvider,
-} from './providers/llm-provider.service';
-import { createScraperTools } from '../scrapers/ai-tools/scraper-tools';
-import { ScrapersService } from '@scrapers/scrapers.service';
+import { AnalyzeQueryDto } from './dto/analyze-query.dto';
+
 import { CategoryOrchestrator } from '@scrapers/category-orchestrator';
+import { ScrapersService } from '@scrapers/scrapers.service';
+import { LLMProviderService } from './providers/llm-provider.service';
 
 @Injectable()
 export class AiQueryService {
@@ -39,6 +25,8 @@ export class AiQueryService {
    */
   async analyzeQuery(dto: AnalyzeQueryDto): Promise<AnalysisResultDto> {
     const { query } = dto;
+
+    this.logger.log(`Analyzing query: ${query}`);
 
     return {
       targets: [],

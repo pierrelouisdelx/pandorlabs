@@ -21,6 +21,9 @@
     "config:verify": "ts-node -r tsconfig-paths/register scripts/verify-config.ts"
   },
   "dependencies": {
+    "@langchain/anthropic": "^0.3.33",
+    "@langchain/core": "^1.0.2",
+    "@langchain/openai": "^1.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -29,10 +32,12 @@
     "@nestjs/platform-express": "^11.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "impit": "^0.6.1",
     "joi": "^18.0.1",
     "mongoose": "^8.19.2",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -48,6 +53,7 @@
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
+    "eslint-plugin-unused-imports": "^4.3.0",
     "globals": "^16.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",

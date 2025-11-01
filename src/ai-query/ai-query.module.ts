@@ -6,15 +6,9 @@ import { LLMProviderService } from './providers/llm-provider.service';
 import { ScrapersModule } from '@scrapers/scrapers.module';
 
 @Module({
-  imports: [
-    ConfigModule,
-    ScrapersModule,
-  ],
+  imports: [ConfigModule, ScrapersModule],
   controllers: [AiQueryController],
-  providers: [
-    AiQueryService,
-    LLMProviderService,
-  ],
+  providers: [AiQueryService, LLMProviderService],
   exports: [AiQueryService, LLMProviderService],
 })
 export class AiQueryModule {}

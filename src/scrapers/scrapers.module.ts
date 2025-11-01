@@ -3,6 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ScrapersController } from './scrapers.controller';
 import { ScrapersService } from './scrapers.service';
 import { CategoryOrchestrator } from './category-orchestrator';
+import { SchemaGeneratorService } from './schema-generator';
+import { SchemaGeneratorController } from './schema-generator/schema-generator.controller';
 import {
   ScraperConfigEntity,
   ScraperConfigSchema,
@@ -17,8 +19,8 @@ import {
       { name: ScraperExecutionEntity.name, schema: ScraperExecutionSchema },
     ]),
   ],
-  controllers: [ScrapersController],
-  providers: [ScrapersService, CategoryOrchestrator],
-  exports: [ScrapersService, CategoryOrchestrator],
+  controllers: [ScrapersController, SchemaGeneratorController],
+  providers: [ScrapersService, CategoryOrchestrator, SchemaGeneratorService],
+  exports: [ScrapersService, CategoryOrchestrator, SchemaGeneratorService],
 })
 export class ScrapersModule {}

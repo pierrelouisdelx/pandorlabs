@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import { Connection } from 'mongoose';
 import { ICategory } from '../interfaces/category.interface';
 import { IScraper } from '../interfaces/scraper.interface';
 import { ScraperCategory } from '../enums';
@@ -12,7 +13,10 @@ export abstract class BaseCategory implements ICategory {
   protected readonly logger: Logger;
   protected readonly scrapers = new Map<string, IScraper>();
 
-  constructor(public readonly category: ScraperCategory) {
+  constructor(
+    public readonly category: ScraperCategory,
+    protected readonly connection?: Connection,
+  ) {
     this.logger = new Logger(`${this.constructor.name}`);
     this.registerScrapers();
   }

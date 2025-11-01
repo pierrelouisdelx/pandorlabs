@@ -35,7 +35,9 @@ export class LLMProviderService {
     this.logger.log('Initializing LLM providers...');
 
     // Initialize Anthropic if enabled
-    const anthropicEnabled = this.configService.get<boolean>('ai.anthropic.enabled');
+    const anthropicEnabled = this.configService.get<boolean>(
+      'ai.anthropic.enabled',
+    );
     if (anthropicEnabled) {
       try {
         const anthropicModel = new ChatAnthropic({
@@ -70,7 +72,9 @@ export class LLMProviderService {
     }
 
     if (this.models.size === 0) {
-      this.logger.warn('No LLM providers are enabled. Check your configuration.');
+      this.logger.warn(
+        'No LLM providers are enabled. Check your configuration.',
+      );
     }
   }
 
@@ -92,10 +96,7 @@ export class LLMProviderService {
   /**
    * Get model with tools bound for agentic behavior
    */
-  getModelWithTools(
-    tools: StructuredToolInterface[],
-    provider?: LLMProvider,
-  ) {
+  getModelWithTools(tools: StructuredToolInterface[], provider?: LLMProvider) {
     const model = this.getModel(provider);
     return model.bindTools(tools);
   }
@@ -104,7 +105,8 @@ export class LLMProviderService {
    * Get the default provider from configuration
    */
   private getDefaultProvider(): LLMProvider {
-    const defaultProvider = this.configService.get<string>('ai.defaultProvider');
+    const defaultProvider =
+      this.configService.get<string>('ai.defaultProvider');
 
     if (defaultProvider && this.models.has(defaultProvider as LLMProvider)) {
       return defaultProvider as LLMProvider;
@@ -149,7 +151,9 @@ export class LLMProviderService {
         maxTokens: this.configService.get<number>('ai.anthropic.maxTokens')!,
         timeoutMs: this.configService.get<number>('ai.anthropic.timeoutMs')!,
         apiKey: this.configService.get<string>('ai.anthropic.apiKey')!,
-        streaming: this.configService.get<boolean>('ai.agentic.streamingEnabled'),
+        streaming: this.configService.get<boolean>(
+          'ai.agentic.streamingEnabled',
+        ),
       };
     }
 
@@ -160,7 +164,9 @@ export class LLMProviderService {
         maxTokens: this.configService.get<number>('ai.openai.maxTokens')!,
         timeoutMs: this.configService.get<number>('ai.openai.timeoutMs')!,
         apiKey: this.configService.get<string>('ai.openai.apiKey')!,
-        streaming: this.configService.get<boolean>('ai.agentic.streamingEnabled'),
+        streaming: this.configService.get<boolean>(
+          'ai.agentic.streamingEnabled',
+        ),
       };
     }
 

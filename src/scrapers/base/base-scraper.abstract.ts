@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import { Connection, Model, Schema as MongooseSchema } from 'mongoose';
 import { IScraper } from '../interfaces/scraper.interface';
 import { ScraperStatus, ScraperCategory } from '../enums';
 import { IScraperConfig } from '../interfaces/scraper-config.interface';
@@ -15,6 +16,7 @@ export abstract class BaseScraper implements IScraper {
     public readonly id: string,
     public readonly category: ScraperCategory,
     public readonly config: IScraperConfig,
+    protected readonly connection?: Connection,
   ) {
     this.logger = new Logger(`${this.constructor.name}:${id}`);
   }
@@ -26,6 +28,62 @@ export abstract class BaseScraper implements IScraper {
   protected setStatus(status: ScraperStatus): void {
     this.logger.log(`Status transition: ${this._status} -> ${status}`);
     this._status = status;
+  }
+
+  /**
+   * Save scraped data to MongoDB collection
+   * @param data Array of scraped data items
+   * @param schema Mongoose schema for the collection
+   */
+  protected async saveScrapedData<T>(
+    data: T[],
+    schema: MongooseSchema,
+  ): Promise<void> {
+    if (!this.connection) {
+      this.logger.warn(
+        'MongoDB connection not available, skipping data persistence',
+      );
+      return;
+    }
+
+    if (!this.config.collectionName) {
+      this.logger.error(
+        'Collection name not specified in config, cannot save data',
+      );
+      return;
+    }
+
+    try {
+      this.logger.log(
+        `Saving ${data.length} items to collection: ${this.config.collectionName}`,
+      );
+
+      // Create or get the model for this collection
+      const model: Model<any> =
+        this.connection.models[this.config.collectionName] ||
+        this.connection.model(
+          this.config.collectionName,
+          schema,
+          this.config.collectionName,
+        );
+
+      // Create document with timestamps and data
+      const document = {
+        created_at: new Date(),
+        updated_at: new Date(),
+        data,
+      };
+
+      await model.create(document);
+      this.logger.log(
+        `Successfully saved data to ${this.config.collectionName}`,
+      );
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      this.logger.error(`Failed to save data to MongoDB: ${errorMessage}`);
+      // Don't throw - allow scraper to complete even if persistence fails
+    }
   }
 
   async initialize(): Promise<void> {
@@ -42,6 +100,19 @@ export abstract class BaseScraper implements IScraper {
     try {
       const data = await this.onExecute();
       const executionTime = Date.now() - startTime;
+
+      // Save scraped data to MongoDB if connection is available
+      if (Array.isArray(data) && data.length > 0 && this.connection) {
+        try {
+          const schema = this.getSchema();
+          await this.saveScrapedData(data, schema);
+        } catch {
+          // If getSchema is not implemented, log and continue
+          this.logger.warn(
+            'getSchema not implemented, skipping data persistence',
+          );
+        }
+      }
 
       this.setStatus(ScraperStatus.COMPLETED);
       this.logger.log(`Execution completed in ${executionTime}ms`);
@@ -93,4 +164,14 @@ export abstract class BaseScraper implements IScraper {
   protected abstract onExecute(): Promise<any>;
   protected abstract onCancel(): Promise<void>;
   protected abstract onValidate(): Promise<boolean>;
+
+  /**
+   * Get the Mongoose schema for data persistence
+   * Override this method in scrapers that need to persist data
+   */
+  protected getSchema(): MongooseSchema {
+    throw new Error(
+      'getSchema() not implemented. Override this method to enable data persistence.',
+    );
+  }
 }

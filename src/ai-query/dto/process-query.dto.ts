@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsOptional, IsEnum, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsEnum,
+  MaxLength,
+} from 'class-validator';
 
 export enum LLMProviderEnum {
   OPENAI = 'openai',

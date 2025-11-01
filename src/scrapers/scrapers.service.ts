@@ -199,6 +199,17 @@ export class ScrapersService {
     };
   }
 
+  // Retrive scraper data from the database
+  async getScraperData(scraperId: string): Promise<any> {
+    const execution = await this.executionModel.findOne({ scraperId }).lean();
+    if (!execution) {
+      throw new NotFoundException(
+        `Execution with scraperId ${scraperId} not found`,
+      );
+    }
+    return execution;
+  }
+
   getAllSupportedScrapers(): Record<string, string[]> {
     const scrapers = this.categoryOrchestrator.getAllSupportedScrapers();
     const result: Record<string, string[]> = {};

@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import { Model, Connection } from 'mongoose';
 import { BaseCategoryOrchestrator } from './base/base-category-orchestrator.abstract';
 import { RealEstateCategory } from './categories';
 import {
@@ -16,6 +16,8 @@ export class CategoryOrchestrator
   constructor(
     @InjectModel(ScraperConfigEntity.name)
     private readonly configModel: Model<ScraperConfigDocument>,
+    @InjectConnection()
+    private readonly connection: Connection,
   ) {
     super();
     this.logger.log('CategoryOrchestrator initialized');
@@ -43,7 +45,7 @@ export class CategoryOrchestrator
   }
 
   private registerAllCategory(): void {
-    this.registerCategory(new RealEstateCategory());
+    this.registerCategory(new RealEstateCategory(this.connection));
   }
 
   /**
@@ -83,7 +85,9 @@ export class CategoryOrchestrator
             this.logger.log(`✓ Seeded config for scraper: ${scraperId}`);
             seededCount++;
           } else {
-            this.logger.log(`⊘ Config already exists for scraper: ${scraperId}`);
+            this.logger.log(
+              `⊘ Config already exists for scraper: ${scraperId}`,
+            );
             skippedCount++;
           }
         } catch (error) {
