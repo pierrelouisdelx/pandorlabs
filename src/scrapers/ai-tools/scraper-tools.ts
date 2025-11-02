@@ -171,18 +171,78 @@ export const fetchScrapedDataTool = (scrapersService: ScrapersService) => {
 };
 
 /**
+ * Tool: Get Schema Sample
+ * Returns schema structure and sample data for a specific scraper
+ */
+export const getSchemaSampleTool = () => {
+  return tool(
+    async ({ scraperId }) => {
+      try {
+        // Import schema parser utility
+        const { generateSchemaDocumentation } = require('@scrapers/utils/schema-parser.util');
+
+        const schemaDoc = generateSchemaDocumentation(scraperId);
+
+        if (!schemaDoc) {
+          return JSON.stringify({
+            success: false,
+            message: `No schema documentation available for scraper: ${scraperId}`,
+          });
+        }
+
+        return JSON.stringify({
+          success: true,
+          scraperId,
+          schemaName: schemaDoc.schemaName,
+          fields: schemaDoc.fields,
+          sampleStructure: schemaDoc.sampleStructure,
+          message: 'Schema structure and sample data retrieved successfully',
+        });
+      } catch (error) {
+        return JSON.stringify({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+    },
+    {
+      name: 'get_schema_sample',
+      description:
+        'Get the data schema structure and sample data for a specific scraper. Use this to understand what fields are available in the scraped data.',
+      schema: z.object({
+        scraperId: z
+          .string()
+          .describe(
+            'The scraper ID to get schema information for (e.g., "auction-com")',
+          ),
+      }),
+    },
+  );
+};
+
+/**
  * Tool: Build New Scraper
  * Creates a new scraper configuration when none exists
  */
-export const buildNewScraperTool = () => {
-  // TODO: Implement this tool
+export const buildNewScraperTool = (scrapersService: ScrapersService) => {
   return tool(
     async ({ targetUrl, category, dataPoints, scraperName }) => {
       try {
+        // Create scraper request in database
+        const request = await scrapersService.createScraperRequest({
+          targetUrl,
+          category,
+          dataPoints,
+          scraperName,
+        });
+
         return JSON.stringify({
-          success: false,
-          message: 'Not implemented',
-          providedInfo: { targetUrl, category, dataPoints, scraperName },
+          success: true,
+          message:
+            'Scraper build request has been queued for manual creation. Our team will review and implement this scraper.',
+          requestId: request.id,
+          status: request.status,
+          estimatedTime: '3-5 business days',
         });
       } catch (error) {
         return JSON.stringify({
@@ -225,6 +285,7 @@ export const createScraperTools = (
   return [
     listScrapersForCategoryTool(categoryOrchestrator),
     fetchScrapedDataTool(scrapersService),
-    buildNewScraperTool(),
+    getSchemaSampleTool(),
+    buildNewScraperTool(scrapersService),
   ];
 };

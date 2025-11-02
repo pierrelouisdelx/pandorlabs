@@ -13,6 +13,10 @@ import {
   ScraperExecutionEntity,
   ScraperExecutionDocument,
 } from './schemas';
+import {
+  ScraperRequest,
+  ScraperRequestDocument,
+} from './schemas/scraper-request.schema';
 import { CategoryOrchestrator } from './category-orchestrator';
 import {
   QueryScraperDto,
@@ -35,6 +39,9 @@ export class ScrapersService {
 
     @InjectModel(ScraperExecutionEntity.name)
     private readonly executionModel: Model<ScraperExecutionDocument>,
+
+    @InjectModel(ScraperRequest.name)
+    private readonly scraperRequestModel: Model<ScraperRequestDocument>,
 
     private readonly categoryOrchestrator: CategoryOrchestrator,
   ) {
@@ -308,5 +315,79 @@ export class ScrapersService {
         : undefined,
       createdAt: execution.createdAt,
     };
+  }
+
+  /**
+   * Create a new scraper build request
+   * Used when a user needs a scraper that doesn't exist yet
+   */
+  async createScraperRequest(data: {
+    targetUrl: string;
+    category: string;
+    dataPoints: string[];
+    scraperName: string;
+    requestedBy?: string;
+  }): Promise<any> {
+    try {
+      this.logger.log(
+        `Creating scraper request for: ${data.scraperName} (${data.targetUrl})`,
+      );
+
+      const request = await this.scraperRequestModel.create({
+        targetUrl: data.targetUrl,
+        category: data.category,
+        dataPoints: data.dataPoints,
+        scraperName: data.scraperName,
+        requestedBy: data.requestedBy || 'ai-agent',
+        status: 'pending',
+      });
+
+      const requestId = request._id as any;
+      this.logger.log(`Scraper request created with ID: ${requestId}`);
+
+      return {
+        id: requestId.toString(),
+        targetUrl: request.targetUrl,
+        category: request.category,
+        dataPoints: request.dataPoints,
+        scraperName: request.scraperName,
+        status: request.status,
+        createdAt: request.createdAt,
+      };
+    } catch (error) {
+      this.logger.error('Failed to create scraper request', error);
+      throw new InternalServerErrorException(
+        'Failed to create scraper build request',
+      );
+    }
+  }
+
+  /**
+   * Get all pending scraper requests for admin review
+   */
+  async getPendingScraperRequests(): Promise<any[]> {
+    try {
+      const requests = await this.scraperRequestModel
+        .find({ status: 'pending' })
+        .sort({ createdAt: -1 })
+        .exec();
+
+      return requests.map((req) => {
+        const reqId = req._id as any;
+        return {
+          id: reqId.toString(),
+          targetUrl: req.targetUrl,
+          category: req.category,
+          dataPoints: req.dataPoints,
+          scraperName: req.scraperName,
+          status: req.status,
+          requestedBy: req.requestedBy,
+          createdAt: req.createdAt,
+        };
+      });
+    } catch (error) {
+      this.logger.error('Failed to get pending scraper requests', error);
+      return [];
+    }
   }
 }
