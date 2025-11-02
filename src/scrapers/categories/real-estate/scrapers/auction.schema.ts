@@ -9,10 +9,10 @@ class ListingConfiguration {
   @Prop()
   is_reserve_displayed?: boolean;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   broker_commission?: string | null;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   financing_available?: string | null;
 
   @Prop()
@@ -168,7 +168,7 @@ class PrimaryProperty {
 
 @Schema({ _id: false })
 class BidInstruction {
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   nos_amount?: string | null;
 }
 
@@ -177,10 +177,10 @@ class Auction {
   @Prop()
   start_date?: string;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   end_date?: string | null;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   starting_bid?: string | null;
 
   @Prop()
@@ -243,13 +243,13 @@ class SellingMethod {
   @Prop()
   __typename?: string;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   _alias_LiveAuctionSegment__starting_bid_amount?: string | null;
 
   @Prop()
   _alias_LiveAuctionSegment__configuration?: SellingMethodConfiguration;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   current_highest_bid?: string | null;
 }
 
@@ -282,10 +282,10 @@ class BaseSchema {
   @Prop()
   listing_page_path?: string;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   reserve_price?: string | null;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   is_hot?: string | null;
 
   @Prop([String])
@@ -309,7 +309,7 @@ class BaseSchema {
   @Prop()
   valuation?: Valuation;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   strategy?: string | null;
 
   @Prop()
@@ -318,7 +318,7 @@ class BaseSchema {
   @Prop()
   program_configuration?: ProgramConfiguration;
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   seller_terms?: string | null;
 
   @Prop()
@@ -330,7 +330,7 @@ class BaseSchema {
   @Prop([String])
   marketing_tags?: string[];
 
-  @Prop()
+  @Prop({ type: String, required: false, default: null })
   open_houses?: string | null;
 
   @Prop()

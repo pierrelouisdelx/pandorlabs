@@ -1,16 +1,17 @@
+import { HumanMessage, ToolMessage } from '@langchain/core/messages';
+import { StructuredToolInterface } from '@langchain/core/tools';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { StructuredToolInterface } from '@langchain/core/tools';
-import { HumanMessage, AIMessage } from '@langchain/core/messages';
 
-import { AnalysisResultDto } from './dto/analysis-result.dto';
-import { AnalyzeQueryDto } from './dto/analyze-query.dto';
 import { AgenticResultDto } from './dto/agentic-result.dto';
 
+import { createScraperTools } from '@scrapers/ai-tools/scraper-tools';
 import { CategoryOrchestrator } from '@scrapers/category-orchestrator';
 import { ScrapersService } from '@scrapers/scrapers.service';
-import { LLMProviderService, LLMProvider } from './providers/llm-provider.service';
-import { createScraperTools } from '@scrapers/ai-tools/scraper-tools';
+import {
+  LLMProvider,
+  LLMProviderService,
+} from './providers/llm-provider.service';
 
 @Injectable()
 export class AiQueryService {
@@ -60,13 +61,11 @@ export class AiQueryService {
 
       // Initialize messages with system prompt and user query
       const messages: any[] = [
-        new HumanMessage(
-          `${this.systemPrompt}\n\nUser query: ${query}`,
-        ),
+        new HumanMessage(`${this.systemPrompt}\n\nUser query: ${query}`),
       ];
 
       let iterations = 0;
-      const maxIterations = 5;
+      const maxIterations = 1;
       let finalResponse = '';
 
       // Agentic loop - execute tools until completion
@@ -104,26 +103,22 @@ export class AiQueryService {
             const toolResult = await tool.invoke(toolCall.args);
 
             // Track the tool execution
+            const toolResultString =
+              typeof toolResult === 'string'
+                ? toolResult
+                : JSON.stringify(toolResult);
+
             toolExecutions.push({
               toolCallId: toolCall.id || `tool-${toolExecutions.length + 1}`,
               toolName: toolCall.name,
-              result:
-                typeof toolResult === 'string'
-                  ? toolResult
-                  : JSON.stringify(toolResult),
+              result: toolResultString,
             });
 
-            // Add tool result to messages
+            // Add tool result to messages using ToolMessage
             messages.push(
-              new AIMessage({
-                content: '',
-                tool_calls: [toolCall],
-              }),
-            );
-            messages.push(
-              new HumanMessage({
-                content: toolResult,
-                name: toolCall.name,
+              new ToolMessage({
+                content: toolResultString,
+                tool_call_id: toolCall.id || `tool-${toolExecutions.length}`,
               }),
             );
 
@@ -135,11 +130,11 @@ export class AiQueryService {
                 : 'Unknown tool error';
             this.logger.error(`Tool execution failed: ${errorMsg}`, toolError);
 
-            // Add error as tool result
+            // Add error as tool result using ToolMessage
             messages.push(
-              new HumanMessage({
+              new ToolMessage({
                 content: `Tool execution failed: ${errorMsg}`,
-                name: toolCall.name,
+                tool_call_id: toolCall.id || `tool-error-${Date.now()}`,
               }),
             );
           }
@@ -205,22 +200,5 @@ export class AiQueryService {
         error: errorMessage,
       };
     }
-  }
-
-  /**
-   * Analyze user query and extract scraping requirements
-   * This is a placeholder implementation - replace with actual AI analysis
-   */
-  async analyzeQuery(dto: AnalyzeQueryDto): Promise<AnalysisResultDto> {
-    const { query } = dto;
-
-    this.logger.log(`Analyzing query: ${query}`);
-
-    return {
-      targets: [],
-      dataPoints: [],
-      estimatedTime: '',
-      steps: [],
-    };
   }
 }

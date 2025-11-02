@@ -1,21 +1,20 @@
-import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AiQueryService } from './ai-query.service';
-import { AnalyzeQueryDto } from './dto';
-import { AnalysisResultDto } from './dto/analysis-result.dto';
+import { AgenticResultDto, ProcessQueryDto } from './dto';
 
 @Controller('ai-query')
 export class AiQueryController {
   constructor(private readonly aiQueryService: AiQueryService) {}
 
   /**
-   * Analyze user query and return scraper plan
-   * POST /ai-query/analyze
+   * Process user query and return scraper plan
+   * POST /ai-query/process
    */
-  @Post('analyze')
+  @Post('process')
   @HttpCode(HttpStatus.OK)
-  async analyzeQuery(
-    @Body() analyzeQueryDto: AnalyzeQueryDto,
-  ): Promise<AnalysisResultDto> {
-    return await this.aiQueryService.analyzeQuery(analyzeQueryDto);
+  async processQuery(
+    @Body() processQueryDto: ProcessQueryDto,
+  ): Promise<AgenticResultDto> {
+    return await this.aiQueryService.processQuery(processQueryDto.query);
   }
 }
