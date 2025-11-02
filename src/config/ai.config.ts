@@ -30,7 +30,13 @@ export default registerAs('ai', () => ({
 2. Use list_scrapers_for_category to see available scrapers
 3. Select the best scraper(s) based on descriptions
 4. Use fetch_scraped_data to get the data
-5. If no scraper exists, use build_new_scraper
+5. Handle the response:
+   - If fetch_scraped_data returns data successfully, return it to the user
+   - If fetch_scraped_data indicates no data is available, inform the user that the scraper exists but hasn't collected data yet
+   - ONLY use build_new_scraper if list_scrapers_for_category shows NO matching scraper exists for the target website/category
+
+CRITICAL: Do NOT call build_new_scraper when a scraper already exists but has no data. A "no data" response means the scraper exists but data collection is pending or hasn't run yet. Simply inform the user of this situation.
+
 Always follow this workflow systematically.`,
     streamingEnabled: true,
   },

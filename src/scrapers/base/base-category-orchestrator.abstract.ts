@@ -1,13 +1,13 @@
 import { Logger } from '@nestjs/common';
-import { ICategoryOrchestrator } from '../interfaces/category-orchestrator.interface';
-import { ICategory } from '../interfaces/category.interface';
-import { IScraper } from '../interfaces/scraper.interface';
 import { ScraperCategory } from '../enums';
 import {
-  CategoryNotFoundException,
   CategoryInvalidScraperException,
+  CategoryNotFoundException,
 } from '../exceptions/category-orchestrator.exception';
+import { ICategoryOrchestrator } from '../interfaces/category-orchestrator.interface';
+import { ICategory } from '../interfaces/category.interface';
 import { IScraperConfig } from '../interfaces/scraper-config.interface';
+import { IScraper } from '../interfaces/scraper.interface';
 
 /**
  * Abstract base class for category orchestrators
@@ -102,6 +102,25 @@ export abstract class BaseCategoryOrchestrator
     }
 
     return scraper;
+  }
+
+  /**
+   * Get schema for a scraper without full instantiation overhead
+   * Uses cached instance if available, otherwise creates temporary instance
+   */
+  async getSchemaOnly(scraperId: string): Promise<any> {
+    // Check if scraper is already cached
+    if (this.cacheEnabled) {
+      const cached = this.getFromCache(scraperId);
+      if (cached) {
+        this.logger.log(`Schema cache hit: ${scraperId}`);
+        return cached.getSchema();
+      }
+    }
+
+    // Get scraper instance (will be cached for future use)
+    const scraper = await this.getScraper(scraperId);
+    return scraper.getSchema();
   }
 
   /**

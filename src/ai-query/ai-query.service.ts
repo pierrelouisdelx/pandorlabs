@@ -65,7 +65,7 @@ export class AiQueryService {
       ];
 
       let iterations = 0;
-      const maxIterations = 1;
+      const maxIterations = 5;
       let finalResponse = '';
 
       // Agentic loop - execute tools until completion

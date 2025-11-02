@@ -43,4 +43,9 @@ export interface IScraper {
    * Validate the scraper configuration
    */
   validate(): Promise<boolean>;
+
+  /**
+   * Get the Mongoose schema for this scraper's data
+   */
+  getSchema(): any;
 }
