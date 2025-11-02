@@ -31,7 +31,7 @@ export class AuctionScraper extends BaseScraper {
   protected async onExecute(): Promise<any> {
     this.logger.log('Executing Auction scraper');
     let page = 0;
-    let maxPages = 3;
+    let maxPages = 1;
     const limit = 500;
     const results = [];
 
@@ -79,9 +79,9 @@ export class AuctionScraper extends BaseScraper {
 
       const data = await response.json();
 
-      if (data.data.seek_listings_from_filters.total_pages > maxPages) {
+      /*if (data.data.seek_listings_from_filters.total_pages > maxPages) {
         maxPages = data.data.seek_listings_from_filters.total_pages;
-      }
+      }*/
 
       const content = data.data.seek_listings_from_filters.content;
       if (content.length === 0) {
@@ -90,6 +90,8 @@ export class AuctionScraper extends BaseScraper {
         this.logger.log(`Found ${content.length} listings on page ${page}`);
         results.push(...content);
       }
+
+      page++;
     }
 
     return results;
