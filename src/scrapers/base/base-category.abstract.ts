@@ -4,6 +4,7 @@ import { ICategory } from '../interfaces/category.interface';
 import { IScraper } from '../interfaces/scraper.interface';
 import { ScraperCategory } from '../enums';
 import { CategoryScraperNotFoundException } from '../exceptions';
+import { ProxyService } from '../services/proxy.service';
 
 /**
  * Abstract base class for categories
@@ -16,6 +17,7 @@ export abstract class BaseCategory implements ICategory {
   constructor(
     public readonly category: ScraperCategory,
     protected readonly connection?: Connection,
+    protected readonly proxyService?: ProxyService,
   ) {
     this.logger = new Logger(`${this.constructor.name}`);
     this.registerScrapers();

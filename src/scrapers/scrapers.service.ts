@@ -5,8 +5,8 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery, SortOrder } from 'mongoose';
+import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import { Model, FilterQuery, SortOrder, Connection } from 'mongoose';
 import {
   ScraperConfigEntity,
   ScraperConfigDocument,
@@ -42,6 +42,9 @@ export class ScrapersService {
 
     @InjectModel(ScraperRequest.name)
     private readonly scraperRequestModel: Model<ScraperRequestDocument>,
+
+    @InjectConnection()
+    private readonly connection: Connection,
 
     private readonly categoryOrchestrator: CategoryOrchestrator,
   ) {
@@ -215,6 +218,93 @@ export class ScrapersService {
       );
     }
     return execution;
+  }
+
+  /**
+   * Query scraped data from dynamic collection using filters
+   * @param scraperId - The scraper ID
+   * @param filters - Optional MongoDB query filters
+   * @param pagination - Pagination options (default: page=1, limit=5)
+   */
+  async queryScrapedData(
+    scraperId: string,
+    filters?: Record<string, any>,
+    pagination?: { page?: number; limit?: number },
+  ): Promise<{
+    success: boolean;
+    data?: any[];
+    count?: number;
+    pagination?: any;
+    message?: string;
+  }> {
+    try {
+      // 1. Get scraper config for collectionName
+      const config = await this.configModel.findOne({ scraperId }).lean();
+      if (!config) {
+        return {
+          success: false,
+          message: `Scraper config not found for: ${scraperId}`,
+        };
+      }
+
+      // 2. Get schema via CategoryOrchestrator
+      const schema = await this.categoryOrchestrator.getSchemaOnly(scraperId);
+
+      // 3. Get/create model for dynamic collection
+      const collectionName = config.collectionName;
+      let model: Model<any>;
+      try {
+        model = this.connection.model(collectionName);
+      } catch {
+        model = this.connection.model(collectionName, schema);
+      }
+
+      // 4. Build query
+      const query = filters ? { data: { $elemMatch: filters } } : {};
+
+      // 5. Apply pagination (default: page=1, limit=5, max=100)
+      const page = pagination?.page || 1;
+      const limit = Math.min(pagination?.limit || 5, 100);
+      const skip = (page - 1) * limit;
+
+      // 6. Execute query
+      const [documents, totalDocs] = await Promise.all([
+        model.find(query).limit(limit).skip(skip).lean(),
+        model.countDocuments(query),
+      ]);
+
+      // 7. Extract data from wrapper documents
+      const allData = documents.flatMap((doc: any) => doc.data || []);
+
+      // 8. Return results
+      if (allData.length === 0) {
+        return {
+          success: false,
+          message: `No data available for scraper: ${scraperId}`,
+        };
+      }
+
+      return {
+        success: true,
+        data: allData.slice(0, limit),
+        count: allData.length,
+        pagination: {
+          page,
+          limit,
+          total: totalDocs,
+          totalPages: Math.ceil(totalDocs / limit),
+        },
+      };
+    } catch (error) {
+      this.logger.error(
+        `Failed to query scraped data for ${scraperId}`,
+        error instanceof Error ? error.stack : String(error),
+      );
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
   }
 
   getAllSupportedScrapers(): Record<string, string[]> {

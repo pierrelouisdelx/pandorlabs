@@ -98,11 +98,11 @@ export const listScrapersForCategoryTool = (
 
 /**
  * Tool: Fetch Scraped Data
- * Executes a scraper and retrieves data
+ * Queries existing scraped data from the database with optional filters
  */
 export const fetchScrapedDataTool = (scrapersService: ScrapersService) => {
   return tool(
-    async ({ scraperId, options }) => {
+    async ({ scraperId, filters, options }) => {
       try {
         // Find the scraper config by scraperId
         const config = await scrapersService.findById(scraperId);
@@ -121,27 +121,36 @@ export const fetchScrapedDataTool = (scrapersService: ScrapersService) => {
           });
         }
 
-        // Execute the scraper
-        const execution = await scrapersService.executeScraper({
-          configId: config.id,
-          overrideOptions: options || {},
-        });
-
-        // Get the execution data
-        const data = await scrapersService.getExecutionData(execution.id, {
-          page: 1,
-          limit: 100,
-        });
-
-        return JSON.stringify({
-          success: true,
+        // Query existing data from database
+        const result = await scrapersService.queryScrapedData(
           scraperId,
-          executionId: execution.id,
-          status: execution.status,
-          itemsScraped: execution.itemsScraped,
-          data: data.data,
-          pagination: data.pagination,
-        });
+          filters,
+          options,
+        );
+
+        // Return results or no-data message
+        if (result.success && result.data && result.data.length > 0) {
+          return JSON.stringify({
+            success: true,
+            source: 'database',
+            scraperId,
+            dataCount: result.count,
+            data: result.data,
+            pagination: result.pagination,
+          });
+        } else {
+          // Scraper exists but has no data - this is different from scraper not existing
+          return JSON.stringify({
+            success: true, // Operation succeeded, just no data available
+            scraperExists: true,
+            hasData: false,
+            dataCount: 0,
+            scraperId,
+            message: `Scraper '${scraperId}' exists but has not collected data yet.`,
+            suggestion:
+              'Data collection may be in progress, scheduled, or not yet initiated. The scraper is configured and ready, but no data has been scraped yet.',
+          });
+        }
       } catch (error) {
         return JSON.stringify({
           success: false,
@@ -152,19 +161,29 @@ export const fetchScrapedDataTool = (scrapersService: ScrapersService) => {
     {
       name: 'fetch_scraped_data',
       description:
-        'Execute a scraper and fetch data from a specific source. Use this after selecting a scraper with list_scrapers_for_category.',
+        'Query existing scraped data from the database with optional filters. Returns up to 5 items by default. Use this to check if data is available before executing a scraper.',
       schema: z.object({
         scraperId: z
           .string()
           .describe(
-            'The unique identifier of the scraper to execute (e.g., "zillow-rentals", "acnestudios-products")',
+            'The unique identifier of the scraper (e.g., "auction-com", "zillow-rentals")',
           ),
-        options: z
+        filters: z
           .record(z.string(), z.any())
           .optional()
           .describe(
-            'Optional scraper configuration overrides (e.g., {"maxPages": 5, "filters": {...}})',
+            'Optional MongoDB query filters for scraped data fields (e.g., {"primary_property.summary.total_bedrooms": {"$gte": 3}})',
           ),
+        options: z
+          .object({
+            page: z.number().optional().describe('Page number (default: 1)'),
+            limit: z
+              .number()
+              .optional()
+              .describe('Items per page (default: 5, max: 100)'),
+          })
+          .optional()
+          .describe('Pagination options'),
       }),
     },
   );
@@ -179,7 +198,9 @@ export const getSchemaSampleTool = () => {
     async ({ scraperId }) => {
       try {
         // Import schema parser utility
-        const { generateSchemaDocumentation } = require('@scrapers/utils/schema-parser.util');
+        const {
+          generateSchemaDocumentation,
+        } = require('@scrapers/utils/schema-parser.util');
 
         const schemaDoc = generateSchemaDocumentation(scraperId);
 
@@ -254,7 +275,7 @@ export const buildNewScraperTool = (scrapersService: ScrapersService) => {
     {
       name: 'build_new_scraper',
       description:
-        'Request building a new scraper when no existing scraper matches the requirements. Only use this as a last resort after checking list_scrapers_for_category.',
+        'Request building a NEW scraper ONLY when list_scrapers_for_category shows NO existing scraper for the target website/category. DO NOT use this tool if a scraper already exists but has no data - that simply means data collection is pending. This is a last resort tool - always verify no matching scraper exists first.',
       schema: z.object({
         targetUrl: z.url().describe('The target website URL to scrape'),
         category: z

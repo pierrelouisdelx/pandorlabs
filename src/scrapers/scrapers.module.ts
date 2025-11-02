@@ -5,6 +5,7 @@ import { ScrapersService } from './scrapers.service';
 import { CategoryOrchestrator } from './category-orchestrator';
 import { SchemaGeneratorService } from './schema-generator';
 import { SchemaGeneratorController } from './schema-generator/schema-generator.controller';
+import { ProxyService } from './services/proxy.service';
 import {
   ScraperConfigEntity,
   ScraperConfigSchema,
@@ -25,7 +26,12 @@ import {
     ]),
   ],
   controllers: [ScrapersController, SchemaGeneratorController],
-  providers: [ScrapersService, CategoryOrchestrator, SchemaGeneratorService],
+  providers: [
+    ScrapersService,
+    CategoryOrchestrator,
+    SchemaGeneratorService,
+    ProxyService,
+  ],
   exports: [ScrapersService, CategoryOrchestrator, SchemaGeneratorService],
 })
 export class ScrapersModule {}

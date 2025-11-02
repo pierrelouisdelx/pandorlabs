@@ -1,8 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { Connection, Model, Schema as MongooseSchema } from 'mongoose';
+import { Impit } from 'impit';
 import { IScraper } from '../interfaces/scraper.interface';
 import { ScraperStatus, ScraperCategory } from '../enums';
 import { IScraperConfig } from '../interfaces/scraper-config.interface';
+import { ProxyService } from '../services/proxy.service';
 
 /**
  * Abstract base class for all scrapers
@@ -17,6 +19,7 @@ export abstract class BaseScraper implements IScraper {
     public readonly category: ScraperCategory,
     public readonly config: IScraperConfig,
     protected readonly connection?: Connection,
+    protected readonly proxyService?: ProxyService,
   ) {
     this.logger = new Logger(`${this.constructor.name}:${id}`);
   }
@@ -84,6 +87,35 @@ export abstract class BaseScraper implements IScraper {
       this.logger.error(`Failed to save data to MongoDB: ${errorMessage}`);
       // Don't throw - allow scraper to complete even if persistence fails
     }
+  }
+
+  /**
+   * Get a random proxy from the ProxyService
+   * @returns Random proxy URL or undefined if no proxies available
+   */
+  protected getRandomProxy(): string | undefined {
+    return this.proxyService?.getRandomProxy();
+  }
+
+  /**
+   * Create an Impit client instance with random proxy rotation
+   * Each call returns a new instance with a different random proxy from ProxyService
+   * @returns Configured Impit instance
+   */
+  protected createImpitClient(): Impit {
+    const proxy = this.getRandomProxy();
+
+    if (proxy) {
+      this.logger.debug(
+        `Creating Impit client with proxy: ${proxy.split('@')[1] || 'masked'}`,
+      );
+      return new Impit({
+        proxyUrl: proxy,
+      });
+    }
+
+    this.logger.debug('Creating Impit client without proxy');
+    return new Impit();
   }
 
   async initialize(): Promise<void> {
@@ -169,7 +201,7 @@ export abstract class BaseScraper implements IScraper {
    * Get the Mongoose schema for data persistence
    * Override this method in scrapers that need to persist data
    */
-  protected getSchema(): MongooseSchema {
+  getSchema(): MongooseSchema {
     throw new Error(
       'getSchema() not implemented. Override this method to enable data persistence.',
     );

@@ -1,11 +1,11 @@
 import { BaseScraper } from '@scrapers/base';
 import { ScraperCategory } from '@scrapers/enums';
-import { Impit } from 'impit';
-import { Schema as MongooseSchema, Connection } from 'mongoose';
+import { ProxyService } from '@scrapers/services/proxy.service';
+import { Connection, Schema as MongooseSchema } from 'mongoose';
 import { AuctionSchema } from './auction.schema';
 
 export class AuctionScraper extends BaseScraper {
-  constructor(connection?: Connection) {
+  constructor(connection?: Connection, proxyService?: ProxyService) {
     super(
       'auction',
       ScraperCategory.REAL_ESTATE,
@@ -20,6 +20,7 @@ export class AuctionScraper extends BaseScraper {
         isActive: true,
       },
       connection,
+      proxyService,
     );
   }
 
@@ -32,9 +33,9 @@ export class AuctionScraper extends BaseScraper {
     const maxPages = 23;
     const results = [];
 
-    const impit = new Impit();
-
     for (let page = 0; page <= maxPages; page++) {
+      const impit = this.createImpitClient();
+
       this.logger.log(`Fetching page ${page}`);
       const response = await impit.fetch('https://graph.auction.com/graphql', {
         headers: {
@@ -78,6 +79,13 @@ export class AuctionScraper extends BaseScraper {
         method: 'POST',
       });
 
+      if (!response.ok) {
+        this.logger.error(
+          `Failed to fetch page ${page}: ${response.statusText}`,
+        );
+        throw new Error(`Failed to fetch page ${page}: ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       const content = data.data.seek_listings_from_filters.content;
@@ -92,7 +100,7 @@ export class AuctionScraper extends BaseScraper {
     return results;
   }
 
-  protected getSchema(): MongooseSchema {
+  getSchema(): MongooseSchema {
     return AuctionSchema;
   }
 

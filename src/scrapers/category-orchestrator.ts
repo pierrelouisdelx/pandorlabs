@@ -3,6 +3,7 @@ import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
 import { BaseCategoryOrchestrator } from './base/base-category-orchestrator.abstract';
 import { RealEstateCategory } from './categories';
+import { ProxyService } from './services/proxy.service';
 import {
   ScraperConfigEntity,
   ScraperConfigDocument,
@@ -18,6 +19,7 @@ export class CategoryOrchestrator
     private readonly configModel: Model<ScraperConfigDocument>,
     @InjectConnection()
     private readonly connection: Connection,
+    private readonly proxyService: ProxyService,
   ) {
     super();
     this.logger.log('CategoryOrchestrator initialized');
@@ -45,7 +47,9 @@ export class CategoryOrchestrator
   }
 
   private registerAllCategory(): void {
-    this.registerCategory(new RealEstateCategory(this.connection));
+    this.registerCategory(
+      new RealEstateCategory(this.connection, this.proxyService),
+    );
   }
 
   /**
