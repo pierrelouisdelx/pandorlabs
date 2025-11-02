@@ -35,6 +35,7 @@ export abstract class BaseScraper implements IScraper {
 
   /**
    * Save scraped data to MongoDB collection
+   * Each item in the data array is saved as a separate document with timestamps
    * @param data Array of scraped data items
    * @param schema Mongoose schema for the collection
    */
@@ -56,6 +57,11 @@ export abstract class BaseScraper implements IScraper {
       return;
     }
 
+    if (!data || data.length === 0) {
+      this.logger.warn('No data to save, skipping persistence');
+      return;
+    }
+
     try {
       this.logger.log(
         `Saving ${data.length} items to collection: ${this.config.collectionName}`,
@@ -70,16 +76,19 @@ export abstract class BaseScraper implements IScraper {
           this.config.collectionName,
         );
 
-      // Create document with timestamps and data
-      const document = {
-        created_at: new Date(),
-        updated_at: new Date(),
-        data,
-      };
+      // Prepare documents - each item becomes a separate document with timestamps
+      const timestamp = new Date();
+      const documents = data.map((item) => ({
+        ...item,
+        created_at: timestamp,
+        updated_at: timestamp,
+      }));
 
-      await model.create(document);
+      // Insert all documents in bulk for efficiency
+      await model.insertMany(documents);
+
       this.logger.log(
-        `Successfully saved data to ${this.config.collectionName}`,
+        `Successfully saved ${documents.length} documents to ${this.config.collectionName}`,
       );
     } catch (error) {
       const errorMessage =

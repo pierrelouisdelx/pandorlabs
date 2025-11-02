@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ScrapedDataEntity } from '@scrapers/schemas';
 
 @Schema({ _id: false })
 class ListingConfiguration {
@@ -167,6 +166,66 @@ class PrimaryProperty {
 }
 
 @Schema({ _id: false })
+class InspectionTerms {
+  @Prop()
+  is_option_contingency?: boolean;
+
+  @Prop()
+  is_contingency?: boolean;
+}
+
+@Schema({ _id: false })
+class LeasebackTerms {
+  @Prop()
+  leaseback_period_in_days?: number;
+
+  @Prop()
+  leaseback_period_rent?: number;
+}
+
+@Schema({ _id: false })
+class FinanceTerms {
+  @Prop()
+  finance_preference?: string;
+
+  @Prop()
+  is_contingency?: boolean;
+}
+
+@Schema({ _id: false })
+class SellerTerms {
+  @Prop()
+  inspection_terms?: InspectionTerms;
+
+  @Prop()
+  leaseback_terms?: LeasebackTerms;
+
+  @Prop()
+  finance_terms?: FinanceTerms;
+
+  @Prop()
+  intent?: string;
+}
+
+@Schema({ _id: false })
+class MarketingTag {
+  @Prop()
+  tag?: string;
+}
+
+@Schema({ _id: false })
+class OpenHouse {
+  @Prop()
+  local_date?: string;
+
+  @Prop()
+  start_time?: string;
+
+  @Prop()
+  end_time?: string;
+}
+
+@Schema({ _id: false })
 class BidInstruction {
   @Prop({ type: String, required: false, default: null })
   nos_amount?: string | null;
@@ -239,6 +298,27 @@ class SellingMethodConfiguration {
 }
 
 @Schema({ _id: false })
+class CurrentHighestBid {
+  @Prop()
+  bid_amount?: number;
+
+  @Prop()
+  type?: string;
+}
+
+@Schema({ _id: false })
+class SellingMethodAttributes {
+  @Prop()
+  online_segment_type?: string;
+}
+
+@Schema({ _id: false })
+class Strategy {
+  @Prop()
+  selling_method_attributes?: SellingMethodAttributes;
+}
+
+@Schema({ _id: false })
 class SellingMethod {
   @Prop()
   __typename?: string;
@@ -249,11 +329,11 @@ class SellingMethod {
   @Prop()
   _alias_LiveAuctionSegment__configuration?: SellingMethodConfiguration;
 
-  @Prop({ type: String, required: false, default: null })
-  current_highest_bid?: string | null;
+  @Prop()
+  current_highest_bid?: CurrentHighestBid;
 }
 
-@Schema()
+@Schema({ timestamps: true })
 class BaseSchema {
   @Prop()
   listing_id!: string;
@@ -309,8 +389,8 @@ class BaseSchema {
   @Prop()
   valuation?: Valuation;
 
-  @Prop({ type: String, required: false, default: null })
-  strategy?: string | null;
+  @Prop()
+  strategy?: Strategy;
 
   @Prop()
   seller_property?: SellerProperty;
@@ -318,8 +398,8 @@ class BaseSchema {
   @Prop()
   program_configuration?: ProgramConfiguration;
 
-  @Prop({ type: String, required: false, default: null })
-  seller_terms?: string | null;
+  @Prop()
+  seller_terms?: SellerTerms;
 
   @Prop()
   primary_property?: PrimaryProperty;
@@ -327,11 +407,11 @@ class BaseSchema {
   @Prop()
   auction?: Auction;
 
-  @Prop([String])
-  marketing_tags?: string[];
+  @Prop([MarketingTag])
+  marketing_tags?: MarketingTag[];
 
-  @Prop({ type: String, required: false, default: null })
-  open_houses?: string | null;
+  @Prop([OpenHouse])
+  open_houses?: OpenHouse[];
 
   @Prop()
   listing_summary?: ListingSummary;
@@ -343,6 +423,4 @@ class BaseSchema {
   selling_method?: SellingMethod;
 }
 
-export const AuctionSchema = SchemaFactory.createForClass(
-  ScrapedDataEntity<BaseSchema>,
-);
+export const AuctionSchema = SchemaFactory.createForClass(BaseSchema);
