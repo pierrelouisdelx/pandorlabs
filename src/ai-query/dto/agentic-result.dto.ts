@@ -1,3 +1,5 @@
+import { ScraperResultDto } from './scraper-result.dto';
+
 export interface ToolCall {
   id: string;
   name: string;
@@ -20,15 +22,15 @@ export interface MessageEntry {
 
 export interface AgenticResultDto {
   success: boolean;
-  result: string;
-  metadata: {
-    iterations: number;
-    totalToolCalls: number;
-    durationMs: number;
-    provider: string;
-    model: string;
+  result: ScraperResultDto | null;
+  metadata?: {
+    iterations?: number;
+    totalToolCalls?: number;
+    durationMs?: number;
+    provider?: string;
+    model?: string;
   };
-  conversationHistory: MessageEntry[];
+  conversationHistory?: MessageEntry[];
   toolExecutions?: ToolResult[];
   error?: string;
 }

@@ -1,8 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ChatOpenAI } from '@langchain/openai';
 import { ChatAnthropic } from '@langchain/anthropic';
 import { StructuredToolInterface } from '@langchain/core/tools';
+import { ChatOpenAI } from '@langchain/openai';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 export type LLMProvider = 'openai' | 'anthropic';
 
@@ -62,7 +62,6 @@ export class LLMProviderService {
           model: this.configService.get<string>('ai.openai.model'),
           maxTokens: this.configService.get<number>('ai.openai.maxTokens'),
           timeout: this.configService.get<number>('ai.openai.timeoutMs'),
-          temperature: 0.7,
         });
         this.models.set('openai', openaiModel);
         this.logger.log('✓ OpenAI provider initialized');

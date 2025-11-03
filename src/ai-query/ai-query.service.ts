@@ -4,6 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { AgenticResultDto } from './dto/agentic-result.dto';
+import { ScraperResultDto } from './dto/scraper-result.dto';
+import { transformScraperData } from './transformers';
 
 import { createScraperTools } from '@scrapers/ai-tools/scraper-tools';
 import { CategoryOrchestrator } from '@scrapers/category-orchestrator';
@@ -54,9 +56,6 @@ export class AiQueryService {
 
       // Get LLM model and bind tools
       const model = this.llmProviderService.getModel(provider);
-      const providerConfig = this.llmProviderService.getProviderConfig(
-        provider || this.llmProviderService.getAvailableProviders()[0],
-      );
       const modelWithTools = model.bindTools(this.tools);
 
       // Initialize messages with system prompt and user query
@@ -165,21 +164,13 @@ export class AiQueryService {
         `Query processed successfully in ${durationMs}ms with ${toolExecutions.length} tool calls`,
       );
 
+      const scraperResult = this.extractScraperResult(toolExecutions);
+
       return {
         success: true,
-        result: finalResponse,
-        metadata: {
-          iterations,
-          totalToolCalls: toolExecutions.length,
-          durationMs,
-          provider: providerConfig.provider,
-          model: providerConfig.model,
-        },
-        conversationHistory,
-        toolExecutions,
+        result: scraperResult ?? null,
       };
     } catch (error) {
-      const durationMs = Date.now() - startTime;
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
 
@@ -187,18 +178,55 @@ export class AiQueryService {
 
       return {
         success: false,
-        result: '',
-        metadata: {
-          iterations: 0,
-          totalToolCalls: toolExecutions.length,
-          durationMs,
-          provider: provider || 'unknown',
-          model: 'unknown',
-        },
-        conversationHistory,
-        toolExecutions,
+        result: null,
         error: errorMessage,
       };
+    }
+  }
+
+  /**
+   * Extract and transform scraper results from tool executions
+   */
+  private extractScraperResult(
+    toolExecutions: AgenticResultDto['toolExecutions'],
+  ): ScraperResultDto | undefined {
+    if (!toolExecutions || toolExecutions.length === 0) {
+      return undefined;
+    }
+
+    // Find the fetch_scraped_data tool execution
+    const fetchExecution = toolExecutions.find(
+      (execution) => execution.toolName === 'fetch_scraped_data',
+    );
+
+    if (!fetchExecution) {
+      this.logger.debug('No fetch_scraped_data tool execution found');
+      return undefined;
+    }
+
+    try {
+      const result = JSON.parse(fetchExecution.result);
+
+      // Extract category from the tool result
+      const category = result.category;
+      const rawData = result.data;
+
+      // Transform data based on category
+      const transformedData = transformScraperData(category, rawData);
+
+      return {
+        category,
+        data: transformedData,
+        metadata: {
+          scraperId: result.scraperId || 'unknown',
+          executionTime: 0, // Not available from fetch tool
+          itemsScraped: transformedData.length,
+          timestamp: new Date(),
+        },
+      };
+    } catch (error) {
+      this.logger.error('Failed to extract scraper result', error);
+      return undefined;
     }
   }
 }

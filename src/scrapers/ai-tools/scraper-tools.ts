@@ -134,6 +134,7 @@ export const fetchScrapedDataTool = (scrapersService: ScrapersService) => {
             success: true,
             source: 'database',
             scraperId,
+            category: config.category,
             dataCount: result.count,
             data: result.data,
             pagination: result.pagination,
