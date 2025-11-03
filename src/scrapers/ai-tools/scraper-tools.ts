@@ -162,7 +162,7 @@ export const fetchScrapedDataTool = (scrapersService: ScrapersService) => {
     {
       name: 'fetch_scraped_data',
       description:
-        'Query existing scraped data from the database with optional filters. Returns up to 5 items by default. Use this to check if data is available before executing a scraper.',
+        'Retrieve scraped data from the database with optional filters. Returns up to 5 items by default. Call this ONCE to get the data, then present results to the user. Do NOT call this tool multiple times for the same query.',
       schema: z.object({
         scraperId: z
           .string()

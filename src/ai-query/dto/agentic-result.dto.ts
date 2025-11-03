@@ -23,6 +23,7 @@ export interface MessageEntry {
 export interface AgenticResultDto {
   success: boolean;
   result: ScraperResultDto | null;
+  scraperResult?: ScraperResultDto;
   metadata?: {
     iterations?: number;
     totalToolCalls?: number;
