@@ -1,33 +1,33 @@
 import {
+  BadRequestException,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
-  BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
-import { InjectModel, InjectConnection } from '@nestjs/mongoose';
-import { Model, FilterQuery, SortOrder, Connection } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, FilterQuery, Model, SortOrder } from 'mongoose';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { CategoryOrchestrator } from './category-orchestrator';
 import {
-  ScraperConfigEntity,
+  ExecuteScraperDto,
+  ExecutionResponseDto,
+  PaginatedResponseDto,
+  QueryExecutionDto,
+  QueryScraperDto,
+  ScraperResponseDto,
+} from './dto';
+import { ScraperStatus } from './enums';
+import {
   ScraperConfigDocument,
-  ScraperExecutionEntity,
+  ScraperConfigEntity,
   ScraperExecutionDocument,
+  ScraperExecutionEntity,
 } from './schemas';
 import {
   ScraperRequest,
   ScraperRequestDocument,
 } from './schemas/scraper-request.schema';
-import { CategoryOrchestrator } from './category-orchestrator';
-import {
-  QueryScraperDto,
-  QueryExecutionDto,
-  ExecuteScraperDto,
-  ScraperResponseDto,
-  ExecutionResponseDto,
-  PaginatedResponseDto,
-} from './dto';
-import { PaginationDto } from '../common/dto/pagination.dto';
-import { ScraperStatus } from './enums';
 
 @Injectable()
 export class ScrapersService {
@@ -256,28 +256,32 @@ export class ScrapersService {
       try {
         model = this.connection.model(collectionName);
       } catch {
-        model = this.connection.model(collectionName, schema);
+        // Force collection name to prevent Mongoose auto-pluralization
+        model = this.connection.model(collectionName, schema, collectionName);
       }
+
+      this.logger.log(`Collection: ${collectionName}`);
 
       // 4. Build query
       const query = filters ? { data: { $elemMatch: filters } } : {};
+
+      this.logger.log(`Query: ${JSON.stringify(query)}`);
 
       // 5. Apply pagination (default: page=1, limit=5, max=100)
       const page = pagination?.page || 1;
       const limit = Math.min(pagination?.limit || 5, 100);
       const skip = (page - 1) * limit;
 
-      // 6. Execute query
+      // 6. Execute query with proper filter application
       const [documents, totalDocs] = await Promise.all([
         model.find(query).limit(limit).skip(skip).lean(),
         model.countDocuments(query),
       ]);
 
-      // 7. Extract data from wrapper documents
-      const allData = documents.flatMap((doc: any) => doc.data || []);
+      this.logger.log(`Found ${documents.length} documents`);
 
-      // 8. Return results
-      if (allData.length === 0) {
+      // 7. Return results (documents are already the scraped data, no wrapper)
+      if (documents.length === 0) {
         return {
           success: false,
           message: `No data available for scraper: ${scraperId}`,
@@ -286,8 +290,8 @@ export class ScrapersService {
 
       return {
         success: true,
-        data: allData.slice(0, limit),
-        count: allData.length,
+        data: documents,
+        count: documents.length,
         pagination: {
           page,
           limit,

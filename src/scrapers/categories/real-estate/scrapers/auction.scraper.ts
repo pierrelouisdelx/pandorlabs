@@ -79,9 +79,9 @@ export class AuctionScraper extends BaseScraper {
 
       const data = await response.json();
 
-      /*if (data.data.seek_listings_from_filters.total_pages > maxPages) {
+      if (data.data.seek_listings_from_filters.total_pages > maxPages) {
         maxPages = data.data.seek_listings_from_filters.total_pages;
-      }*/
+      }
 
       const content = data.data.seek_listings_from_filters.content;
       if (content.length === 0) {
