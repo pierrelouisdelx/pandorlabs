@@ -10,6 +10,12 @@ import helper from '@/lib/helper'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
+import {
+  generateSoftwareApplicationSchema,
+  generateWebPageSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 import {
   Shield,
   Target,
@@ -63,8 +69,37 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+
+  const softwareAppSchema = generateSoftwareApplicationSchema(
+    siteUrl,
+    'PandorLabs',
+    'Market Intelligence Platform that delivers competitive intelligence and real-time business insights without hiring analysts or waiting weeks. Trusted by Fortune 500 companies for faster, smarter business decisions.'
+  )
+
+  const webPageSchema = generateWebPageSchema(
+    siteUrl,
+    'PandorLabs | Market Intelligence Platform',
+    'Get competitive intelligence and market data without hiring analysts or waiting weeks. Access real-time business insights from any source in minutes.'
+  )
+
   return (
     <>
+      {/* JSON-LD Schemas */}
+      <Script
+        id="software-app-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(softwareAppSchema),
+        }}
+      />
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(webPageSchema),
+        }}
+      />
       {/* Hero Section */}
       <div className="relative -mt-24 flex min-h-screen items-center bg-[url(/images/hero-section.png)] bg-cover bg-center bg-no-repeat pt-24">
         <span className="from-primary to-primary/20 absolute inset-0 z-5 bg-linear-to-t"></span>
@@ -536,77 +571,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: `{
-                "@context": "https://schema.org",
-                "@type": "SoftwareApplication",
-                "name": "PandorLabs",
-                "applicationCategory": "BusinessApplication",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "0",
-                  "priceCurrency": "USD"
-                },
-                "aggregateRating": {
-                  "@type": "AggregateRating",
-                  "ratingValue": "4.9",
-                  "ratingCount": "127"
-                },
-                "description": "Market Intelligence Platform that delivers competitive intelligence and real-time business insights without hiring analysts or waiting weeks. Trusted by Fortune 500 companies for faster, smarter business decisions.",
-                "url": "${process.env.NEXT_PUBLIC_APP_URL}",
-                "image": "${process.env.NEXT_PUBLIC_APP_URL}/images/logo.svg",
-                "publisher": {
-                  "@type": "Organization",
-                  "name": "PandorLabs",
-                  "logo": {
-                    "@type": "ImageObject",
-                    "url": "${process.env.NEXT_PUBLIC_APP_URL}/images/logo.svg"
-                  }
-                },
-                "featureList": [
-                  "Competitive pricing intelligence and market research",
-                  "Lead generation that scales with 10x efficiency",
-                  "Real-time market intelligence for executives",
-                  "E-commerce and product research insights",
-                  "Risk and compliance monitoring automation",
-                  "Investment research intelligence",
-                  "Business decision support with real-time data"
-                ],
-                "operatingSystem": "Web-based"
-            }`,
-        }}
-      />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: `{
-                "@context": "https://schema.org",
-                "@type": "Organization",
-                "name": "PandorLabs",
-                "url": "${process.env.NEXT_PUBLIC_APP_URL}",
-                "logo": "${process.env.NEXT_PUBLIC_APP_URL}/images/logo.svg",
-                "description": "Built by former AI researchers from NVIDIA, Siemens, and Palantir. World-record AI inference team with 10+ years of web scraping and reverse engineering mastery.",
-                "foundingDate": "2023",
-                "founder": {
-                  "@type": "Person",
-                  "name": "PandorLabs Team"
-                },
-                "sameAs": [
-                  "https://twitter.com/pandorlabs",
-                  "https://linkedin.com/company/pandorlabs"
-                ],
-                "contactPoint": {
-                  "@type": "ContactPoint",
-                  "contactType": "Sales",
-                  "email": "contact@pandorlabs.com"
-                }
-            }`,
-        }}
-      />
     </>
   )
 }

@@ -3,6 +3,12 @@ import '@/app/globals.css'
 import helper from '@/lib/helper'
 import { Funnel_Display } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
+import Script from 'next/script'
+import {
+  generateWebSiteSchema,
+  generateOrganizationSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 
 const font = Funnel_Display({
   subsets: ['latin'],
@@ -31,8 +37,30 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+  const websiteSchema = generateWebSiteSchema(siteUrl, 'Pandor Labs')
+  const organizationSchema = generateOrganizationSchema(siteUrl)
+
   return (
     <html lang="en">
+      <head>
+        {/* WebSite Schema for Google Sitelinks */}
+        <Script
+          id="website-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: stringifyJsonLd(websiteSchema),
+          }}
+        />
+        {/* Organization Schema */}
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: stringifyJsonLd(organizationSchema),
+          }}
+        />
+      </head>
       <body
         className="bg-primary font-funnel-display flex min-h-screen flex-col text-base/6 font-normal text-white antialiased"
         style={

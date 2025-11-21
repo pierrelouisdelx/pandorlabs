@@ -189,16 +189,6 @@ export default function TermsConditions() {
               Email address: &nbsp;
               <Link href="mailto:info@pandorlabs.com">info@pandorlabs.com</Link>
             </p>
-            <p className="mb-2.5 leading-5! lg:mb-5">
-              Contact number: &nbsp;
-              <Link href="tel:+208-555-0112">+208-555-0112</Link>
-            </p>
-            <p className="mb-2.5 leading-5! lg:mb-5">
-              Address: &nbsp;
-              <span className="text-green-light font-medium">
-                4648 Rocky Road Philadelphia PA, 1920
-              </span>
-            </p>
           </li>
         </ol>
         <div className="pt-5">

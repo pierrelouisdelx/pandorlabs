@@ -6,6 +6,13 @@ import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
+import {
+  generateServiceSchema,
+  generateBreadcrumbSchema,
+  generateWebPageSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 import {
   Shield,
   ShoppingCart,
@@ -29,8 +36,57 @@ const accentColor = '#F59E0B'
 const accentGlow = 'rgba(245, 158, 11, 0.15)'
 
 export default function ShoppingMonitoringPage() {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+
+  const serviceSchema = generateServiceSchema({
+    name: 'E-commerce Price Intelligence',
+    description:
+      'Track 30.7M+ stores with 98% AI product matching and 15-minute price updates. Monitor competitive pricing, inventory, and market trends across all major e-commerce platforms.',
+    url: `${siteUrl}/products/shopping`,
+    provider: {
+      name: 'Pandor Labs',
+      url: siteUrl,
+    },
+    serviceType: 'E-commerce Intelligence Service',
+    areaServed: 'Worldwide',
+  })
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: `${siteUrl}/products` },
+    { name: 'E-commerce Intelligence', url: `${siteUrl}/products/shopping` },
+  ])
+
+  const webPageSchema = generateWebPageSchema(
+    `${siteUrl}/products/shopping`,
+    'E-commerce Price Intelligence at Scale',
+    'Track 30.7M+ stores with 98% AI product matching and 15-minute price updates—without hiring analysts or waiting weeks'
+  )
+
   return (
     <>
+      {/* JSON-LD Schemas */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(breadcrumbSchema),
+        }}
+      />
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(webPageSchema),
+        }}
+      />
       {/* Hero Section */}
       <div className="relative -mt-24 flex min-h-screen items-center bg-gradient-to-b from-[#0A0A0A] via-amber-950/10 to-[#0A0A0A] pt-24">
         <span className="from-primary to-primary/20 absolute inset-0 z-5 bg-linear-to-t"></span>

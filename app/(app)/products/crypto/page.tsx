@@ -7,13 +7,69 @@ import { ProductHero } from '../_components/product-hero'
 import StatsCard from '@/components/custom/stats-card'
 import TechFeatureCard from '@/components/custom/tech-feature-card'
 import UseCaseCard from '@/components/custom/use-case-card'
+import Script from 'next/script'
+import {
+  generateServiceSchema,
+  generateBreadcrumbSchema,
+  generateWebPageSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 
 const accentColor = '#8B5CF6'
 const accentGlow = 'rgba(139, 92, 246, 0.15)'
 
 export default function CryptoDataPage() {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+
+  const serviceSchema = generateServiceSchema({
+    name: 'Cryptocurrency Market Data API',
+    description:
+      'Access real-time crypto prices from 400+ exchanges with <50ms latency. Track 10,000+ cryptocurrencies with institutional-grade reliability, WebSocket support, and unified multi-chain blockchain analytics.',
+    url: `${siteUrl}/products/crypto`,
+    provider: {
+      name: 'Pandor Labs',
+      url: siteUrl,
+    },
+    serviceType: 'Cryptocurrency Data Service',
+    areaServed: 'Worldwide',
+  })
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: `${siteUrl}/products` },
+    { name: 'Cryptocurrency Data API', url: `${siteUrl}/products/crypto` },
+  ])
+
+  const webPageSchema = generateWebPageSchema(
+    `${siteUrl}/products/crypto`,
+    'Cryptocurrency Market Data API',
+    'Access real-time crypto prices from 400+ exchanges with <50ms latency and institutional-grade reliability.'
+  )
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
+      {/* JSON-LD Schemas */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(breadcrumbSchema),
+        }}
+      />
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(webPageSchema),
+        }}
+      />
       <ProductHero
         product="crypto"
         headline="Cryptocurrency Market Data API"

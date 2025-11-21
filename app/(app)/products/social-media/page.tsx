@@ -28,6 +28,13 @@ import TechFeatureCard from '@/components/custom/tech-feature-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
 import Link from 'next/link'
+import Script from 'next/script'
+import {
+  generateServiceSchema,
+  generateBreadcrumbSchema,
+  generateWebPageSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 
 const accentColor = '#8B5CF6'
 const accentGlow = 'rgba(139, 92, 246, 0.15)'
@@ -236,8 +243,57 @@ const features = [
 ]
 
 export default function SocialMediaPage() {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+
+  const serviceSchema = generateServiceSchema({
+    name: 'Social Media Data API',
+    description:
+      'Access real-time social media data from 10+ platforms including Instagram, TikTok, Twitter/X, and more. Comprehensive engagement metrics, sentiment analysis, brand monitoring, and influencer analytics with sub-60-second latency.',
+    url: `${siteUrl}/products/social-media`,
+    provider: {
+      name: 'Pandor Labs',
+      url: siteUrl,
+    },
+    serviceType: 'Social Media Intelligence Service',
+    areaServed: 'Worldwide',
+  })
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: `${siteUrl}/products` },
+    { name: 'Social Media Data API', url: `${siteUrl}/products/social-media` },
+  ])
+
+  const webPageSchema = generateWebPageSchema(
+    `${siteUrl}/products/social-media`,
+    'Social Media Data API for Market Intelligence',
+    'Access real-time social media data from 10+ platforms through a single API. Monitor brand mentions, track competitors, and analyze trends with comprehensive metrics.'
+  )
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
+      {/* JSON-LD Schemas */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(breadcrumbSchema),
+        }}
+      />
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(webPageSchema),
+        }}
+      />
       {/* Vision Section */}
       <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
         <div className="container">
@@ -693,46 +749,6 @@ export default function SocialMediaPage() {
           }
         }
       `}</style>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            name: 'Social Media Data API',
-            description:
-              'Access real-time social media data from 10+ platforms including Instagram, TikTok, Twitter, and more. Comprehensive metrics, sentiment analysis, brand monitoring, and influencer analytics with 99.9% uptime.',
-            brand: {
-              '@type': 'Brand',
-              name: 'PandorLabs',
-            },
-            offers: {
-              '@type': 'Offer',
-              price: '0',
-              priceCurrency: 'USD',
-              availability: 'https://schema.org/InStock',
-              url: `${process.env.NEXT_PUBLIC_APP_URL}/products/social-media`,
-            },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.8',
-              ratingCount: '156',
-            },
-            category: 'Social Media Technology',
-            featureList: [
-              '10+ platform integrations',
-              'Real-time data streaming',
-              'Sentiment analysis',
-              'Brand monitoring',
-              'Influencer analytics',
-              'Social listening',
-              'Crisis management',
-              'Comprehensive metrics tracking',
-            ],
-          }),
-        }}
-      />
     </div>
   )
 }

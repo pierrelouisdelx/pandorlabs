@@ -6,6 +6,13 @@ import { buttonVariants } from '@/components/ui/button'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
+import {
+  generateServiceSchema,
+  generateBreadcrumbSchema,
+  generateWebPageSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 import {
   Shield,
   Target,
@@ -29,8 +36,57 @@ export const metadata: Metadata = {
 }
 
 export default function LeadGenerationPage() {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+
+  const serviceSchema = generateServiceSchema({
+    name: 'Lead Generation Data API',
+    description:
+      'Access 321M+ verified B2B contacts with 95% email accuracy and GDPR compliance. Scale your sales pipeline with real-time lead enrichment and AI-powered scoring.',
+    url: `${siteUrl}/products/lead-generation`,
+    provider: {
+      name: 'Pandor Labs',
+      url: siteUrl,
+    },
+    serviceType: 'Lead Generation Service',
+    areaServed: 'Worldwide',
+  })
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: `${siteUrl}/products` },
+    { name: 'Lead Generation API', url: `${siteUrl}/products/lead-generation` },
+  ])
+
+  const webPageSchema = generateWebPageSchema(
+    `${siteUrl}/products/lead-generation`,
+    'Lead Generation Data API | PandorLabs',
+    'Access 321M+ verified B2B contacts with 95% email accuracy and GDPR compliance. Scale your sales pipeline with real-time lead enrichment.'
+  )
+
   return (
     <>
+      {/* JSON-LD Schemas */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(breadcrumbSchema),
+        }}
+      />
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(webPageSchema),
+        }}
+      />
       {/* Vision Section */}
       <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
         <div className="container">

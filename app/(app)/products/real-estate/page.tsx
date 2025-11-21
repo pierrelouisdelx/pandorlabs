@@ -22,6 +22,13 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
+import {
+  generateServiceSchema,
+  generateBreadcrumbSchema,
+  generateWebPageSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 import StatsCard from '@/components/custom/stats-card'
 import ProcessStep from '@/components/custom/process-step'
 import UseCaseCard from '@/components/custom/use-case-card'
@@ -30,8 +37,57 @@ import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
 
 export default function RealEstatePage() {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+
+  const serviceSchema = generateServiceSchema({
+    name: 'Real Estate Market Data API',
+    description:
+      'Access comprehensive real estate market intelligence with property listings, pricing trends, market analytics, and investment insights. Real-time data for informed property decisions.',
+    url: `${siteUrl}/products/real-estate`,
+    provider: {
+      name: 'Pandor Labs',
+      url: siteUrl,
+    },
+    serviceType: 'Real Estate Intelligence Service',
+    areaServed: 'Worldwide',
+  })
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: `${siteUrl}/products` },
+    { name: 'Real Estate Data API', url: `${siteUrl}/products/real-estate` },
+  ])
+
+  const webPageSchema = generateWebPageSchema(
+    `${siteUrl}/products/real-estate`,
+    'Real Estate Market Data API',
+    'Access comprehensive real estate market intelligence with property listings, pricing trends, and investment insights.'
+  )
+
   return (
     <>
+      {/* JSON-LD Schemas */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(breadcrumbSchema),
+        }}
+      />
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(webPageSchema),
+        }}
+      />
       {/* Vision Section - Real Estate Intelligence Advantage */}
       <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
         <div className="container">

@@ -21,6 +21,13 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
+import {
+  generateServiceSchema,
+  generateBreadcrumbSchema,
+  generateWebPageSchema,
+  stringifyJsonLd,
+} from '@/lib/schema-generator'
 
 import { ProductHero } from '../_components/product-hero'
 import StatsCard from '@/components/custom/stats-card'
@@ -35,8 +42,57 @@ const accentGlow = 'rgba(70, 230, 149, 0.15)'
 const accentGradient = 'linear-gradient(135deg, #46e695 0%, #46e695 100%)'
 
 export default function AIDataPage() {
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
+
+  const serviceSchema = generateServiceSchema({
+    name: 'AI Training Datasets API',
+    description:
+      'Access 100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing. Text, vision, audio datasets with synthetic data generation for edge cases.',
+    url: `${siteUrl}/products/ai-datasets`,
+    provider: {
+      name: 'Pandor Labs',
+      url: siteUrl,
+    },
+    serviceType: 'AI Training Data Service',
+    areaServed: 'Worldwide',
+  })
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: `${siteUrl}/products` },
+    { name: 'AI Training Datasets', url: `${siteUrl}/products/ai-datasets` },
+  ])
+
+  const webPageSchema = generateWebPageSchema(
+    `${siteUrl}/products/ai-datasets`,
+    'AI Training Datasets API',
+    'Access 100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing'
+  )
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
+      {/* JSON-LD Schemas */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(breadcrumbSchema),
+        }}
+      />
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(webPageSchema),
+        }}
+      />
       {/* Enhanced Hero Section */}
       <div className="relative">
         <ProductHero
