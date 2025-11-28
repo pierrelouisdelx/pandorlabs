@@ -66,7 +66,7 @@ export default function ProductsMenu() {
             Products
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="z-50 grid w-[400px] gap-3 bg-white/10 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <ul className="z-50 grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               {products.map((product) => (
                 <ListItem
                   key={product.id}

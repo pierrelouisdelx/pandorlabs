@@ -463,12 +463,12 @@ export default function Home() {
                     <Award className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Enterprise Solutions
+                    Enterprise-Grade Solutions
                   </h3>
                 </div>
                 <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
                   Dedicated infrastructure, SLAs, and white-glove onboarding for
-                  Fortune 500 teams.
+                  enterprise teams.
                 </p>
               </div>
 
@@ -493,24 +493,18 @@ export default function Home() {
                     <CheckCircle2 className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Custom Compliance
+                    Custom Solutions
                   </h3>
                 </div>
                 <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  GDPR, CCPA, HIPAA-ready deployments. On-premise hosting
-                  available.
+                  Need something unique? Our teams and AI agents create custom
+                  solutions for your specific use cases.
                 </p>
               </div>
 
               <div className="flex gap-4">
-                <Link href="/demo" className={buttonVariants()}>
+                <Link href="/contact" className={buttonVariants()}>
                   See AI in Action
-                </Link>
-                <Link
-                  href="/pricing"
-                  className={buttonVariants({ variant: 'outline' })}
-                >
-                  View Pricing
                 </Link>
               </div>
             </div>
@@ -542,29 +536,9 @@ export default function Home() {
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/request" className={buttonVariants({ size: 'lg' })}>
+              <Link href="/contact" className={buttonVariants({ size: 'lg' })}>
                 Get Your First Dataset Free →
               </Link>
-              <Link
-                href="/demo"
-                className={buttonVariants({ variant: 'outline', size: 'lg' })}
-              >
-                See a 2-Minute Demo
-              </Link>
-            </div>
-
-            {/* Trust Elements */}
-            <div className="mb-4 space-y-3">
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <TrustBadge icon={Shield} text="SOC 2 Type II Certified" />
-                <TrustBadge icon={CheckCircle2} text="GDPR Compliant" />
-                <TrustBadge icon={Activity} text="99.9% Uptime SLA" />
-              </div>
-              <div className="text-gray space-y-1 text-sm">
-                <p>✓ Free first request—no credit card required</p>
-                <p>✓ Results in 15 minutes or less</p>
-                <p>✓ Cancel anytime, no questions asked</p>
-              </div>
             </div>
 
             <p className="text-gray text-sm">
