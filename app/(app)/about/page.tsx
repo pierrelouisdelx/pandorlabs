@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: 'About Us | PandorLabs',
     description:
       'Former AI researchers from NVIDIA, Siemens & Palantir. World-record AI inference. Expert AI agents with 10+ years web scraping mastery.',
-    url: process.env.NEXT_PUBLIC_APP_URL + '/about-us',
+    url: process.env.NEXT_PUBLIC_APP_URL + '/about',
     type: 'website',
     siteName: 'PandorLabs',
   },
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     images: [`${process.env.NEXT_PUBLIC_APP_URL}/images/og-image.jpg`],
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_APP_URL}/about-us`,
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL}/about`,
   },
 }
 
@@ -232,7 +232,7 @@ export default function AboutUs() {
                 "@context": "https://schema.org",
                 "@type": "AboutPage",
                 "name": "About Us | PandorLabs",
-                "url": "${process.env.NEXT_PUBLIC_APP_URL}/about-us",
+                "url": "${process.env.NEXT_PUBLIC_APP_URL}/about",
                 "description": "Former AI researchers from NVIDIA, Siemens & Palantir. World-record AI inference. Expert AI agents with 10+ years web scraping mastery.",
                 "inLanguage": "en",
                 "image": "${process.env.NEXT_PUBLIC_APP_URL}/images/logo.svg",
@@ -247,7 +247,7 @@ export default function AboutUs() {
                         "@type": "ListItem",
                         "position": 2,
                         "name": "About Us",
-                        "item": "${process.env.NEXT_PUBLIC_APP_URL}/about-us"
+                        "item": "${process.env.NEXT_PUBLIC_APP_URL}/about"
                     }]
                 },
                 "mainEntity": {

@@ -32,7 +32,7 @@ export default function Header() {
         </div>
         <div className="flex justify-end gap-3.5">
           <Link
-            href="/contact-us"
+            href="/contact"
             className={`${buttonVariants()} rounded-full max-lg:!hidden`}
           >
             Book a demo
@@ -50,7 +50,7 @@ export default function Header() {
               <SheetDescription hidden />
               <NavLinks />
               <Link
-                href="/contact-us"
+                href="/contact"
                 className={`${buttonVariants()} mt-6 w-full rounded-full`}
               >
                 Book a demo

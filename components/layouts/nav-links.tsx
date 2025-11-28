@@ -27,12 +27,12 @@ const NavLinks = ({ className }: any) => {
         </NavLink>
       </li>
       <li>
-        <NavLink href="/about-us" className="nav-links">
+        <NavLink href="/about" className="nav-links">
           About us
         </NavLink>
       </li>
       <li>
-        <NavLink href="/contact-us" className="nav-links">
+        <NavLink href="/contact" className="nav-links">
           Contact us
         </NavLink>
       </li>

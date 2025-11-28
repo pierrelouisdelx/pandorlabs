@@ -29,6 +29,10 @@ import {
   Award,
   CheckCircle2,
   Activity,
+  Building2,
+  Bitcoin,
+  Megaphone,
+  Brain,
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -74,13 +78,13 @@ export default function Home() {
   const softwareAppSchema = generateSoftwareApplicationSchema(
     siteUrl,
     'PandorLabs',
-    'Market Intelligence Platform that delivers competitive intelligence and real-time business insights without hiring analysts or waiting weeks. Trusted by Fortune 500 companies for faster, smarter business decisions.'
+    'Market Intelligence Platform that delivers competitive intelligence and real-time business insights without hiring analysts or waiting weeks. Trusted by Fortune 500 companies for faster, smarter business decisions.',
   )
 
   const webPageSchema = generateWebPageSchema(
     siteUrl,
     'PandorLabs | Market Intelligence Platform',
-    'Get competitive intelligence and market data without hiring analysts or waiting weeks. Access real-time business insights from any source in minutes.'
+    'Get competitive intelligence and market data without hiring analysts or waiting weeks. Access real-time business insights from any source in minutes.',
   )
 
   return (
@@ -240,7 +244,7 @@ export default function Home() {
             <ProcessStep
               number="02"
               title="We Find and Verify the Data"
-              description="Our intelligent system locates the right sources, navigates complex websites, and validates data quality—automatically. What used to take your team weeks happens in minutes."
+              description="Our AI agents locate the right sources, navigate complex websites, and validate data quality—automatically. What used to take your team weeks happens in minutes."
             />
             <ProcessStep
               number="03"
@@ -281,16 +285,15 @@ export default function Home() {
               </span>
             </h2>
             <p className="text-gray mx-auto max-w-2xl">
-              Our adaptive scraping infrastructure powers diverse applications
-              across industries.
+              Our AI agents adapt to any applications across any industry.
             </p>
           </div>
 
           <div className="mb-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <UseCaseCard
-              icon={Target}
-              title="Competitive Pricing Intelligence"
-              description="Know exactly what your competitors are charging—before you lose the deal. Track pricing changes daily and adjust your strategy in real-time. Sales teams report 15-25% higher win rates with real-time pricing data."
+              icon={Building2}
+              title="Real Estate Market Intelligence"
+              description="Find the best properties for sale in any market. Our AI agents analyze market trends, property values, and sales data to help you make the best investment decisions."
             />
             <UseCaseCard
               icon={Users}
@@ -298,24 +301,24 @@ export default function Home() {
               description="Generate qualified leads 10x faster than manual research. Our clients fill their pipeline with decision-makers while competitors waste time on spreadsheets. Reduce cost-per-lead by 60% and accelerate sales cycles by 40%."
             />
             <UseCaseCard
-              icon={Search}
-              title="Market Intelligence for Executives"
-              description="Make strategic decisions backed by real-time market data. See what customers say about your brand, competitors, and industry trends—updated hourly. Executive teams report 30% faster go-to-market decisions."
-            />
-            <UseCaseCard
               icon={Scale}
               title="E-commerce & Product Research"
               description="Track competitor products, pricing, and reviews across all major retailers. Identify trending products and pricing opportunities before your competition. Merchants increase profit margins by 18% on average."
             />
             <UseCaseCard
-              icon={Shield}
-              title="Risk & Compliance Monitoring"
-              description="Stay ahead of regulatory changes and security threats with 24/7 automated monitoring. Reduce compliance review time by 75% and catch emerging risks before they impact your business."
+              icon={Bitcoin}
+              title="Crypto Data Intelligence"
+              description="Track the latest news and insights about the crypto market. Our AI agents analyze market trends, price movements, and news to help you make the best investment decisions."
             />
             <UseCaseCard
-              icon={Radio}
-              title="Investment Research Intelligence"
-              description="Access market data your competitors don't have. Track competitor moves, industry trends, and emerging opportunities in real-time. Investment teams make faster, more confident decisions with better data."
+              icon={Brain}
+              title="AI Datasets"
+              description="Create custom AI datasets from millions of sources. Our AI agents help you find the right sources and create the perfect dataset for your use case."
+            />
+            <UseCaseCard
+              icon={Megaphone}
+              title="Social Media Intelligence"
+              description="Get real-time insights from social media. Our AI agents analyze social media posts, comments, and trends to help you make the best decisions."
             />
           </div>
 

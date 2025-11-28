@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: 'Contact Us | PandorLabs',
     description:
       'Get in touch with PandorLabs to discuss your web intelligence and data extraction challenges. Our team specializes in solving complex automation problems.',
-    url: process.env.NEXT_PUBLIC_APP_URL + '/contact-us',
+    url: process.env.NEXT_PUBLIC_APP_URL + '/contact',
     type: 'website',
     siteName: 'PandorLabs',
   },
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     images: [`${process.env.NEXT_PUBLIC_APP_URL}/images/og-image.jpg`],
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_APP_URL}/contact-us`,
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL}/contact`,
   },
 }
 export default function ContactUs() {
@@ -109,7 +109,7 @@ export default function ContactUs() {
                 "@context": "https://schema.org",
                 "@type": "ContactPage",
                 "name": "Contact Us | PandorLabs",
-                "url": "${process.env.NEXT_PUBLIC_APP_URL}/contact-us",
+                "url": "${process.env.NEXT_PUBLIC_APP_URL}/contact",
                 "description": "Get in touch with PandorLabs to discuss your web intelligence and data extraction challenges. Our team specializes in solving complex automation problems.",
                 "inLanguage": "en",
                 "image": "${process.env.NEXT_PUBLIC_APP_URL}/images/logo.svg",
@@ -137,7 +137,7 @@ export default function ContactUs() {
                         "@type": "ListItem",
                         "position": 2,
                         "name": "Contact Us",
-                        "item": "${process.env.NEXT_PUBLIC_APP_URL}/contact-us"
+                        "item": "${process.env.NEXT_PUBLIC_APP_URL}/contact"
                     }]
                 }
             }`,

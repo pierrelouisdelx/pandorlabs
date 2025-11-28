@@ -21,12 +21,12 @@ export default function Footer() {
           </div>
           <ul className="mt-10 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-10">
             <li>
-              <Link href="/about-us" className="hover:text-green">
+              <Link href="/about" className="hover:text-green">
                 About us
               </Link>
             </li>
             <li>
-              <Link href="/contact-us" className="hover:text-green">
+              <Link href="/contact" className="hover:text-green">
                 Contact us
               </Link>
             </li>
