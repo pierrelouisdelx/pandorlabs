@@ -4,7 +4,6 @@ import UseCaseCard from '@/components/custom/use-case-card'
 import TechFeatureCard from '@/components/custom/tech-feature-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
-import Image from 'next/image'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -15,7 +14,6 @@ import {
 } from '@/lib/schema-generator'
 import {
   Shield,
-  ShoppingCart,
   TrendingDown,
   TrendingUp,
   Zap,
@@ -31,9 +29,6 @@ import {
   Bell,
   Package,
 } from 'lucide-react'
-
-const accentColor = '#F59E0B'
-const accentGlow = 'rgba(245, 158, 11, 0.15)'
 
 export default function ShoppingMonitoringPage() {
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
@@ -60,7 +55,7 @@ export default function ShoppingMonitoringPage() {
   const webPageSchema = generateWebPageSchema(
     `${siteUrl}/products/shopping`,
     'E-commerce Price Intelligence at Scale',
-    'Track 30.7M+ stores with 98% AI product matching and 15-minute price updates—without hiring analysts or waiting weeks'
+    'Track 30.7M+ stores with 98% AI product matching and 15-minute price updates—without hiring analysts or waiting weeks',
   )
 
   return (
@@ -88,79 +83,247 @@ export default function ShoppingMonitoringPage() {
         }}
       />
       {/* Hero Section */}
-      <div className="relative -mt-24 flex min-h-screen items-center bg-gradient-to-b from-[#0A0A0A] via-amber-950/10 to-[#0A0A0A] pt-24">
-        <span className="from-primary to-primary/20 absolute inset-0 z-5 bg-linear-to-t"></span>
-        <div className="cursor-effect-section relative z-5 container w-full py-20">
-          <div className="mx-auto max-w-4xl text-center">
-            <h1 className="relative mb-6 text-[32px]/tight font-bold tracking-tight sm:text-5xl lg:text-7xl/tight">
-              E-commerce Price <br />
-              <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent drop-shadow-lg">
-                Intelligence at Scale
-              </span>
-            </h1>
-            <p className="text-gray mx-auto mb-10 max-w-2xl text-lg leading-relaxed sm:text-xl">
-              Track 30.7M+ stores with 98% AI product matching and 15-minute
-              price updates—without hiring analysts or waiting weeks
-            </p>
+      <div className="from-primary via-primary/95 to-background relative -mt-24 flex min-h-screen items-center overflow-hidden bg-linear-to-b pt-24">
+        <div className="container w-full py-20">
+          <div className="flex flex-col gap-12 lg:flex-row lg:gap-20">
+            {/* Left Column - Content */}
+            <div className="w-full lg:w-1/2">
+              <div className="mx-auto max-w-4xl text-center lg:mx-0 lg:text-left">
+                <h1 className="relative mb-6 text-[32px]/tight font-bold tracking-tight sm:text-5xl lg:text-7xl/tight">
+                  E-commerce Price <br />
+                  <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent drop-shadow-lg">
+                    Intelligence at Scale
+                  </span>
+                </h1>
+                <p className="text-gray mx-auto mb-10 max-w-2xl text-lg leading-relaxed sm:text-xl lg:mx-0">
+                  Track 30.7M+ stores with 98% AI product matching and 15-minute
+                  price updates—without hiring analysts or waiting weeks
+                </p>
 
-            {/* Value Props */}
-            <ul className="mx-auto mb-10 max-w-2xl space-y-3 text-left">
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
-                <span className="text-white/80">
-                  30.7M+ stores monitored across 50+ marketplaces
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
-                <span className="text-white/80">
-                  98% AI-powered product matching accuracy
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
-                <span className="text-white/80">
-                  15-minute price update frequency
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
-                <span className="text-white/80">
-                  Automated MAP violation alerts and brand protection
-                </span>
-              </li>
-            </ul>
+                {/* Value Props */}
+                <ul className="mx-auto mb-10 max-w-2xl space-y-3 text-left lg:mx-0">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
+                    <span className="text-white/80">
+                      30.7M+ stores monitored across 50+ marketplaces
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
+                    <span className="text-white/80">
+                      98% AI-powered product matching accuracy
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
+                    <span className="text-white/80">
+                      15-minute price update frequency
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-1 h-5 w-5 text-amber-400" />
+                    <span className="text-white/80">
+                      Automated MAP violation alerts and brand protection
+                    </span>
+                  </li>
+                </ul>
 
-            {/* CTA Buttons */}
-            <div className="mb-10 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/request" className={buttonVariants({ size: 'lg' })}>
-                Start Free Trial →
-              </Link>
-              <Link
-                href="/demo"
-                className={buttonVariants({ variant: 'outline', size: 'lg' })}
-              >
-                View Documentation
-              </Link>
+                {/* CTA Buttons */}
+                <div className="mb-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+                  <Link
+                    href="/request"
+                    className={buttonVariants({ size: 'lg' })}
+                  >
+                    Start Free Trial →
+                  </Link>
+                  <Link
+                    href="/demo"
+                    className={buttonVariants({
+                      variant: 'outline',
+                      size: 'lg',
+                    })}
+                  >
+                    View Documentation
+                  </Link>
+                </div>
+
+                {/* Trust Badges */}
+                <div className="mt-20">
+                  <p className="mb-8 text-center text-lg font-semibold text-white/90 uppercase lg:text-left">
+                    Trusted by Leading E-commerce Brands
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center gap-12 lg:justify-start lg:gap-16">
+                    <div className="flex items-center gap-2 text-white/60">
+                      <Zap className="h-5 w-5 text-amber-400" />
+                      <span className="font-medium">15-min Updates</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/60">
+                      <Shield className="h-5 w-5 text-amber-400" />
+                      <span className="font-medium">Enterprise Security</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/60">
+                      <TrendingUp className="h-5 w-5 text-amber-400" />
+                      <span className="font-medium">Real-time Alerts</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Trust Badges */}
-            <div className="mt-20">
-              <p className="mb-8 text-center text-lg font-semibold text-white/90 uppercase">
-                Trusted by Leading E-commerce Brands
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-12 lg:gap-16">
-                <div className="flex items-center gap-2 text-white/60">
-                  <Zap className="h-5 w-5 text-amber-400" />
-                  <span className="font-medium">15-min Updates</span>
-                </div>
-                <div className="flex items-center gap-2 text-white/60">
-                  <Shield className="h-5 w-5 text-amber-400" />
-                  <span className="font-medium">Enterprise Security</span>
-                </div>
-                <div className="flex items-center gap-2 text-white/60">
-                  <TrendingUp className="h-5 w-5 text-amber-400" />
-                  <span className="font-medium">Real-time Alerts</span>
+            {/* Right Column - Animated Price Trend Visualization */}
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+              <div className="relative aspect-square w-full max-w-md">
+                <div className="relative h-full w-full rounded-2xl border border-amber-500/20 bg-linear-to-b from-amber-500/10 to-transparent p-8">
+                  {/* Chart Header */}
+                  <div className="mb-6 flex items-center justify-between">
+                    <div>
+                      <div className="mb-1 flex items-center gap-2">
+                        <TrendingDown className="h-5 w-5 text-amber-400" />
+                        <span className="font-semibold">
+                          Real-Time Price Monitoring
+                        </span>
+                      </div>
+                      <div className="text-xs text-white/60">
+                        30.7M+ Stores Tracked
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-amber-400">
+                        -23%
+                      </div>
+                      <div className="text-xs text-white/60">Avg Savings</div>
+                    </div>
+                  </div>
+
+                  {/* Animated Price Chart */}
+                  <div className="relative h-64">
+                    <svg
+                      className="h-full w-full"
+                      viewBox="0 0 400 200"
+                      preserveAspectRatio="none"
+                    >
+                      <defs>
+                        <linearGradient
+                          id="chartGradient"
+                          x1="0%"
+                          y1="0%"
+                          x2="0%"
+                          y2="100%"
+                        >
+                          <stop offset="0%" stopColor="rgba(245,158,11,0.4)" />
+                          <stop
+                            offset="100%"
+                            stopColor="rgba(245,158,11,0)"
+                          />
+                        </linearGradient>
+                        <linearGradient
+                          id="lineGradient"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="0%"
+                        >
+                          <stop offset="0%" stopColor="rgba(245,158,11,0.6)" />
+                          <stop offset="50%" stopColor="rgba(245,158,11,1)" />
+                          <stop
+                            offset="100%"
+                            stopColor="rgba(245,158,11,0.6)"
+                          />
+                        </linearGradient>
+                      </defs>
+
+                      {/* Competitor Price Lines */}
+                      <path
+                        d="M 0 120 L 50 110 L 100 115 L 150 105 L 200 110 L 250 100 L 300 95 L 350 90 L 400 85 L 400 200 L 0 200 Z"
+                        fill="rgba(245,158,11,0.1)"
+                        className="competitor-line-1"
+                      />
+                      <path
+                        d="M 0 120 L 50 110 L 100 115 L 150 105 L 200 110 L 250 100 L 300 95 L 350 90 L 400 85"
+                        stroke="rgba(245,158,11,0.4)"
+                        strokeWidth="2"
+                        fill="none"
+                        strokeDasharray="5,5"
+                      />
+
+                      {/* Your Price Line (Animated) */}
+                      <path
+                        d="M 0 100 L 50 80 L 100 90 L 150 70 L 200 85 L 250 60 L 300 75 L 350 50 L 400 65 L 400 200 L 0 200 Z"
+                        fill="url(#chartGradient)"
+                        className="price-area"
+                      />
+                      <path
+                        d="M 0 100 L 50 80 L 100 90 L 150 70 L 200 85 L 250 60 L 300 75 L 350 50 L 400 65"
+                        stroke="url(#lineGradient)"
+                        strokeWidth="3"
+                        fill="none"
+                        className="price-line"
+                      />
+
+                      {/* Animated Data Points */}
+                      <circle
+                        cx="100"
+                        cy="90"
+                        r="4"
+                        fill="#F59E0B"
+                        className="data-point"
+                        style={{ animationDelay: '0s' }}
+                      />
+                      <circle
+                        cx="200"
+                        cy="85"
+                        r="4"
+                        fill="#F59E0B"
+                        className="data-point"
+                        style={{ animationDelay: '0.5s' }}
+                      />
+                      <circle
+                        cx="300"
+                        cy="75"
+                        r="4"
+                        fill="#F59E0B"
+                        className="data-point"
+                        style={{ animationDelay: '1s' }}
+                      />
+                    </svg>
+
+                    {/* Price Alert Indicators */}
+                    <div
+                      className="alert-pulse absolute"
+                      style={{ left: '25%', top: '40%' }}
+                    >
+                      <div className="h-3 w-3 rounded-full bg-amber-400"></div>
+                    </div>
+                    <div
+                      className="alert-pulse absolute"
+                      style={{ left: '62.5%', top: '30%', animationDelay: '1s' }}
+                    >
+                      <div className="h-3 w-3 rounded-full bg-amber-400"></div>
+                    </div>
+                  </div>
+
+                  {/* Time Labels */}
+                  <div className="mt-4 flex justify-between text-xs text-white/60">
+                    <span>Jan</span>
+                    <span>Mar</span>
+                    <span>May</span>
+                    <span>Jul</span>
+                    <span>Sep</span>
+                  </div>
+
+                  {/* Legend */}
+                  <div className="mt-6 flex items-center justify-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-8 rounded-full bg-amber-400"></div>
+                      <span className="text-xs text-white/60">Your Price</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-8 rounded-full border-2 border-dashed border-amber-400/40"></div>
+                      <span className="text-xs text-white/60">
+                        Competitors
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

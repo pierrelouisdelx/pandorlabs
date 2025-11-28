@@ -251,3 +251,62 @@ header.scrolled {
 .plans-features-table tbody td {
   @apply text-gray px-5 py-4 text-center font-normal first:px-10 first:text-left first:text-white;
 }
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Shopping Page Price Chart Animations */
+@keyframes pulse-scale {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@keyframes draw-line {
+  0% {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.price-line {
+  animation: draw-line 2s ease-out forwards;
+}
+
+.price-area {
+  animation: fadeIn 2s ease-out forwards;
+}
+
+.data-point {
+  animation: pulse-scale 2s ease-in-out infinite;
+}
+
+.alert-pulse {
+  animation: pulse-scale 1.5s ease-in-out infinite;
+}
