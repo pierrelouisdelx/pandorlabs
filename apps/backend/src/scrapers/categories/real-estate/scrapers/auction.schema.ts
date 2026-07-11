@@ -1,0 +1,426 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+@Schema({ _id: false })
+class ListingConfiguration {
+  @Prop()
+  product_type?: string;
+
+  @Prop()
+  is_reserve_displayed?: boolean;
+
+  @Prop({ type: String, required: false, default: null })
+  broker_commission?: string | null;
+
+  @Prop({ type: String, required: false, default: null })
+  financing_available?: string | null;
+
+  @Prop()
+  buyer_premium_available?: boolean;
+
+  @Prop()
+  interior_access_allowed?: boolean;
+
+  @Prop()
+  occupancy_status?: string;
+
+  @Prop()
+  asset_type?: string;
+
+  @Prop()
+  is_first_look_enabled?: boolean;
+
+  @Prop()
+  is_direct_offer_enabled?: boolean;
+
+  @Prop()
+  is_third_party_online?: boolean;
+}
+
+@Schema({ _id: false })
+class AttributionSource {
+  @Prop()
+  origin_code?: string;
+}
+
+@Schema({ _id: false })
+class ExternalIdentifier {
+  @Prop()
+  data_source?: string;
+
+  @Prop()
+  external_identifier?: string;
+}
+
+@Schema({ _id: false })
+class Venue {
+  @Prop()
+  venue_type?: string;
+}
+
+@Schema({ _id: false })
+class Event {
+  @Prop()
+  event_code?: string;
+
+  @Prop()
+  trustee_sale?: boolean;
+}
+
+@Schema({ _id: false })
+class Valuation {
+  @Prop()
+  seller_current_value_amount?: number;
+}
+
+@Schema({ _id: false })
+class SellerProperty {
+  @Prop()
+  street_description?: string;
+
+  @Prop()
+  municipality?: string;
+
+  @Prop()
+  country_primary_subdivision?: string;
+
+  @Prop()
+  country_secondary_subdivision?: string;
+
+  @Prop()
+  postal_code?: string;
+}
+
+@Schema({ _id: false })
+class ProgramConfiguration {
+  @Prop()
+  program_enrollment_code?: string;
+}
+
+@Schema({ _id: false })
+class Coordinates {
+  @Prop()
+  lon?: number;
+
+  @Prop()
+  lat?: number;
+}
+
+@Schema({ _id: false })
+class Address {
+  @Prop()
+  coordinates?: Coordinates;
+}
+
+@Schema({ _id: false })
+class PropertySummary {
+  @Prop()
+  total_bedrooms?: number;
+
+  @Prop()
+  total_bathrooms?: number;
+
+  @Prop()
+  square_footage?: number;
+
+  @Prop()
+  lot_size?: number;
+
+  @Prop()
+  year_built?: number;
+
+  @Prop()
+  valuation?: number;
+
+  @Prop()
+  structure_type_code?: string;
+
+  @Prop()
+  structure_type_group?: string;
+
+  @Prop()
+  address?: Address;
+}
+
+@Schema({ _id: false })
+class CurrentUserTrackingState {
+  @Prop()
+  is_seen?: boolean;
+
+  @Prop()
+  is_updated?: boolean;
+}
+
+@Schema({ _id: false })
+class PrimaryProperty {
+  @Prop()
+  property_id?: string;
+
+  @Prop()
+  summary?: PropertySummary;
+
+  @Prop()
+  is_newly_listed?: boolean;
+
+  @Prop()
+  current_user_tracking_state?: CurrentUserTrackingState;
+}
+
+@Schema({ _id: false })
+class InspectionTerms {
+  @Prop()
+  is_option_contingency?: boolean;
+
+  @Prop()
+  is_contingency?: boolean;
+}
+
+@Schema({ _id: false })
+class LeasebackTerms {
+  @Prop()
+  leaseback_period_in_days?: number;
+
+  @Prop()
+  leaseback_period_rent?: number;
+}
+
+@Schema({ _id: false })
+class FinanceTerms {
+  @Prop()
+  finance_preference?: string;
+
+  @Prop()
+  is_contingency?: boolean;
+}
+
+@Schema({ _id: false })
+class SellerTerms {
+  @Prop()
+  inspection_terms?: InspectionTerms;
+
+  @Prop()
+  leaseback_terms?: LeasebackTerms;
+
+  @Prop()
+  finance_terms?: FinanceTerms;
+
+  @Prop()
+  intent?: string;
+}
+
+@Schema({ _id: false })
+class MarketingTag {
+  @Prop()
+  tag?: string;
+}
+
+@Schema({ _id: false })
+class OpenHouse {
+  @Prop()
+  local_date?: string;
+
+  @Prop()
+  start_time?: string;
+
+  @Prop()
+  end_time?: string;
+}
+
+@Schema({ _id: false })
+class BidInstruction {
+  @Prop({ type: String, required: false, default: null })
+  nos_amount?: string | null;
+}
+
+@Schema({ _id: false })
+class Auction {
+  @Prop()
+  start_date?: string;
+
+  @Prop({ type: String, required: false, default: null })
+  end_date?: string | null;
+
+  @Prop({ type: String, required: false, default: null })
+  starting_bid?: string | null;
+
+  @Prop()
+  is_online?: boolean;
+
+  @Prop()
+  visible_auction_start_date_time?: string;
+
+  @Prop()
+  bid_instruction?: BidInstruction;
+}
+
+@Schema({ _id: false })
+class ListingSummary {
+  @Prop()
+  is_remote_bid_enabled?: boolean;
+
+  @Prop()
+  is_remote_before_and_during_auction_enabled?: boolean;
+
+  @Prop()
+  show_opening_bid?: boolean;
+}
+
+@Schema({ _id: false })
+class CollateralSummaryItem {
+  @Prop()
+  estimated?: number;
+
+  @Prop()
+  low?: number;
+
+  @Prop()
+  high?: number;
+
+  @Prop()
+  type?: string;
+}
+
+@Schema({ _id: false })
+class Collateral {
+  @Prop([CollateralSummaryItem])
+  summary?: CollateralSummaryItem[];
+}
+
+@Schema({ _id: false })
+class ExternalInformation {
+  @Prop()
+  collateral?: Collateral;
+}
+
+@Schema({ _id: false })
+class SellingMethodConfiguration {
+  @Prop()
+  state_deposit_rule?: string;
+}
+
+@Schema({ _id: false })
+class CurrentHighestBid {
+  @Prop()
+  bid_amount?: number;
+
+  @Prop()
+  type?: string;
+}
+
+@Schema({ _id: false })
+class SellingMethodAttributes {
+  @Prop()
+  online_segment_type?: string;
+}
+
+@Schema({ _id: false })
+class Strategy {
+  @Prop()
+  selling_method_attributes?: SellingMethodAttributes;
+}
+
+@Schema({ _id: false })
+class SellingMethod {
+  @Prop()
+  __typename?: string;
+
+  @Prop({ type: String, required: false, default: null })
+  _alias_LiveAuctionSegment__starting_bid_amount?: string | null;
+
+  @Prop()
+  _alias_LiveAuctionSegment__configuration?: SellingMethodConfiguration;
+
+  @Prop()
+  current_highest_bid?: CurrentHighestBid;
+}
+
+@Schema({ timestamps: true })
+class BaseSchema {
+  @Prop()
+  listing_id!: string;
+
+  @Prop()
+  urn!: string;
+
+  @Prop()
+  listing_status_group!: string;
+
+  @Prop()
+  listing_status?: string;
+
+  @Prop()
+  listing_status_label?: string;
+
+  @Prop()
+  primary_photo?: string;
+
+  @Prop()
+  primary_property_id?: string;
+
+  @Prop()
+  listing_photos_count?: number;
+
+  @Prop()
+  listing_page_path?: string;
+
+  @Prop({ type: String, required: false, default: null })
+  reserve_price?: string | null;
+
+  @Prop({ type: String, required: false, default: null })
+  is_hot?: string | null;
+
+  @Prop([String])
+  formatted_address?: string[];
+
+  @Prop()
+  listing_configuration?: ListingConfiguration;
+
+  @Prop()
+  attribution_source?: AttributionSource;
+
+  @Prop([ExternalIdentifier])
+  external_identifiers?: ExternalIdentifier[];
+
+  @Prop()
+  venue?: Venue;
+
+  @Prop()
+  event?: Event;
+
+  @Prop()
+  valuation?: Valuation;
+
+  @Prop()
+  strategy?: Strategy;
+
+  @Prop()
+  seller_property?: SellerProperty;
+
+  @Prop()
+  program_configuration?: ProgramConfiguration;
+
+  @Prop()
+  seller_terms?: SellerTerms;
+
+  @Prop()
+  primary_property?: PrimaryProperty;
+
+  @Prop()
+  auction?: Auction;
+
+  @Prop([MarketingTag])
+  marketing_tags?: MarketingTag[];
+
+  @Prop([OpenHouse])
+  open_houses?: OpenHouse[];
+
+  @Prop()
+  listing_summary?: ListingSummary;
+
+  @Prop()
+  external_information?: ExternalInformation;
+
+  @Prop()
+  selling_method?: SellingMethod;
+}
+
+export const AuctionSchema = SchemaFactory.createForClass(BaseSchema);
