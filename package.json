@@ -18,7 +18,8 @@
     "db:reset": "docker compose down -v && docker compose up -d",
     "db:generate": "pnpm --filter @pandorlabs/db generate",
     "db:migrate": "pnpm --filter @pandorlabs/db migrate",
-    "db:studio": "pnpm --filter @pandorlabs/db studio"
+    "db:studio": "pnpm --filter @pandorlabs/db studio",
+    "db:seed-admin": "pnpm --filter @pandorlabs/web seed:admin"
   },
   "devDependencies": {
     "prettier": "^3.7.4",

@@ -8,6 +8,13 @@
       "when": 1783773005581,
       "tag": "0000_stiff_greymalkin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1783775048969,
+      "tag": "0001_yielding_rhino",
+      "breakpoints": true
     }
   ]
 }

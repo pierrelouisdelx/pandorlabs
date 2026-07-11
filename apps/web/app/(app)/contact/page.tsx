@@ -1,11 +1,9 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import helper from '@/lib/helper'
-import { ArrowUpRight, Send } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
+
+import ContactForm from './contact-form'
 
 export const metadata: Metadata = {
   title: 'Contact Us | PandorLabs',
@@ -83,22 +81,7 @@ export default function ContactUs() {
             <h3 className="mb-8 text-xl font-semibold tracking-widest">
               Contact Us
             </h3>
-            <form className="space-y-5 lg:space-y-8">
-              <Input type="text" className="" placeholder="Name" />
-              <Input type="text" className="form-input" placeholder="Email" />
-              <Input type="text" className="form-input" placeholder="Phone" />
-              <Textarea
-                className="form-textarea"
-                placeholder="Message"
-                rows={5}
-              ></Textarea>
-              <div className="text-right">
-                <Button type="submit" className="hover:[&_svg]:-rotate-45">
-                  Send Message
-                  <Send className="size-4 shrink-0 duration-300" />
-                </Button>
-              </div>
-            </form>
+            <ContactForm />
           </div>
         </div>
       </div>
