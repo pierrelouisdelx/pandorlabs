@@ -8,6 +8,8 @@
   },
   "scripts": {
     "dev": "turbo run dev",
+    "tilt": "tilt up",
+    "tilt:down": "tilt down",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",

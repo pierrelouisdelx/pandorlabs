@@ -4,6 +4,10 @@
 #   postgres — frontend: Drizzle / Better Auth
 #   mongodb  — backend: scraper configs, executions, scraped data
 #   redis    — backend: caching
+#
+# Under `tilt up` the host ports come from .env.tilt, which scripts/tilt-ports.mjs
+# regenerates each run by probing for free ports. The defaults below only apply
+# when compose is driven directly (`pnpm db:up`).
 services:
   postgres:
     image: postgres:17-alpine
