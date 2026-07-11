@@ -32,8 +32,8 @@ if (!email || !password) {
 }
 // Must match `emailAndPassword.minPasswordLength` in lib/auth.ts, otherwise the
 // seeded password would be rejected at sign-in.
-if (password.length < 12) {
-  throw new Error('ADMIN_PASSWORD must be at least 12 characters')
+if (password.length < 8) {
+  throw new Error('ADMIN_PASSWORD must be at least 8 characters')
 }
 
 const hash = await hashPassword(password)

@@ -3,12 +3,16 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
 
-import { appUrl, serverEnv } from './env'
+import { appUrl, isProduction, serverEnv } from './env'
 
 export const auth = betterAuth({
   appName: 'PandorLabs',
   baseURL: appUrl,
   secret: serverEnv.betterAuthSecret,
+  // Origins are checked against `baseURL`, so a dev server that falls back to
+  // another port (3000 taken -> 3001) would 403 every request. Trust any origin
+  // in development; production keeps the strict `baseURL`-only check.
+  trustedOrigins: isProduction ? [] : ['*'],
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema: { user, session, account, verification },
@@ -18,7 +22,7 @@ export const auth = betterAuth({
     // Accounts are created only by `pnpm db:seed-admin`. Leaving the public
     // sign-up endpoint open would let anyone create rows in `user`.
     disableSignUp: true,
-    minPasswordLength: 12,
+    minPasswordLength: 8,
   },
   user: {
     additionalFields: {

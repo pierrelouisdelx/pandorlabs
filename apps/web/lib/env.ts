@@ -32,6 +32,8 @@ export const serverEnv = {
 
 export const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 
+export const isProduction = process.env.NODE_ENV === 'production'
+
 /**
  * Sender identities an admin may reply from, e.g.
  *   `PandorLabs <info@pandorlabs.com>,Sales <sales@pandorlabs.com>`
