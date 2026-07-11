@@ -19,6 +19,11 @@ out/
 
 # production
 build
+dist
+
+# logs
+logs
+*.log
 
 # turbo
 .turbo

@@ -1,10 +1,6 @@
 /**
- * Status states for scraper instances
+ * Status states for scraper executions.
+ *
+ * Declared in @pandorlabs/types so the frontend renders off the same values.
  */
-export enum ScraperStatus {
-  IDLE = 'idle',
-  RUNNING = 'running',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  CANCELLED = 'cancelled',
-}
+export { ScraperStatus } from '@pandorlabs/types';

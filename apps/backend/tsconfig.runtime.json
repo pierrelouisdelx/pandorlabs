@@ -1,0 +1,18 @@
+{
+  // Runtime-only path mapping for `node -r tsconfig-paths/register dist/main`.
+  //
+  // tsc does not rewrite path aliases, so the compiled output still contains
+  // bare `require('@scrapers/...')` calls. These are the same aliases as
+  // tsconfig.json, rebased from src/ onto dist/. Keep the two in sync.
+  "compilerOptions": {
+    "baseUrl": "./dist",
+    "paths": {
+      "@common/*": ["common/*"],
+      "@config/*": ["config/*"],
+      "@scrapers/*": ["scrapers/*"],
+      "@ai-query/*": ["ai-query/*"],
+      "@scraper-builder/*": ["scraper-builder/*"],
+      "@users/*": ["users/*"]
+    }
+  }
+}

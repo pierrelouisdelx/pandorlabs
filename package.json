@@ -12,6 +12,7 @@
     "start": "turbo run start",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "format": "prettier --write .",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
@@ -19,7 +20,7 @@
     "db:generate": "pnpm --filter @pandorlabs/db generate",
     "db:migrate": "pnpm --filter @pandorlabs/db migrate",
     "db:studio": "pnpm --filter @pandorlabs/db studio",
-    "db:seed-admin": "pnpm --filter @pandorlabs/web seed:admin"
+    "db:seed-admin": "pnpm --filter @pandorlabs/frontend seed:admin"
   },
   "devDependencies": {
     "prettier": "^3.7.4",

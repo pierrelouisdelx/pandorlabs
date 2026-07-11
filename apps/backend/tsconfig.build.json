@@ -1,4 +1,20 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  "compilerOptions": {
+    // Pin the root to src. Without it tsc infers the common root across
+    // src/ and scripts/, which lands the entrypoint at dist/src/main.js and
+    // breaks `node dist/main`.
+    "rootDir": "./src",
+    // Keep the incremental state inside dist so nest's deleteOutDir clears it.
+    // A tsbuildinfo that outlives dist makes tsc skip emit entirely.
+    "tsBuildInfoFile": "./dist/tsconfig.build.tsbuildinfo"
+  },
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist",
+    "scripts",
+    "**/*spec.ts",
+    "**/*.test.ts"
+  ]
 }

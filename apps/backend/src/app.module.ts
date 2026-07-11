@@ -14,7 +14,9 @@ import { configurations, validationSchema } from './config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: configurations,
-      envFilePath: '.env',
+      // Env lives at the monorepo root so one file serves both apps. Paths are
+      // resolved from cwd, which is apps/backend. A local .env still wins.
+      envFilePath: ['.env', '../../.env'],
       validationSchema: validationSchema,
       validationOptions: {
         allowUnknown: true,

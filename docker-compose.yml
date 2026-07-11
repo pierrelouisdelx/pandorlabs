@@ -1,3 +1,9 @@
+# Backing services for local development. The apps themselves run on the host
+# via `pnpm dev` (turbo), so nothing here builds application code.
+#
+#   postgres — frontend: Drizzle / Better Auth
+#   mongodb  — backend: scraper configs, executions, scraped data
+#   redis    — backend: caching
 services:
   postgres:
     image: postgres:17-alpine
@@ -18,5 +24,40 @@ services:
       timeout: 5s
       retries: 5
 
+  mongodb:
+    image: mongo:8
+    container_name: pandorlabs-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: pandorlabs
+    ports:
+      - '${MONGODB_PORT:-27017}:27017'
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  redis:
+    image: redis:8-alpine
+    container_name: pandorlabs-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    # Host port 6381: 6379 is taken by another local project, same as Postgres.
+    ports:
+      - '${REDIS_PORT:-6381}:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
 volumes:
   postgres-data:
+  mongodb-data:
+  redis-data:

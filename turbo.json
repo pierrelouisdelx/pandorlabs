@@ -5,6 +5,7 @@
     "NODE_ENV",
     "DATABASE_URL",
     "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_API_URL",
     "BETTER_AUTH_SECRET",
     "RESEND_API_KEY",
     "CONTACT_FORWARD_EMAIL",
@@ -12,7 +13,37 @@
     "RESEND_FROM_ADDRESSES",
     "ADMIN_EMAIL",
     "ADMIN_PASSWORD",
-    "ADMIN_NAME"
+    "ADMIN_NAME",
+    "PORT",
+    "FRONTEND_URL",
+    "MONGODB_URI",
+    "MONGODB_MIN_POOL_SIZE",
+    "MONGODB_MAX_POOL_SIZE",
+    "MONGODB_SOCKET_TIMEOUT_MS",
+    "MONGODB_SERVER_SELECTION_TIMEOUT_MS",
+    "MONGODB_RETRY_ATTEMPTS",
+    "MONGODB_RETRY_DELAY",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_MODEL",
+    "ANTHROPIC_MAX_TOKENS",
+    "ANTHROPIC_TIMEOUT_MS",
+    "OPENAI_API_KEY",
+    "OPENAI_MODEL",
+    "OPENAI_MAX_TOKENS",
+    "OPENAI_TIMEOUT_MS",
+    "REDIS_HOST",
+    "REDIS_PORT",
+    "REDIS_PASSWORD",
+    "REDIS_DB",
+    "REDIS_TTL",
+    "JWT_SECRET",
+    "JWT_EXPIRATION",
+    "JWT_REFRESH_EXPIRATION",
+    "RATE_LIMIT_TTL",
+    "RATE_LIMIT_MAX",
+    "LOG_LEVEL",
+    "LOG_FILE_ENABLED",
+    "LOG_FILE_PATH"
   ],
   "tasks": {
     "build": {
@@ -20,8 +51,12 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"]
     },
     "start": {
       "dependsOn": ["build"],
