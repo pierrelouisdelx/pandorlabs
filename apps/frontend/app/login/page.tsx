@@ -18,9 +18,12 @@ export default async function LoginPage({
   const { next, error } = await searchParams
   const session = await getSession()
 
-  // Already an admin? Skip the form entirely.
-  if (session?.user.role === 'admin') {
-    redirect(safeNext(next))
+  // Already signed in? Skip the form — but only send them somewhere they are
+  // actually allowed to be, or they bounce straight back here.
+  if (session) {
+    const home =
+      session.user.role === 'admin' ? '/admin/emails' : '/dashboard'
+    redirect(safeNext(next) ?? home)
   }
 
   return (
@@ -28,7 +31,7 @@ export default async function LoginPage({
       <div className="w-full max-w-md rounded-2xl bg-white/5 p-8 shadow-xl backdrop-blur-md">
         <h1 className="mb-2 text-2xl font-semibold">Sign in</h1>
         <p className="text-gray mb-8 text-sm">
-          Admin access to the PandorLabs panel.
+          Access your PandorLabs panel.
         </p>
 
         {error === 'forbidden' && (
@@ -43,10 +46,14 @@ export default async function LoginPage({
   )
 }
 
-/** Only same-origin paths — never bounce a signed-in admin to another site. */
-function safeNext(next?: string): string {
+/**
+ * Only same-origin paths — never bounce a signed-in user to another site.
+ * Returns undefined when there is no usable target, so the caller picks a
+ * destination the user's role can actually reach.
+ */
+function safeNext(next?: string): string | undefined {
   if (next && next.startsWith('/') && !next.startsWith('//')) {
     return next
   }
-  return '/admin/emails'
+  return undefined
 }

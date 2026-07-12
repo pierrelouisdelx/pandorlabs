@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import Logo from '@/components/layouts/logo'
+import SignOutButton from '@/components/layouts/sign-out-button'
 import { requireAdmin } from '@/lib/session'
-
-import SignOutButton from './sign-out-button'
 
 export const metadata: Metadata = {
   title: 'Admin | PandorLabs',
