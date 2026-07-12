@@ -5,14 +5,13 @@
   // bare `require('@scrapers/...')` calls. These are the same aliases as
   // tsconfig.json, rebased from src/ onto dist/. Keep the two in sync.
   "compilerOptions": {
-    "baseUrl": "./dist",
     "paths": {
-      "@common/*": ["common/*"],
-      "@config/*": ["config/*"],
-      "@scrapers/*": ["scrapers/*"],
-      "@ai-query/*": ["ai-query/*"],
-      "@scraper-builder/*": ["scraper-builder/*"],
-      "@users/*": ["users/*"]
+      "@common/*": ["./dist/common/*"],
+      "@config/*": ["./dist/config/*"],
+      "@scrapers/*": ["./dist/scrapers/*"],
+      "@ai-query/*": ["./dist/ai-query/*"],
+      "@scraper-builder/*": ["./dist/scraper-builder/*"],
+      "@users/*": ["./dist/users/*"]
     }
   }
 }

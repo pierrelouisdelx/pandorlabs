@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, FilterQuery, Model, SortOrder } from 'mongoose';
+import { Connection, Model, QueryFilter, SortOrder } from 'mongoose';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { CategoryOrchestrator } from './category-orchestrator';
 import {
@@ -27,6 +27,7 @@ import {
 import {
   ScraperRequest,
   ScraperRequestDocument,
+  ScraperRequestStatus,
 } from './schemas/scraper-request.schema';
 
 @Injectable()
@@ -330,8 +331,8 @@ export class ScrapersService {
 
   private buildConfigFilter(
     query: QueryScraperDto,
-  ): FilterQuery<ScraperConfigDocument> {
-    const filter: FilterQuery<ScraperConfigDocument> = {};
+  ): QueryFilter<ScraperConfigDocument> {
+    const filter: QueryFilter<ScraperConfigDocument> = {};
 
     if (query.category) {
       filter.category = query.category;
@@ -357,11 +358,11 @@ export class ScrapersService {
 
   private buildExecutionFilter(
     query: QueryExecutionDto,
-  ): FilterQuery<ScraperExecutionDocument> {
-    const filter: FilterQuery<ScraperExecutionDocument> = {};
+  ): QueryFilter<ScraperExecutionDocument> {
+    const filter: QueryFilter<ScraperExecutionDocument> = {};
 
     if (query.configId) {
-      filter.configId = query.configId;
+      (filter as { configId?: string }).configId = query.configId;
     }
 
     if (query.status) {
@@ -433,7 +434,7 @@ export class ScrapersService {
         dataPoints: data.dataPoints,
         scraperName: data.scraperName,
         requestedBy: data.requestedBy || 'ai-agent',
-        status: 'pending',
+        status: ScraperRequestStatus.PENDING,
       });
 
       const requestId = request._id as any;
@@ -462,7 +463,7 @@ export class ScrapersService {
   async getPendingScraperRequests(): Promise<any[]> {
     try {
       const requests = await this.scraperRequestModel
-        .find({ status: 'pending' })
+        .find({ status: ScraperRequestStatus.PENDING })
         .sort({ createdAt: -1 })
         .exec();
 
