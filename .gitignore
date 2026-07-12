@@ -52,3 +52,4 @@ tilt_modules/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.gstack/

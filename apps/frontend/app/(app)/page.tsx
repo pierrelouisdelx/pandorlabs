@@ -3,7 +3,6 @@ import ProcessStep from '@/components/custom/process-step'
 import UseCaseCard from '@/components/custom/use-case-card'
 import TechFeatureCard from '@/components/custom/tech-feature-card'
 import DashboardPreview from '@/components/custom/dashboard-preview'
-import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
 import HeroSearchInput from '@/components/custom/hero-search-input'
 import helper from '@/lib/helper'
@@ -33,6 +32,8 @@ import {
   Bitcoin,
   Megaphone,
   Brain,
+  Radar,
+  ScanLine,
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -204,13 +205,14 @@ export default function Home() {
                 <StatsCard value="24/7" label="Never Miss an Opportunity" />
               </div>
             </div>
-            <Image
-              src="/images/radar.gif"
-              alt="Radar"
-              width={500}
-              height={500}
-              className="hidden w-1/2 lg:block"
-            />
+            <div className="hidden w-1/2 items-center justify-center lg:flex">
+              <div className="relative h-[500px] w-[500px]">
+                <div className="bg-green-light/20 absolute inset-0 animate-pulse rounded-full blur-3xl" />
+                <div className="relative flex h-full w-full items-center justify-center">
+                  <ScanLine className="text-green-light h-64 w-64 animate-pulse" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

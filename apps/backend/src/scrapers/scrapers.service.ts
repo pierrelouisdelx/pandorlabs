@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, FilterQuery, Model, SortOrder } from 'mongoose';
+import { Connection, Model, QueryFilter, SortOrder } from 'mongoose';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { CategoryOrchestrator } from './category-orchestrator';
 import {
@@ -27,6 +27,7 @@ import {
 import {
   ScraperRequest,
   ScraperRequestDocument,
+  ScraperRequestStatus,
 } from './schemas/scraper-request.schema';
 
 @Injectable()
@@ -117,23 +118,46 @@ export class ScrapersService {
     await execution.save();
 
     try {
-      const scraperConfig = {
-        scraperId: config.scraperId,
-        category: config.category,
-        url: config.url,
-        options: { ...config.options, ...dto.overrideOptions },
-        metadata: config.metadata,
-      };
-
       const scraper = await this.categoryOrchestrator.getScraper(
-        scraperConfig.scraperId,
+        config.scraperId,
       );
-      await scraper.execute();
+      const result = await scraper.execute();
+
+      // `execute()` resolves even when the scrape itself failed — it reports
+      // that in `success`, so a rejected promise is not the only failure path.
+      // `error` comes back as a bare string from BaseScraper.
+      if (result?.success === false) {
+        throw new Error(toErrorMessage(result.error));
+      }
+
+      execution.status = ScraperStatus.COMPLETED;
+      execution.completedAt = new Date();
+      execution.durationMs =
+        execution.completedAt.getTime() - execution.startedAt!.getTime();
+      execution.itemsScraped = result?.metadata?.itemsScraped ?? 0;
     } catch (error) {
+      // Persist the failure before surfacing it: an execution row that stays
+      // RUNNING forever is indistinguishable from one still in flight.
+      execution.status = ScraperStatus.FAILED;
+      execution.completedAt = new Date();
+      execution.durationMs =
+        execution.completedAt.getTime() - execution.startedAt!.getTime();
+      execution.error = {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      };
+      await execution.save();
+
+      this.logger.error(
+        `Execution ${execution._id.toString()} failed: ${execution.error.message}`,
+      );
       throw new InternalServerErrorException('Failed to execute scraper');
     }
 
-    await execution.save();
+    config.lastExecutedAt = execution.completedAt;
+    config.executionCount += 1;
+    await Promise.all([execution.save(), config.save()]);
+
     return this.toExecutionResponse(execution);
   }
 
@@ -184,6 +208,15 @@ export class ScrapersService {
     return this.toExecutionResponse(execution);
   }
 
+  /**
+   * The rows a single execution produced.
+   *
+   * Scraped rows do not carry the execution that wrote them — `saveScrapedData`
+   * bulk-inserts them into the scraper's own collection, stamping only
+   * `created_at`. So an execution's rows are the ones written inside its
+   * window. A run still in flight has no `completedAt` yet, hence the open
+   * upper bound.
+   */
   async getExecutionData(
     executionId: string,
     query: PaginationDto,
@@ -191,13 +224,51 @@ export class ScrapersService {
     const { page = 1, limit = 10 } = query;
     const skip = (page - 1) * limit;
 
+    const execution = await this.executionModel.findById(executionId).lean();
+    if (!execution) {
+      throw new NotFoundException(`Execution ${executionId} not found`);
+    }
+
+    const config = await this.configModel.findById(execution.configId).lean();
+    if (!config?.collectionName) {
+      throw new NotFoundException(
+        `No data collection for execution ${executionId}`,
+      );
+    }
+
+    const schema = await this.categoryOrchestrator.getSchemaOnly(
+      execution.scraperId,
+    );
+    let model: Model<any>;
+    try {
+      model = this.connection.model(config.collectionName);
+    } catch {
+      // Force the collection name to prevent Mongoose auto-pluralization.
+      model = this.connection.model(
+        config.collectionName,
+        schema,
+        config.collectionName,
+      );
+    }
+
+    // `startedAt` is written when the execution row is created, so it is always
+    // present; the guard is only here to keep the filter well-formed.
+    const filter: QueryFilter<any> = execution.startedAt
+      ? {
+          created_at: {
+            $gte: execution.startedAt,
+            ...(execution.completedAt ? { $lte: execution.completedAt } : {}),
+          },
+        }
+      : {};
+
     const [data, total] = await Promise.all([
-      this.executionModel.find({ executionId }).skip(skip).limit(limit).lean(),
-      this.executionModel.countDocuments({ executionId }),
+      model.find(filter).sort({ created_at: -1 }).skip(skip).limit(limit).lean(),
+      model.countDocuments(filter),
     ]);
 
     return {
-      data: data.map((item) => item.result),
+      data,
       pagination: {
         page,
         limit,
@@ -330,8 +401,8 @@ export class ScrapersService {
 
   private buildConfigFilter(
     query: QueryScraperDto,
-  ): FilterQuery<ScraperConfigDocument> {
-    const filter: FilterQuery<ScraperConfigDocument> = {};
+  ): QueryFilter<ScraperConfigDocument> {
+    const filter: QueryFilter<ScraperConfigDocument> = {};
 
     if (query.category) {
       filter.category = query.category;
@@ -357,11 +428,11 @@ export class ScrapersService {
 
   private buildExecutionFilter(
     query: QueryExecutionDto,
-  ): FilterQuery<ScraperExecutionDocument> {
-    const filter: FilterQuery<ScraperExecutionDocument> = {};
+  ): QueryFilter<ScraperExecutionDocument> {
+    const filter: QueryFilter<ScraperExecutionDocument> = {};
 
     if (query.configId) {
-      filter.configId = query.configId;
+      (filter as { configId?: string }).configId = query.configId;
     }
 
     if (query.status) {
@@ -433,7 +504,7 @@ export class ScrapersService {
         dataPoints: data.dataPoints,
         scraperName: data.scraperName,
         requestedBy: data.requestedBy || 'ai-agent',
-        status: 'pending',
+        status: ScraperRequestStatus.PENDING,
       });
 
       const requestId = request._id as any;
@@ -462,7 +533,7 @@ export class ScrapersService {
   async getPendingScraperRequests(): Promise<any[]> {
     try {
       const requests = await this.scraperRequestModel
-        .find({ status: 'pending' })
+        .find({ status: ScraperRequestStatus.PENDING })
         .sort({ createdAt: -1 })
         .exec();
 
@@ -484,4 +555,19 @@ export class ScrapersService {
       return [];
     }
   }
+}
+
+/**
+ * `BaseScraper.execute()` reports a soft failure as `error: string`, but a
+ * thrown error is an `Error`. Both end up on the execution row, so both have to
+ * reduce to something the user can actually read.
+ */
+function toErrorMessage(error: unknown): string {
+  if (typeof error === 'string' && error) return error;
+  if (error instanceof Error) return error.message;
+
+  const message = (error as { message?: unknown })?.message;
+  if (typeof message === 'string' && message) return message;
+
+  return 'Scraper reported failure';
 }

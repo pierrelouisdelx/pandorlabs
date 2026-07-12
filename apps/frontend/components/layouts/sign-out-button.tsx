@@ -4,21 +4,34 @@ import { LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-import { Button } from '@/components/ui/button'
+import { Button, type ButtonProps } from '@/components/ui/button'
 import { signOut } from '@/lib/auth-client'
 
-export default function SignOutButton() {
+type Props = {
+  variant?: ButtonProps['variant']
+  size?: ButtonProps['size']
+  className?: string
+}
+
+export default function SignOutButton({
+  variant = 'secondary',
+  size = 'sm',
+  className,
+}: Props) {
   const router = useRouter()
   const [pending, setPending] = useState(false)
 
   return (
     <Button
-      variant="secondary"
-      size="sm"
+      variant={variant}
+      size={size}
+      className={className}
       disabled={pending}
       onClick={async () => {
         setPending(true)
         await signOut()
+        // `refresh` drops the RSC cache — without it the signed-in shell can be
+        // served from cache to the next visitor of this tab.
         router.replace('/login')
         router.refresh()
       }}
