@@ -1,8 +1,13 @@
+'use client'
+
+import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import NavLink from '@/components/ui/nav-link'
 import { cn } from '@/lib/utils'
+import { ChevronDownIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ProductsMenu from './products-menu'
+import { products } from './products'
 
 const NavLinks = ({ className }: any) => {
   return (
@@ -22,9 +27,38 @@ const NavLinks = ({ className }: any) => {
         <ProductsMenu />
       </li>
       <li className="lg:hidden">
-        <NavLink href="/" className="nav-links">
-          Products
-        </NavLink>
+        <AccordionPrimitive.Root type="single" collapsible>
+          <AccordionPrimitive.Item value="products">
+            <AccordionPrimitive.Header>
+              <AccordionPrimitive.Trigger className="nav-links flex w-full items-center justify-between gap-2 text-left [&[data-state=open]>svg]:rotate-180">
+                Products
+                <ChevronDownIcon className="size-4 shrink-0 transition-transform duration-300" />
+              </AccordionPrimitive.Trigger>
+            </AccordionPrimitive.Header>
+            <AccordionPrimitive.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden">
+              <ul className="mt-3 flex flex-col gap-1 border-l border-white/10 pl-4">
+                {products.map((product) => (
+                  <li key={product.id}>
+                    <Link
+                      href={product.href}
+                      className="block rounded-lg py-2 text-sm text-white/70 transition-colors hover:text-white"
+                    >
+                      {product.title}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link
+                    href="/products"
+                    className="text-green-light block rounded-lg py-2 text-sm font-medium"
+                  >
+                    Browse all products →
+                  </Link>
+                </li>
+              </ul>
+            </AccordionPrimitive.Content>
+          </AccordionPrimitive.Item>
+        </AccordionPrimitive.Root>
       </li>
       <li>
         <NavLink href="/about" className="nav-links">
