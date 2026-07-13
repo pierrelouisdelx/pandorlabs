@@ -61,7 +61,7 @@ export default function ContactUs() {
           <div className="mt-10 space-y-7">
             <div className="space-y-2 lg:space-y-3">
               <h3 className="text-green-light/70 text-base tracking-[3px] uppercase">
-                Email Us
+                email us
               </h3>
               <Link
                 href="mailto:info@pandorlabs.com"

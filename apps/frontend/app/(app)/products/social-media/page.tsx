@@ -4,23 +4,23 @@ import {
   Activity,
   Award,
   Bot,
+  CheckCircle2,
   Code,
   Database,
+  Globe,
   Lock,
   MessageSquare,
   Radio,
   Search,
   Share2,
   Shield,
-  Target,
   TrendingUp,
   Users,
   Zap,
 } from 'lucide-react'
 
+import { FAQSection } from '../_components/faq-section'
 import { FeaturesGrid } from '../_components/features-grid'
-import { FinalCTASection } from '../_components/final-cta-section'
-import { ProductHero } from '../_components/product-hero'
 import StatsCard from '@/components/custom/stats-card'
 import ProcessStep from '@/components/custom/process-step'
 import UseCaseCard from '@/components/custom/use-case-card'
@@ -38,29 +38,23 @@ import {
 
 const accentColor = '#8B5CF6'
 const accentGlow = 'rgba(139, 92, 246, 0.15)'
-const accentGradient = 'from-purple-500/20 via-fuchsia-500/20 to-pink-500/20'
 
 const heroData = {
   product: 'socialMedia' as const,
-  headline: 'Social Media Data API for Market Intelligence',
+  headline: 'Social Media Data for Market Intelligence',
   subheadline:
-    'Access real-time social media data from 10+ platforms through a single API. Monitor brand mentions, track competitors, and analyze trends with comprehensive metrics.',
+    'We monitor 10+ platforms for you and deliver the mentions, metrics, and sentiment straight into your stack. Track brands, competitors, and trends without building a single scraper.',
   valueProps: [
     'Real-time data from Instagram, TikTok, Twitter/X, and 7+ platforms',
     'Sub-60-second latency for instant brand monitoring',
-    'Unified API with 200+ engagement metrics and sentiment analysis',
+    'One unified schema, 200+ engagement metrics, sentiment scored',
     'GDPR-compliant with enterprise security and privacy controls',
   ],
-  primaryCTA: 'Start Free Trial',
-  secondaryCTA: 'View Documentation',
   trustIndicators: [
     { Icon: Zap, text: '<100ms Response' },
     { Icon: Activity, text: 'Real-time Data' },
     { Icon: TrendingUp, text: '99.9% Uptime' },
   ],
-  accentColor,
-  accentGlow,
-  accentGradient,
   visualElement: (
     <div className="relative aspect-square w-full">
       <div className="absolute inset-0 flex items-center justify-center">
@@ -193,14 +187,14 @@ const features = [
     Icon: Share2,
     title: 'Multi-Platform Coverage',
     description:
-      'Access unified data from Instagram, TikTok, Twitter/X, Facebook, LinkedIn, YouTube, Pinterest, Reddit, and Snapchat through a single API endpoint with standardized schemas.',
+      'Instagram, TikTok, Twitter/X, Facebook, LinkedIn, YouTube, Pinterest, Reddit, and Snapchat arrive in one standardized schema, so a post from any network lands with the same field names.',
     metrics: '10+ Platforms',
   },
   {
     Icon: Radio,
     title: 'Real-Time Streaming',
     description:
-      'Track social media activity with sub-60-second data latency. Get instant webhook notifications for brand mentions, trending content, and competitive moves.',
+      'Track social media activity with sub-60-second data latency. Webhooks push brand mentions, trending content, and competitive moves into your systems the moment they land.',
     metrics: '<60s Latency',
   },
   {
@@ -236,9 +230,76 @@ const features = [
   },
   {
     Icon: Code,
-    title: 'Developer-First API',
+    title: 'Delivered to Your Stack',
     description:
-      'Comprehensive REST API with SDKs for Python, JavaScript, PHP, and Ruby. Interactive playground, detailed docs, and 24/7 technical support for seamless integration.',
+      'We push JSON, CSV, or Parquet to S3, GCS, Snowflake, BigQuery, or your webhooks on the cadence you set. A solutions engineer configures the schema and destination with you — there is nothing for your team to build.',
+  },
+]
+
+const complianceItems = [
+  {
+    Icon: Shield,
+    title: 'SOC 2 Type II',
+    description:
+      'Audited controls for security, availability, and confidentiality. Report available under NDA.',
+  },
+  {
+    Icon: Lock,
+    title: 'GDPR & CCPA',
+    description:
+      'Public data only, with data subject request handling, retention limits, and deletion propagation.',
+  },
+  {
+    Icon: Activity,
+    title: '99.9% Uptime SLA',
+    description:
+      'Contractual availability target, public status page, and service credits when we miss it.',
+  },
+  {
+    Icon: Globe,
+    title: 'EU / US Data Residency',
+    description:
+      'Choose the region where your social data is stored and processed. Private VPC delivery available.',
+  },
+]
+
+const faqs = [
+  {
+    question:
+      'Which platforms do you cover, and how deep does the coverage go?',
+    answer:
+      'We cover Instagram, TikTok, Twitter/X, Facebook, LinkedIn, YouTube, Pinterest, Reddit, and Snapchat behind a single schema, so a post from any of them arrives with the same field names. For each post you get the content, timestamps, author handle, and the full engagement envelope — likes, comments, shares, views where the platform exposes them — plus comment threads on the platforms that allow it. Coverage depth varies by platform because each one exposes a different surface, so during scoping we confirm in writing exactly which fields you can rely on for each network you care about.',
+  },
+  {
+    question: 'How fresh is the data, and how often does it refresh?',
+    answer:
+      'Tracked keywords, handles, and hashtags refresh continuously, with new matching posts typically available within 60 seconds of publication. Webhooks fire on the same clock, so a mention spike reaches your systems while it is still actionable rather than in tomorrow’s report. Historical backfill goes back 12+ months and is delivered in the same schema as the live feed, so trend analysis and real-time alerting read from one consistent dataset rather than two.',
+  },
+  {
+    question: 'Is this legal, and how do you handle platform terms of service?',
+    answer:
+      'We collect public data only — posts, profiles, and engagement counts that any logged-out visitor can see. We do not access private accounts, direct messages, or content behind a login, and we do not resell personal data or attempt to deanonymize users. Where a platform offers an official API we use it under its terms; where we collect publicly available pages, we respect robots directives and rate limits, and we do not circumvent authentication.',
+  },
+  {
+    question: 'How do you handle personal data and GDPR requests?',
+    answer:
+      'Social posts can contain personal data, so we treat them as such: data is stored in your chosen region, retention windows are configurable, and we honor deletion and access requests within the statutory window. When a user deletes a post or an account on the source platform, that deletion propagates through our pipeline and the records drop out of your subsequent pulls. Our DPA covers the processor relationship and is available before you sign.',
+  },
+  {
+    question:
+      'What formats do you deliver in, and what does integration look like?',
+    answer:
+      'We deliver JSON, CSV, or Parquet into S3, GCS, Azure Blob, Snowflake, or BigQuery, and push webhooks for real-time alerting — whichever fits the pipeline you already run. Integration means telling a solutions engineer where the data should land and how often; we handle the collection, normalization, and delivery. The schema is stable across platforms, so a dashboard built on Instagram data works on TikTok data without a rewrite.',
+  },
+  {
+    question: 'What happens when a platform changes its layout or API?',
+    answer:
+      'Platform changes are our problem, not yours. Our extractors are monitored continuously, and when a source changes its structure our team patches the extractor while the unified schema we deliver to you stays exactly the same. If a change causes a gap in coverage, we tell you which platform and which window were affected rather than silently returning fewer results.',
+  },
+  {
+    question: 'How does pricing work?',
+    answer:
+      'Pricing is scoped per engagement, driven by the platforms you monitor, the number of tracked keywords and handles, refresh cadence, and delivery destinations — not per seat. Before you commit to anything we run a sample against your actual brand terms and hand back the dataset, so you can judge the data on your own terms. Enterprise engagements add dedicated infrastructure, custom filters, and SLA-backed support.',
   },
 ]
 
@@ -246,9 +307,9 @@ export default function SocialMediaPage() {
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
 
   const serviceSchema = generateServiceSchema({
-    name: 'Social Media Data API',
+    name: 'Social Media Data',
     description:
-      'Access real-time social media data from 10+ platforms including Instagram, TikTok, Twitter/X, and more. Comprehensive engagement metrics, sentiment analysis, brand monitoring, and influencer analytics with sub-60-second latency.',
+      'Managed social media data from 10+ platforms including Instagram, TikTok, Twitter/X, and more, delivered to your warehouse or webhooks. Engagement metrics, sentiment analysis, brand monitoring, and influencer analytics with sub-60-second latency.',
     url: `${siteUrl}/products/social-media`,
     provider: {
       name: 'Pandor Labs',
@@ -261,17 +322,17 @@ export default function SocialMediaPage() {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: siteUrl },
     { name: 'Products', url: `${siteUrl}/products` },
-    { name: 'Social Media Data API', url: `${siteUrl}/products/social-media` },
+    { name: 'Social Media Data', url: `${siteUrl}/products/social-media` },
   ])
 
   const webPageSchema = generateWebPageSchema(
     `${siteUrl}/products/social-media`,
-    'Social Media Data API for Market Intelligence',
-    'Access real-time social media data from 10+ platforms through a single API. Monitor brand mentions, track competitors, and analyze trends with comprehensive metrics.'
+    'Social Media Data for Market Intelligence',
+    'Managed social media data from 10+ platforms, delivered to your stack. Monitor brand mentions, track competitors, and analyze trends with comprehensive metrics.',
   )
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="bg-primary min-h-screen">
       {/* JSON-LD Schemas */}
       <Script
         id="service-schema"
@@ -294,21 +355,21 @@ export default function SocialMediaPage() {
           __html: stringifyJsonLd(webPageSchema),
         }}
       />
-      {/* Vision Section */}
-      <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="container">
+
+      {/* Vision — first section, no divider */}
+      <section className="section section-glow">
+        <div className="relative z-10 container">
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-20">
             <div className="w-full lg:w-1/2">
               <div className="mb-10 text-center lg:text-left">
-                <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-                  WHY SOCIAL MEDIA DATA API
-                </p>
-                <h2 className="mb-6 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
+                <p className="eyebrow">why managed social data</p>
+                <h1 className="mb-6 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
                   Your Social Intelligence{' '}
                   <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
                     Real-Time Edge
                   </span>
-                </h2>
+                </h1>
+                <p className="text-gray mt-4 text-lg">{heroData.subheadline}</p>
               </div>
 
               <div className="text-gray mx-auto mb-12 max-w-4xl space-y-4 lg:mx-0">
@@ -344,16 +405,13 @@ export default function SocialMediaPage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* How It Works Section */}
-      <div className="from-background to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/5 to-green-light/5 absolute inset-0 bg-gradient-to-r via-transparent opacity-30"></div>
+      {/* How It Works */}
+      <section className="section section-divided section-glow-center">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              HOW IT WORKS
-            </p>
+            <p className="eyebrow">how it works</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               From Query to Insight —{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -370,7 +428,7 @@ export default function SocialMediaPage() {
             <ProcessStep
               number="01"
               title="Configure Social Monitoring"
-              description="Select platforms, brand keywords, competitor handles, and hashtags to track. Our API supports Instagram, TikTok, Twitter/X, LinkedIn, and 7+ networks."
+              description="Tell us the platforms, brand keywords, competitor handles, and hashtags to track. We cover Instagram, TikTok, Twitter/X, LinkedIn, and 7+ networks."
             />
             <ProcessStep
               number="02"
@@ -380,17 +438,17 @@ export default function SocialMediaPage() {
             <ProcessStep
               number="03"
               title="Actionable Insights"
-              description="Receive structured JSON/CSV with 200+ metrics ready for your dashboard, BI tools, or CRM. Make data-driven social decisions in real-time."
+              description="Structured JSON, CSV, or Parquet lands in your warehouse, bucket, or webhook with 200+ metrics, ready for your dashboard, BI tools, or CRM."
             />
           </div>
 
           {/* Timeline */}
-          <div className="text-gray mt-10 flex items-center justify-center gap-4">
+          <div className="text-gray mt-10 flex flex-wrap items-center justify-center gap-4">
             <span className="rounded-full bg-white/5 px-4 py-2 font-medium transition-all duration-300 hover:bg-white/10">
-              API Request
+              Post published
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
-            <span className="to-green-light bg-green-light/10 animate-pulse rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
+            <span className="to-green-light bg-green-light/10 rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
               &lt;60s latency
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
@@ -399,16 +457,22 @@ export default function SocialMediaPage() {
             </span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Use Cases Section */}
-      <div className="from-background to-primary/20 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
+      {/* Capability grid */}
+      <FeaturesGrid
+        title="Everything You Need to Read the Social Layer"
+        subtitle="One schema, ten platforms, delivered to your stack — from raw posts to sentiment-scored intelligence."
+        features={features}
+        accentColor={accentColor}
+        accentGlow={accentGlow}
+      />
+
+      {/* Use Cases */}
+      <section className="section section-divided section-glow-center">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              SOCIAL MEDIA APPLICATIONS
-            </p>
+            <p className="eyebrow">social media applications</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Power Every Social Intelligence{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -416,7 +480,7 @@ export default function SocialMediaPage() {
               </span>
             </h2>
             <p className="text-gray mx-auto max-w-2xl">
-              From brand monitoring to influencer analytics, our API powers the
+              From brand monitoring to influencer analytics, our data powers the
               next generation of social listening applications.
             </p>
           </div>
@@ -425,7 +489,7 @@ export default function SocialMediaPage() {
             <UseCaseCard
               icon={Radio}
               title="Brand Reputation Monitoring"
-              description="Track brand mentions, sentiment trends, and crisis signals across all platforms. Respond to negative sentiment before it goes viral. Teams report 60% faster crisis response."
+              description="Track brand mentions, sentiment trends, and crisis signals across all platforms. Respond to negative sentiment before it goes viral."
             />
             <UseCaseCard
               icon={Users}
@@ -464,16 +528,13 @@ export default function SocialMediaPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Technology Section */}
-      <div className="from-primary/20 to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="to-green-light/5 absolute inset-0 bg-gradient-to-br from-green-100/5 via-transparent"></div>
+      {/* Technology */}
+      <section className="section section-divided section-glow-right">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              TECHNOLOGY
-            </p>
+            <p className="eyebrow">technology</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Enterprise-Grade Social Intelligence{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -491,7 +552,7 @@ export default function SocialMediaPage() {
             <TechFeatureCard
               icon={Radio}
               title="Multi-Platform Aggregation"
-              description="Unified API combining official APIs and proprietary data sources across Instagram, TikTok, Twitter/X, LinkedIn, and 7+ platforms with real-time sync."
+              description="One unified pipeline combining official platform APIs and public-data collection across Instagram, TikTok, Twitter/X, LinkedIn, and 7+ platforms with real-time sync."
             />
             <TechFeatureCard
               icon={Bot}
@@ -513,174 +574,109 @@ export default function SocialMediaPage() {
             <StatsCard value="99.9%" label="Uptime SLA" />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Enterprise/Social Proof Section */}
-      <div className="from-background to-primary/10 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
+      {/* Compliance & delivery */}
+      <section className="section section-divided section-glow-right">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              TRUSTED BY LEADING BRANDS
-            </p>
+            <p className="eyebrow">compliance & delivery</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
-              Built for{' '}
+              Public Data Only,{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
-                Enterprise Scale
+                Collected Responsibly
               </span>
             </h2>
-            <p className="text-gray mx-auto mb-12 max-w-2xl">
-              Whether you&apos;re a social media agency or a global brand, we
-              provide the infrastructure and support for mission-critical social
-              intelligence.
+            <p className="text-gray mx-auto max-w-2xl">
+              We collect what a logged-out visitor can see — never private
+              accounts, never direct messages, never content behind a login. The
+              controls below are contract terms, not aspirations.
             </p>
           </div>
 
-          {/* Testimonials */}
-          <div className="mb-12 grid gap-6 md:grid-cols-3">
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">📱</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Social Media Agencies
-                </h4>
-                <p className="text-gray/80 text-sm">
-                  Leading Digital Marketing Firm
+          <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {complianceItems.map(({ Icon, title, description }) => (
+              <div key={title} className="panel p-7">
+                <div className="bg-green-light/10 mb-4 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Icon className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-white">
+                  {title}
+                </h3>
+                <p className="text-gray text-sm leading-relaxed">
+                  {description}
                 </p>
               </div>
+            ))}
+          </div>
+
+          {/* Enterprise capabilities */}
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Award className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Custom Data Pipelines
+                </h3>
+              </div>
               <p className="text-gray leading-relaxed">
-                &quot;We replaced 5 social listening tools with PandorLabs. Now
-                we get better data, faster—and save $3K/month on tool
-                subscriptions.&quot;
+                Dedicated infrastructure with custom filters, webhooks, and
+                real-time streaming shaped around your monitoring workflows.
               </p>
             </div>
 
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🏢</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Enterprise Brands
-                </h4>
-                <p className="text-gray/80 text-sm">
-                  Fortune 500 Consumer Company
-                </p>
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Activity className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Priority Support
+                </h3>
               </div>
               <p className="text-gray leading-relaxed">
-                &quot;Real-time crisis detection saved our brand reputation
-                during a viral moment. We responded in minutes, not hours.&quot;
+                Dedicated account management with SLA guarantees and direct
+                engineering access over Slack or Teams for critical monitoring.
               </p>
             </div>
 
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">📊</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Marketing Analytics
-                </h4>
-                <p className="text-gray/80 text-sm">Series B Marketing SaaS</p>
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <CheckCircle2 className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Schema Stability
+                </h3>
               </div>
               <p className="text-gray leading-relaxed">
-                &quot;PandorLabs gives us social data our competitors don&apos;t
-                have access to. It&apos;s a competitive moat for our
-                platform.&quot;
+                When a platform changes its layout, we patch the extractor. The
+                schema we deliver to you does not move.
               </p>
             </div>
           </div>
 
-          <div className="grid gap-10 lg:grid-cols-2">
-            <div className="space-y-6">
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Award className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Custom Data Pipelines
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Dedicated infrastructure with custom filters, webhooks, and
-                  real-time streaming for your enterprise social monitoring
-                  workflows.
-                </p>
-              </div>
-
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Activity className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Priority Support
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Dedicated account management with SLA guarantees. Direct
-                  engineering access via Slack/Teams integration for critical
-                  social monitoring.
-                </p>
-              </div>
-
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Lock className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Compliance & Security
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  GDPR/CCPA compliant, SOC 2 Type II certified. Secure handling
-                  of social data with platform-compliant API usage.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-4">
-                <Link href="/demo" className={buttonVariants()}>
-                  Schedule Demo
-                </Link>
-                <Link
-                  href="/pricing"
-                  className={buttonVariants({ variant: 'outline' })}
-                >
-                  View Enterprise Pricing
-                </Link>
-              </div>
-            </div>
-
-            {/* API Code Example */}
-            <div className="flex items-center">
-              <div className="w-full rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm">
-                <div className="mb-4 flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                  <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-                  <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                  <span className="text-gray ml-3 text-sm">
-                    API Request Example
-                  </span>
-                </div>
-                <pre className="overflow-x-auto text-sm">
-                  <code className="text-purple-400">{`GET /api/v1/social?
-  platforms=instagram,tiktok,twitter&
-  keywords=brand_name,competitor&
-  metrics=engagement,sentiment&
-  real_time=true&
-  webhooks=true`}</code>
-                </pre>
-                <div className="text-gray mt-4 text-xs">
-                  <span className="text-green-400">200 OK</span> - 12,458 posts
-                  analyzed in 42ms
-                </div>
-              </div>
-            </div>
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <Link href="/contact" className={buttonVariants()}>
+              Schedule a Demo
+            </Link>
+            <Link
+              href="/contact"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Get an Enterprise Quote
+            </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Enhanced Final CTA */}
-      <div className="from-primary/10 to-primary relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-gradient-to-t via-transparent to-transparent"></div>
+      {/* FAQ — emits FAQPage JSON-LD */}
+      <FAQSection faqs={faqs} accentColor={accentColor} />
+
+      {/* Final CTA */}
+      <section className="section section-divided section-glow">
         <div className="relative z-10 container">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
@@ -690,20 +686,20 @@ export default function SocialMediaPage() {
               </span>
             </h2>
             <p className="text-gray mb-8 text-lg">
-              Join 200+ brands leveraging real-time social data to make faster,
-              smarter marketing decisions. Monitor 10+ platforms with a single
-              API.
+              We monitor 10+ platforms and deliver the results into your stack,
+              so you can act on social data while it still matters. Start with a
+              free sample dataset built from your own brand terms.
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/request" className={buttonVariants({ size: 'lg' })}>
-                Start Free Trial — 1,000 API Calls
+              <Link href="/contact" className={buttonVariants({ size: 'lg' })}>
+                Request a Sample Dataset
               </Link>
               <Link
-                href="/demo"
+                href="/contact"
                 className={buttonVariants({ variant: 'outline', size: 'lg' })}
               >
-                Schedule Demo
+                Schedule a Demo
               </Link>
             </div>
 
@@ -711,23 +707,18 @@ export default function SocialMediaPage() {
             <div className="mb-4 flex flex-wrap items-center justify-center gap-4">
               <TrustBadge icon={Radio} text="10+ Platforms" />
               <TrustBadge icon={Activity} text="Real-Time Monitoring" />
-              <TrustBadge icon={Shield} text="SOC 2 Certified" />
+              <TrustBadge icon={Shield} text="SOC 2 Type II Certified" />
               <TrustBadge icon={TrendingUp} text="200+ Metrics" />
             </div>
 
             <div className="text-gray mb-4 space-y-1 text-sm">
-              <p>✓ Free first 1,000 API calls—no credit card required</p>
-              <p>✓ Setup in 5 minutes with comprehensive docs</p>
-              <p>✓ Cancel anytime, no questions asked</p>
+              <p>✓ Free sample dataset from your own brand terms</p>
+              <p>✓ Delivery configured with a solutions engineer</p>
+              <p>✓ No long-term lock-in — cancel at the end of any term</p>
             </div>
-
-            <p className="text-gray text-sm">
-              Trusted by leading social media agencies and enterprise brands
-              worldwide
-            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <style jsx>{`
         @keyframes float {

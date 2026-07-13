@@ -15,9 +15,9 @@ import {
   Users,
   CheckCircle2,
   Activity,
-  Award,
   Lock,
   Bot,
+  Globe,
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -29,6 +29,7 @@ import {
   stringifyJsonLd,
 } from '@/lib/schema-generator'
 
+import { FAQSection } from '../_components/faq-section'
 import { ProductHero } from '../_components/product-hero'
 import StatsCard from '@/components/custom/stats-card'
 import ProcessStep from '@/components/custom/process-step'
@@ -41,13 +42,80 @@ const accentColor = '#46e695'
 const accentGlow = 'rgba(70, 230, 149, 0.15)'
 const accentGradient = 'linear-gradient(135deg, #46e695 0%, #46e695 100%)'
 
+const modalitySummary = [
+  { type: 'Images', samples: '820K samples' },
+  { type: 'Text', samples: '640K samples' },
+  { type: 'Audio', samples: '310K samples' },
+]
+
+const complianceItems = [
+  {
+    Icon: Shield,
+    title: 'SOC 2 Type II',
+    description:
+      'Audited controls covering security, availability, and confidentiality. Report available under NDA.',
+  },
+  {
+    Icon: Lock,
+    title: 'GDPR & CCPA',
+    description:
+      'Lawful basis documented per dataset, with data subject request handling and deletion propagation.',
+  },
+  {
+    Icon: Activity,
+    title: '99.9% Uptime SLA',
+    description:
+      'Contractual availability target for scheduled dataset delivery, with status page and incident credits.',
+  },
+  {
+    Icon: Globe,
+    title: 'EU / US Data Residency',
+    description:
+      'Choose where datasets are stored and processed. Self-hosted delivery available for regulated workloads.',
+  },
+]
+
+const faqs = [
+  {
+    question: 'What sources do the datasets come from, and how are they built?',
+    answer:
+      'Datasets are assembled from three streams: licensed corpora acquired directly from rights holders, public and open-licensed data collected from sources that permit it, and data we generate or annotate ourselves through our labeling teams. Every dataset carries a provenance record naming the source, the license, and the collection date. If a dataset mixes streams, the record breaks the mix down per split so you can exclude anything your legal team is not comfortable with.',
+  },
+  {
+    question: 'How fresh is the data, and how often are datasets refreshed?',
+    answer:
+      'Static benchmark datasets are versioned and immutable once released, so your training runs stay reproducible. Living datasets — the ones tracking a changing source — are refreshed on a schedule that ranges from daily to quarterly depending on how fast the underlying source moves. Each refresh ships as a new version with a changelog and a diff, and older versions stay pinned and downloadable so you can reproduce any past run.',
+  },
+  {
+    question: 'Is the data collection legal, and can I use it to train models?',
+    answer:
+      'We only collect from sources whose terms permit it, and we do not collect personal data unless there is a documented lawful basis for it. Licensing for model training is explicit rather than assumed: each dataset states whether commercial training, fine-tuning, and redistribution of model weights are permitted, and those rights are passed through in your contract. Where a source requires consent — for example, voice or likeness data — we hold the consent records and can produce them for your audit.',
+  },
+  {
+    question: 'What happens to my training rights if a dataset is withdrawn?',
+    answer:
+      'If a rights holder withdraws a license or a data subject exercises deletion rights, we notify you, remove the affected records from future versions, and tell you exactly which records were affected. Models you already trained under a valid license at the time of training are not retroactively invalidated by that removal, and the license terms in your contract spell this out. We keep the audit trail so you can evidence what you trained on and when.',
+  },
+  {
+    question:
+      'What formats do you deliver in, and how does it fit my pipeline?',
+    answer:
+      'Datasets are delivered as JSONL, Parquet, WebDataset shards, or CSV, plus images and audio in their native encodings with sidecar annotation files. We land them in an S3 or GCS bucket you own, or in Snowflake or BigQuery, so they sit one step away from your data loaders rather than behind an integration. Annotation schemas follow COCO, YOLO, and CoNLL conventions where those standards apply, so most teams do not have to write a converter. A solutions engineer agrees the format, split layout, and destination with you before the first delivery.',
+  },
+  {
+    question: 'How does pricing work?',
+    answer:
+      'Pricing is per dataset licence rather than metered by usage, so training runs and re-downloads do not meter against you. Before you commit we deliver free sample splits with the full schema and provenance blocks, so you can evaluate quality against your own benchmarks. Custom annotation and dataset creation work is quoted separately based on volume, modality, and the level of domain expertise the labeling requires.',
+  },
+]
+
 export default function AIDataPage() {
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
 
   const serviceSchema = generateServiceSchema({
-    name: 'AI Training Datasets API',
+    name: 'AI Training Datasets',
     description:
-      'Access 100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing. Text, vision, audio datasets with synthetic data generation for edge cases.',
+      '100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing, delivered to your bucket or warehouse. Text, vision, audio datasets with synthetic data generation for edge cases.',
     url: `${siteUrl}/products/ai-datasets`,
     provider: {
       name: 'Pandor Labs',
@@ -65,12 +133,12 @@ export default function AIDataPage() {
 
   const webPageSchema = generateWebPageSchema(
     `${siteUrl}/products/ai-datasets`,
-    'AI Training Datasets API',
-    'Access 100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing'
+    'AI Training Datasets',
+    '100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing, delivered to your stack',
   )
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="bg-primary min-h-screen">
       {/* JSON-LD Schemas */}
       <Script
         id="service-schema"
@@ -93,20 +161,20 @@ export default function AIDataPage() {
           __html: stringifyJsonLd(webPageSchema),
         }}
       />
-      {/* Enhanced Hero Section */}
-      <div className="relative">
+      {/* Hero */}
+      <div className="bg-primary relative">
         <ProductHero
           product="aiDatasets"
-          headline="AI Training Datasets API"
-          subheadline="Access 100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing"
+          headline="AI Training Datasets, Delivered"
+          subheadline="100,000+ production-ready datasets with 99% annotation accuracy and ethical sourcing, landed straight in your bucket or warehouse"
           valueProps={[
             '100,000+ curated datasets across text, vision, audio',
             '99% annotation accuracy with human verification',
             'Ethical sourcing with full data provenance',
             'Synthetic data generation for edge cases',
           ]}
-          primaryCTA="Start Free Trial"
-          secondaryCTA="View Documentation"
+          primaryCTA="Request Sample Splits"
+          secondaryCTA="Schedule a Demo"
           trustIndicators={[
             { Icon: Zap, text: '99% Accuracy' },
             { Icon: Shield, text: 'Ethical Sourcing' },
@@ -172,20 +240,18 @@ export default function AIDataPage() {
                 </svg>
               </div>
               <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-4">
-                {['Images', 'Text', 'Audio'].map((type, i) => (
+                {modalitySummary.map((item, i) => (
                   <div
-                    key={i}
+                    key={item.type}
                     className="border-green-light/30 bg-green-light/20 rounded-lg border px-4 py-2 backdrop-blur-sm"
                     style={{
                       animation: `slideIn 1s ease-out ${i * 0.2}s both`,
                     }}
                   >
                     <div className="text-green-light text-sm font-medium">
-                      {type}
+                      {item.type}
                     </div>
-                    <div className="text-xs text-white/60">
-                      {Math.floor(Math.random() * 900 + 100)}K samples
-                    </div>
+                    <div className="text-xs text-white/60">{item.samples}</div>
                   </div>
                 ))}
               </div>
@@ -193,7 +259,7 @@ export default function AIDataPage() {
           }
         />
 
-        {/* Trust Badges */}
+        {/* Partner logos */}
         <div className="absolute right-0 bottom-10 left-0 z-20">
           <div className="container">
             <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-12">
@@ -216,15 +282,13 @@ export default function AIDataPage() {
         </div>
       </div>
 
-      {/* Why AI Datasets Section */}
-      <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
+      {/* Why AI Datasets — first section after the hero, no divider */}
+      <section className="section section-glow">
         <div className="container">
           <div className="flex flex-col gap-20 lg:flex-row">
             <div className="w-full lg:w-1/2">
               <div className="mb-10 text-center lg:text-left">
-                <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-                  WHY AI DATASETS
-                </p>
+                <p className="eyebrow">why ai datasets</p>
                 <h2 className="mb-6 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
                   Your AI Training Data{' '}
                   <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -258,21 +322,9 @@ export default function AIDataPage() {
 
               {/* Stats Cards */}
               <div className="grid gap-6 md:grid-cols-3">
-                <StatsCard
-                  value="100K+"
-                  label="Curated Datasets"
-                  className="hover:border-green-light/50 hover:shadow-green-light/20"
-                />
-                <StatsCard
-                  value="99%"
-                  label="Annotation Accuracy"
-                  className="hover:border-green-light/50 hover:shadow-green-light/20"
-                />
-                <StatsCard
-                  value="10x"
-                  label="Faster Development"
-                  className="hover:border-green-light/50 hover:shadow-green-light/20"
-                />
+                <StatsCard value="100K+" label="Curated Datasets" />
+                <StatsCard value="99%" label="Annotation Accuracy" />
+                <StatsCard value="10x" label="Faster Development" />
               </div>
             </div>
 
@@ -301,16 +353,13 @@ export default function AIDataPage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* How It Works Section */}
-      <div className="from-background to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/5 to-green-light/5 absolute inset-0 bg-gradient-to-r via-transparent opacity-30"></div>
+      {/* How It Works */}
+      <section className="section section-divided section-glow-center">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              HOW IT WORKS
-            </p>
+            <p className="eyebrow">how it works</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               From Search to Training —{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -336,18 +385,18 @@ export default function AIDataPage() {
             />
             <ProcessStep
               number="03"
-              title="Integrate & Train"
-              description="Stream datasets directly to your ML pipeline via API, download in your preferred format, or integrate with popular frameworks. Start training immediately."
+              title="Delivered & Training-Ready"
+              description="We land the dataset in your bucket or warehouse in the format your loaders already read — JSONL, Parquet, WebDataset, or CSV. Point your pipeline at it and start training."
             />
           </div>
 
           {/* Timeline */}
-          <div className="text-gray mt-10 flex items-center justify-center gap-4">
+          <div className="text-gray mt-10 flex flex-wrap items-center justify-center gap-4">
             <span className="rounded-full bg-white/5 px-4 py-2 font-medium transition-all duration-300 hover:bg-white/10">
               Start
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
-            <span className="to-green-light bg-green-light/10 animate-pulse rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
+            <span className="to-green-light bg-green-light/10 rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
               Minutes to model training
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
@@ -356,16 +405,13 @@ export default function AIDataPage() {
             </span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Dataset Categories Section */}
-      <div className="from-background to-primary/20 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
+      {/* Dataset Categories */}
+      <section className="section section-divided section-glow-center">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              DATASET LIBRARY
-            </p>
+            <p className="eyebrow">dataset library</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Every AI Modality.{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -421,16 +467,13 @@ export default function AIDataPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Quality & Technology Section */}
-      <div className="from-primary/20 to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="to-green-light/5 absolute inset-0 bg-gradient-to-br from-green-100/5 via-transparent"></div>
+      {/* Quality & Technology */}
+      <section className="section section-divided section-glow-right">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              QUALITY & TECHNOLOGY
-            </p>
+            <p className="eyebrow">quality & technology</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Built for{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -464,216 +507,106 @@ export default function AIDataPage() {
 
           {/* Tech Stats */}
           <div className="grid gap-6 md:grid-cols-4">
-            <StatsCard
-              value="99%"
-              label="Accuracy"
-              className="hover:border-green-light/50 hover:shadow-green-light/20"
-            />
-            <StatsCard
-              value="100K+"
-              label="Datasets"
-              className="hover:border-green-light/50 hover:shadow-green-light/20"
-            />
-            <StatsCard
-              value="10M+"
-              label="Samples"
-              className="hover:border-green-light/50 hover:shadow-green-light/20"
-            />
-            <StatsCard
-              value="50+"
-              label="Domains"
-              className="hover:border-green-light/50 hover:shadow-green-light/20"
-            />
+            <StatsCard value="99%" label="Accuracy" />
+            <StatsCard value="100K+" label="Datasets" />
+            <StatsCard value="10M+" label="Samples" />
+            <StatsCard value="50+" label="Domains" />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Enterprise & Trust Section */}
-      <div className="from-background to-primary/10 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
+      {/* Compliance & Delivery */}
+      <section className="section section-divided section-glow-right">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              TRUSTED BY AI TEAMS
-            </p>
+            <p className="eyebrow">compliance & delivery</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
-              Powering Models at{' '}
+              Training Data Your Legal Team{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
-                Leading Organizations
+                Can Sign Off On
               </span>
             </h2>
-            <p className="text-gray mx-auto mb-8 max-w-2xl">
-              From research labs to production AI teams, organizations trust
-              PandorLabs datasets for model development.
+            <p className="text-gray mx-auto max-w-2xl">
+              Provenance, licensing, and residency are contract terms here — not
+              footnotes. Every dataset ships with the paperwork that proves
+              where it came from and what you are allowed to do with it.
             </p>
           </div>
 
-          {/* Testimonials */}
-          <div className="mb-12 grid gap-6 md:grid-cols-3">
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🔬</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  AI Research Lab
-                </h4>
-                <p className="text-gray/80 text-sm">
-                  University Medical Center
+          <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {complianceItems.map(({ Icon, title, description }) => (
+              <div key={title} className="panel p-7">
+                <div className="bg-green-light/10 mb-4 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Icon className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-white">
+                  {title}
+                </h3>
+                <p className="text-gray text-sm leading-relaxed">
+                  {description}
                 </p>
               </div>
-              <p className="text-gray leading-relaxed">
-                &quot;PandorLabs datasets reduced our model training time by
-                60%. The annotation quality is exceptional—better than our
-                in-house labeling.&quot;
-              </p>
-            </div>
-
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🚀</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Computer Vision Startup
-                </h4>
-                <p className="text-gray/80 text-sm">Series A Company</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;We achieved production-ready models in 3 months instead of
-                12. Access to diverse, high-quality datasets was a game changer
-                for our launch.&quot;
-              </p>
-            </div>
-
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🏢</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Enterprise ML Team
-                </h4>
-                <p className="text-gray/80 text-sm">Fortune 500 Tech Company</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;The custom labeling service delivered exactly what we
-                needed. Domain experts annotated our specialized dataset with
-                99.5% accuracy.&quot;
-              </p>
-            </div>
+            ))}
           </div>
 
-          {/* Enterprise Features */}
-          <div className="grid gap-10 lg:grid-cols-2">
-            <div className="space-y-6">
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Database className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Custom Dataset Creation
-                  </h3>
+          {/* Enterprise capabilities */}
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Database className="text-green-light h-6 w-6" />
                 </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Need something unique? Our annotation teams create custom
-                  datasets tailored to your specific requirements with quality
-                  guarantees.
-                </p>
+                <h3 className="text-lg font-semibold text-white">
+                  Custom Dataset Creation
+                </h3>
               </div>
-
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Activity className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Dedicated Support & SLAs
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Enterprise-grade support with guaranteed response times.
-                  Direct access to our data science team via Slack or Teams.
-                </p>
-              </div>
-
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <CheckCircle2 className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    On-Premise Deployment
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  GDPR, CCPA, HIPAA-ready deployments. Self-hosted options
-                  available for organizations with strict data residency
-                  requirements.
-                </p>
-              </div>
+              <p className="text-gray leading-relaxed">
+                Need something unique? Our annotation teams create custom
+                datasets tailored to your specific requirements, with quality
+                guarantees and domain expert review.
+              </p>
             </div>
 
-            {/* API Integration Preview */}
-            <div className="flex items-center justify-center">
-              <div className="border-green-light/30 shadow-green-light/20 w-full max-w-md rounded-2xl border bg-[#1a1a1a] p-6 shadow-2xl">
-                <div className="mb-4 flex items-center gap-2">
-                  <div className="flex gap-1.5">
-                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                    <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-                    <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                  </div>
-                  <span className="text-gray ml-auto text-xs">
-                    API Integration
-                  </span>
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Activity className="text-green-light h-6 w-6" />
                 </div>
-                <div className="space-y-2 font-mono text-sm">
-                  <div>
-                    <span className="text-green-light">import</span>{' '}
-                    <span className="text-white">pandor</span>
-                  </div>
-                  <div className="text-gray"># Initialize API</div>
-                  <div>
-                    <span className="text-white">client = </span>
-                    <span className="text-blue-400">pandor</span>
-                    <span className="text-white">.Client()</span>
-                  </div>
-                  <div className="text-gray mt-4"># Load dataset</div>
-                  <div>
-                    <span className="text-white">dataset = client.</span>
-                    <span className="text-yellow-400">load</span>
-                    <span className="text-white">(</span>
-                  </div>
-                  <div className="pl-4">
-                    <span className="text-green-400">
-                      &quot;coco-detection&quot;
-                    </span>
-                    <span className="text-white">,</span>
-                  </div>
-                  <div className="pl-4">
-                    <span className="text-white">split=</span>
-                    <span className="text-green-400">&quot;train&quot;</span>
-                  </div>
-                  <div>
-                    <span className="text-white">)</span>
-                  </div>
-                  <div className="text-gray mt-4"># Stream to pipeline</div>
-                  <div>
-                    <span className="text-green-light">for</span>{' '}
-                    <span className="text-white">batch</span>{' '}
-                    <span className="text-green-light">in</span>{' '}
-                    <span className="text-white">dataset:</span>
-                  </div>
-                  <div className="pl-4">
-                    <span className="text-white">model.</span>
-                    <span className="text-yellow-400">train</span>
-                    <span className="text-white">(batch)</span>
-                  </div>
-                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Dedicated Support & SLAs
+                </h3>
               </div>
+              <p className="text-gray leading-relaxed">
+                Enterprise support with guaranteed response times and direct
+                access to the data science team that builds and maintains your
+                datasets.
+              </p>
+            </div>
+
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <CheckCircle2 className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  On-Premise Deployment
+                </h3>
+              </div>
+              <p className="text-gray leading-relaxed">
+                HIPAA-ready, self-hosted delivery for organizations with strict
+                data residency requirements. Datasets never leave your
+                environment.
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Final CTA Section */}
-      <div className="from-primary/10 to-primary relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-gradient-to-t via-transparent to-transparent"></div>
+      {/* FAQ — emits FAQPage JSON-LD */}
+      <FAQSection faqs={faqs} accentColor={accentColor} />
+
+      {/* Final CTA */}
+      <section className="section section-divided section-glow">
         <div className="relative z-10 container">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
@@ -685,18 +618,18 @@ export default function AIDataPage() {
             <p className="text-gray mb-8 text-lg">
               While your competitors spend months curating datasets, you could
               be training production models with verified, high-quality data.
-              Start free. No credit card required.
+              Start with free sample splits from the datasets you actually need.
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/request" className={buttonVariants({ size: 'lg' })}>
-                Start Free Trial →
+              <Link href="/contact" className={buttonVariants({ size: 'lg' })}>
+                Request Sample Splits →
               </Link>
               <Link
-                href="/docs"
+                href="/contact"
                 className={buttonVariants({ variant: 'outline', size: 'lg' })}
               >
-                View Documentation
+                Schedule a Demo
               </Link>
             </div>
 
@@ -708,19 +641,14 @@ export default function AIDataPage() {
                 <TrustBadge icon={Activity} text="99.9% Uptime SLA" />
               </div>
               <div className="text-gray space-y-1 text-sm">
-                <p>✓ Free tier with 10GB sample datasets</p>
-                <p>✓ No credit card required to explore</p>
-                <p>✓ Cancel anytime, no long-term contracts</p>
+                <p>✓ Free sample splits before you license anything</p>
+                <p>✓ Delivery configured with a solutions engineer</p>
+                <p>✓ Per-dataset licensing, no long-term contracts</p>
               </div>
             </div>
-
-            <p className="text-gray text-sm">
-              Trusted by AI teams at NVIDIA, Siemens Healthineers, and research
-              labs worldwide
-            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <style jsx>{`
         @keyframes slideIn {
@@ -750,24 +678,23 @@ export default function AIDataPage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name: 'AI Training Datasets API',
+            name: 'AI Training Datasets',
             description:
-              'Access 100,000+ high-quality AI training datasets with 99% accuracy. Computer vision, NLP, synthetic data, and annotation services for machine learning model development and training.',
+              '100,000+ high-quality AI training datasets with 99% accuracy, delivered to your bucket or warehouse. Computer vision, NLP, synthetic data, and annotation services for machine learning model development and training.',
             brand: {
               '@type': 'Brand',
               name: 'PandorLabs',
             },
             offers: {
               '@type': 'Offer',
-              price: '0',
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
-              url: `${process.env.NEXT_PUBLIC_APP_URL}/products/ai-datasets`,
-            },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.9',
-              ratingCount: '78',
+              priceSpecification: {
+                '@type': 'PriceSpecification',
+                description:
+                  'Custom quote based on sources, volume, and delivery cadence.',
+              },
+              url: `${siteUrl}/products/ai-datasets`,
             },
             category: 'Artificial Intelligence',
             featureList: [

@@ -3,8 +3,10 @@
 import { useState } from 'react'
 
 import { ChevronDown } from 'lucide-react'
+import Link from 'next/link'
 
 import { cn } from '@/lib/utils'
+import { generateFAQSchema, stringifyJsonLd } from '@/lib/schema-generator'
 
 interface FAQ {
   question: string
@@ -20,14 +22,22 @@ export function FAQSection({ faqs, accentColor }: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section className="relative py-32">
+    <section className="section section-divided">
+      {/* FAQPage schema, generated from the same questions rendered below. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: stringifyJsonLd(generateFAQSchema(faqs)),
+        }}
+      />
       <div className="container mx-auto max-w-4xl px-6 md:px-8">
-        <div className="mb-20 text-center">
-          <h2 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl">
+        <div className="mb-12 text-center">
+          <p className="eyebrow">questions</p>
+          <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
             Frequently Asked Questions
           </h2>
-          <p className="text-xl text-white/60">
-            Everything you need to know about our API
+          <p className="text-gray">
+            Everything you need to know before you send us your first request.
           </p>
         </div>
 
@@ -66,11 +76,14 @@ export function FAQSection({ faqs, accentColor }: FAQSectionProps) {
         </div>
 
         {/* Still have questions CTA */}
-        <div className="mt-16 rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-8 text-center">
-          <p className="mb-4 text-lg text-white/70">Still have questions?</p>
-          <button className="rounded-lg border border-white/20 px-8 py-3 font-semibold transition-all duration-300 hover:bg-white/5">
-            Contact Support
-          </button>
+        <div className="panel mt-16 p-8 text-center">
+          <p className="text-gray mb-4 text-lg">Still have questions?</p>
+          <Link
+            href="/contact"
+            className="inline-flex rounded-full border border-white/20 px-8 py-3 font-semibold transition-all duration-300 hover:border-white/40 hover:bg-white/5"
+          >
+            Talk to an engineer
+          </Link>
         </div>
       </div>
     </section>

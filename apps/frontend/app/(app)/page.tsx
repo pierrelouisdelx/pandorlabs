@@ -18,7 +18,6 @@ import {
 import {
   Shield,
   Target,
-  Search,
   Users,
   Scale,
   Radio,
@@ -32,7 +31,6 @@ import {
   Bitcoin,
   Megaphone,
   Brain,
-  Radar,
   ScanLine,
 } from 'lucide-react'
 
@@ -125,8 +123,8 @@ export default function Home() {
 
             {/* Trust Badges */}
             <div className="mt-20">
-              <p className="mb-8 text-center text-lg font-semibold text-white/90 uppercase">
-                Trusted by Industry Leaders
+              <p className="mb-8 text-center text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
+                trusted by industry leaders
               </p>
               <CompanyLogoMarquee />
             </div>
@@ -135,14 +133,12 @@ export default function Home() {
       </div>
 
       {/* Vision Section */}
-      <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
+      <div className="section section-glow">
         <div className="container">
           <div className="flex gap-20">
             <div className="w-full lg:w-1/2">
               <div className="mb-10 text-center">
-                <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-                  WHY PANDORALABS
-                </p>
+                <p className="eyebrow">why pandorlabs</p>
                 <h2 className="mb-6 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
                   Your Competitive Intelligence{' '}
                   <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -196,13 +192,10 @@ export default function Home() {
       </div>
 
       {/* How It Works Section */}
-      <div className="from-background to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/5 to-green-light/5 absolute inset-0 bg-gradient-to-r via-transparent opacity-30"></div>
+      <div className="section section-divided section-glow section-glow-center">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              HOW IT WORKS
-            </p>
+            <p className="eyebrow">how it works</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               From Question to Dataset —{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -251,13 +244,10 @@ export default function Home() {
       </div>
 
       {/* Use Cases Section */}
-      <div className="from-background to-primary/20 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
+      <div className="section section-divided section-glow section-glow-center">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              LIMITLESS APPLICATIONS
-            </p>
+            <p className="eyebrow">limitless applications</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               One Engine.{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -315,13 +305,10 @@ export default function Home() {
       </div>
 
       {/* Technology Section */}
-      <div className="from-primary/20 to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="to-green-light/5 absolute inset-0 bg-gradient-to-br from-green-100/5 via-transparent"></div>
+      <div className="section section-divided section-glow section-glow-right">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              TECHNOLOGY
-            </p>
+            <p className="eyebrow">technology</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Built for{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -365,126 +352,122 @@ export default function Home() {
       </div>
 
       {/* Enterprise Section */}
-      <div className="from-background to-primary/10 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
+      <div className="section section-divided section-glow section-glow-right">
         <div className="relative z-10 container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              FOR BUSINESSES AT SCALE
-            </p>
+            <p className="eyebrow">for teams at scale</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
-              Trusted by Teams That{' '}
+              Enterprise Web Data,{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
-                Can&apos;t Afford to Wait
+                Without the Enterprise Overhead
               </span>
             </h2>
             <p className="text-gray mx-auto mb-8 max-w-2xl">
-              Whether you&apos;re a startup racing to understand your market or
-              a Fortune 500 making billion-dollar decisions, you need
-              intelligence you can trust—fast.
+              Dedicated pipelines, contractual guarantees, and a named team
+              behind every dataset — so legal, security, and procurement can say
+              yes on the first review.
             </p>
           </div>
 
-          {/* Testimonials Section */}
-          <div className="mb-12 grid gap-6 md:grid-cols-3">
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🏢</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Enterprise Strategy Teams
-                </h4>
-                <p className="text-gray/80 text-sm">
-                  Fortune 500 Healthcare Company
-                </p>
+          {/* Compliance strip */}
+          <div className="mb-12 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: Shield, label: 'SOC 2 Type II', sub: 'Audited annually' },
+              { icon: Scale, label: 'GDPR & CCPA', sub: 'DPA on request' },
+              { icon: Activity, label: '99.9% uptime SLA', sub: 'Credit-backed' },
+              { icon: Lock, label: 'Data residency', sub: 'EU & US regions' },
+            ].map(({ icon: Icon, label, sub }) => (
+              <div
+                key={label}
+                className="bg-primary flex items-center gap-4 px-6 py-6"
+              >
+                <Icon className="text-green-light h-6 w-6 shrink-0" />
+                <div>
+                  <p className="font-semibold text-white">{label}</p>
+                  <p className="text-gray text-sm">{sub}</p>
+                </div>
               </div>
-              <p className="text-gray leading-relaxed">
-                &quot;We replaced 3 full-time analysts with PandorLabs. Now we
-                get better data, faster—and our team focuses on insights, not
-                spreadsheets.&quot;
-              </p>
-            </div>
-
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🚀</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Growth-Stage Startups
-                </h4>
-                <p className="text-gray/80 text-sm">Series B SaaS Company</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;Before PandorLabs, competitive research took weeks. Now we
-                have real-time market intelligence that informs every product
-                decision.&quot;
-              </p>
-            </div>
-
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">📊</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Investment Research
-                </h4>
-                <p className="text-gray/80 text-sm">$2B Investment Fund</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;PandorLabs gives us market data our competitors don&apos;t
-                have access to. It&apos;s like having insider
-                knowledge—legally.&quot;
-              </p>
-            </div>
+            ))}
           </div>
 
           <div className="grid gap-10 lg:grid-cols-2">
             <div className="space-y-6">
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
+              <div className="panel group p-7">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Award className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
+                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300">
+                    <Target className="text-green-light h-6 w-6" />
                   </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Enterprise-Grade Solutions
+                  <h3 className="text-lg font-semibold text-white">
+                    Dedicated Extraction Pipelines
                   </h3>
                 </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Dedicated infrastructure, SLAs, and white-glove onboarding for
-                  enterprise teams.
+                <p className="text-gray leading-relaxed">
+                  Isolated infrastructure with reserved throughput and a proxy
+                  pool that is yours alone. Your crawls are never queued behind
+                  another customer&apos;s, and volume spikes don&apos;t degrade
+                  your latency.
                 </p>
               </div>
 
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
+              <div className="panel group p-7">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Activity className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
+                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300">
+                    <Radio className="text-green-light h-6 w-6" />
                   </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    24/7 Support
+                  <h3 className="text-lg font-semibold text-white">
+                    Delivered Into Your Stack
                   </h3>
                 </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Direct access to engineering team. Slack/Teams integration
-                  available.
+                <p className="text-gray leading-relaxed">
+                  Push clean records straight to S3, GCS, Snowflake, BigQuery,
+                  or a webhook — as JSON, CSV, or Parquet, on the schedule you
+                  set. Schema changes are versioned, never silent.
                 </p>
               </div>
 
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
+              <div className="panel group p-7">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <CheckCircle2 className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
+                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300">
+                    <CheckCircle2 className="text-green-light h-6 w-6" />
                   </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Custom Solutions
+                  <h3 className="text-lg font-semibold text-white">
+                    Monitored Data Quality
                   </h3>
                 </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Need something unique? Our teams and AI agents create custom
-                  solutions for your specific use cases.
+                <p className="text-gray leading-relaxed">
+                  Every run is validated against your schema, with coverage and
+                  freshness checks on each field. When a source changes layout,
+                  our agents repair the extractor and we tell you before you
+                  find a gap in your dashboard.
                 </p>
               </div>
 
-              <div className="flex gap-4">
+              <div className="panel group p-7">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300">
+                    <Award className="text-green-light h-6 w-6" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">
+                    A Named Team, Not a Ticket Queue
+                  </h3>
+                </div>
+                <p className="text-gray leading-relaxed">
+                  A solutions engineer scopes your sources, designs the schema,
+                  and stays in a shared Slack or Teams channel. Security reviews,
+                  DPAs, and custom contracts handled by people, not a help
+                  center.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
                 <Link href="/contact" className={buttonVariants()}>
-                  See AI in Action
+                  Talk to a Solutions Engineer
+                </Link>
+                <Link
+                  href="/contact"
+                  className={buttonVariants({ variant: 'outline' })}
+                >
+                  Request a Sample Dataset
                 </Link>
               </div>
             </div>
@@ -498,8 +481,7 @@ export default function Home() {
       </div>
 
       {/* Final CTA Section */}
-      <div className="from-primary/10 to-primary relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-gradient-to-t via-transparent to-transparent"></div>
+      <div className="section section-divided section-glow section-glow-center">
         <div className="relative z-10 container">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
@@ -509,21 +491,28 @@ export default function Home() {
               </span>
             </h2>
             <p className="text-gray mb-8 text-lg">
-              While your competitors waste weeks gathering data manually, you
-              could be making strategic moves backed by real-time intelligence.
-              Start free. No credit card. No technical setup. Get your first
-              dataset in the next 15 minutes.
+              While your competitors spend weeks gathering data by hand, you
+              could be deciding on evidence. Send us the sources you care about
+              and the fields you need — we&apos;ll come back with a sample
+              dataset extracted from the real sites, before you commit to
+              anything.
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
               <Link href="/contact" className={buttonVariants({ size: 'lg' })}>
-                Get Your First Dataset Free →
+                Request Your Free Sample Dataset →
+              </Link>
+              <Link
+                href="/products"
+                className={buttonVariants({ variant: 'outline', size: 'lg' })}
+              >
+                Browse the Products
               </Link>
             </div>
 
             <p className="text-gray text-sm">
-              Trusted by NVIDIA, Siemens Healthineers, and 500+ research teams
-              worldwide
+              No credit card, no commitment — just a solutions engineer and your
+              data request.
             </p>
           </div>
         </div>

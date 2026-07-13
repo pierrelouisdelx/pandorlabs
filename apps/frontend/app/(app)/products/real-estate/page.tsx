@@ -5,22 +5,18 @@ import {
   Home,
   Shield,
   TrendingUp,
-  Zap,
-  Search,
   Users,
-  Target,
   Calculator,
   LineChart,
   Map,
   Database,
-  Bot,
   Cpu,
   Lock,
   Award,
   Activity,
   CheckCircle2,
+  Globe,
 } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -35,14 +31,52 @@ import UseCaseCard from '@/components/custom/use-case-card'
 import TechFeatureCard from '@/components/custom/tech-feature-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
+import { FAQSection } from '../_components/faq-section'
+import { ProductHero } from '../_components/product-hero'
+
+const accentColor = '#46e695'
+
+const faqs = [
+  {
+    question: 'Where does the property data come from?',
+    answer:
+      'We aggregate from licensed MLS feeds, county assessor and recorder records, public deed and permit filings, and rental listing sources across 50+ US markets. Each record carries the source and the timestamp it was last observed, so you can always trace a value back to where it came from. Where sources disagree, we surface both values rather than silently picking one.',
+  },
+  {
+    question: 'How fresh is the data?',
+    answer:
+      'Active listing and price-change data refreshes on a 15-minute cycle. County-sourced records (deeds, assessments, permits) update as fast as the county publishes them, which ranges from daily to monthly depending on the jurisdiction. Every record exposes a last_updated field so you never have to guess how current a value is.',
+  },
+  {
+    question:
+      'What does the ML valuation actually predict, and how accurate is it?',
+    answer:
+      'The model estimates a current market value for a property from comparable sales, price history, property characteristics, and neighborhood trend signals. Reported accuracy is measured as median error against subsequent arms-length sales in covered markets; accuracy varies by market density, and every valuation ships with a confidence interval so you can decide whether to trust it for a given decision.',
+  },
+  {
+    question: 'How do I get the data out — streamed, or in bulk?',
+    answer:
+      'Both, and either way we do the delivering. Webhooks push listing and price-change events to your systems as they happen, and bulk JSON, CSV, or Parquet snapshots land in S3, GCS, Azure Blob, Snowflake, or BigQuery on the schedule you set. A solutions engineer agrees the fields, cadence, and destination with you up front, so the data arrives already shaped for the models and dashboards you run.',
+  },
+  {
+    question: 'How is it priced?',
+    answer:
+      'Pricing is based on the records delivered and the refresh cadence you need, with volume tiers that lower the unit price as you scale. Bulk snapshot delivery is priced per dataset. Before you commit we deliver a free sample built from your own target markets and addresses, so you can check coverage and valuation accuracy against deals you already know.',
+  },
+  {
+    question: 'What happens when a source site or feed changes its layout?',
+    answer:
+      'Extraction is monitored continuously: schema validators compare each run against the expected shape of the data and alert us when field coverage or value distributions drift. Layout changes are typically repaired within hours, and in the meantime the affected fields are marked stale rather than served as if nothing happened. Silent bad data is the failure mode we work hardest to prevent.',
+  },
+]
 
 export default function RealEstatePage() {
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
 
   const serviceSchema = generateServiceSchema({
-    name: 'Real Estate Market Data API',
+    name: 'Real Estate Market Data',
     description:
-      'Access comprehensive real estate market intelligence with property listings, pricing trends, market analytics, and investment insights. Real-time data for informed property decisions.',
+      'Managed real estate market intelligence — property listings, pricing trends, market analytics, and investment insights, delivered to your warehouse or object storage. Real-time data for informed property decisions.',
     url: `${siteUrl}/products/real-estate`,
     provider: {
       name: 'Pandor Labs',
@@ -55,13 +89,13 @@ export default function RealEstatePage() {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: siteUrl },
     { name: 'Products', url: `${siteUrl}/products` },
-    { name: 'Real Estate Data API', url: `${siteUrl}/products/real-estate` },
+    { name: 'Real Estate Market Data', url: `${siteUrl}/products/real-estate` },
   ])
 
   const webPageSchema = generateWebPageSchema(
     `${siteUrl}/products/real-estate`,
-    'Real Estate Market Data API',
-    'Access comprehensive real estate market intelligence with property listings, pricing trends, and investment insights.'
+    'Real Estate Market Data',
+    'Managed real estate market intelligence — property listings, pricing trends, and investment insights, delivered to your stack.',
   )
 
   return (
@@ -88,15 +122,81 @@ export default function RealEstatePage() {
           __html: stringifyJsonLd(webPageSchema),
         }}
       />
+
+      <ProductHero
+        product="realEstate"
+        headline="Property Data, Delivered to Your Models"
+        subheadline="140M+ property records with price history, comps, and market movement — normalised into one schema and refreshed on the cadence you set."
+        valueProps={[
+          '140M+ property records across listing portals, agency sites, and public records',
+          'One schema, so a listing in Paris compares cleanly to one in Miami',
+          'Refreshed as often as every 15 minutes, with change events pushed to you',
+          'Delivered to S3, Snowflake, BigQuery, or a webhook — not a portal you log into',
+        ]}
+        primaryCTA="Request a Sample Dataset"
+        secondaryCTA="Schedule a Demo"
+        trustIndicators={[
+          { Icon: Shield, text: 'SOC 2 Type II' },
+          { Icon: Activity, text: '99.9% uptime SLA' },
+          { Icon: Building2, text: '140M+ records' },
+        ]}
+        accentColor={accentColor}
+        accentGlow="rgba(70, 230, 149, 0.15)"
+        accentGradient="from-green-light/20 via-transparent to-transparent"
+        visualElement={
+          <div className="space-y-4">
+            {[
+              {
+                addr: '12 Rue de Rivoli, Paris',
+                price: '€1.24M',
+                delta: '+3.1%',
+              },
+              {
+                addr: '840 Ocean Dr, Miami, FL',
+                price: '$2.10M',
+                delta: '+5.4%',
+              },
+              {
+                addr: '17 Cheyne Walk, London',
+                price: '£3.85M',
+                delta: '-1.2%',
+              },
+            ].map((p) => (
+              <div key={p.addr} className="panel flex items-center gap-4 p-5">
+                <div className="bg-green-light/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
+                  <Building2 className="text-green-light h-6 w-6" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm text-white">{p.addr}</p>
+                  <p className="text-gray text-xs">
+                    last sold · verified today
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-white">{p.price}</p>
+                  <p
+                    className={
+                      p.delta.startsWith('-')
+                        ? 'text-xs text-red-400'
+                        : 'text-green-light text-xs'
+                    }
+                  >
+                    {p.delta}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        }
+      />
+
       {/* Vision Section - Real Estate Intelligence Advantage */}
-      <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
+      <section className="section section-glow">
         <div className="container">
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-20">
             <div className="w-full lg:w-1/2">
               <div className="mb-10 text-center lg:text-left">
-                <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-                  WHY REAL ESTATE DATA API
-                </p>
+                <p className="eyebrow">why managed property data</p>
                 <h2 className="mb-6 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
                   Your Market Intelligence{' '}
                   <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -108,9 +208,9 @@ export default function RealEstatePage() {
               <div className="text-gray mx-auto mb-12 max-w-4xl space-y-4 lg:mx-0">
                 <p>
                   Manual property research is slow, outdated comps miss market
-                  shifts, and opportunities vanish while you&apos;re still gathering
-                  data. Traditional real estate tools leave you flying blind in
-                  fast-moving markets.
+                  shifts, and opportunities vanish while you&apos;re still
+                  gathering data. Traditional real estate tools leave you flying
+                  blind in fast-moving markets.
                 </p>
                 <p className="text-lg font-semibold text-white">
                   Get instant market intelligence with ML-powered insights.
@@ -128,12 +228,12 @@ export default function RealEstatePage() {
               {/* Stats Cards */}
               <div className="grid gap-6 md:grid-cols-3">
                 <StatsCard value="140M+" label="Property Records" />
-                <StatsCard value="<50ms" label="API Response" />
+                <StatsCard value="<50ms" label="Feed Latency" />
                 <StatsCard value="99.9%" label="Data Accuracy" />
               </div>
             </div>
 
-            {/* Market Visualization Placeholder */}
+            {/* Market Visualization */}
             <div className="flex w-full items-center justify-center lg:w-1/2">
               <div className="relative aspect-square w-full max-w-md">
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -230,16 +330,13 @@ export default function RealEstatePage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* How It Works Section */}
-      <div className="from-background to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/5 to-green-light/5 absolute inset-0 bg-gradient-to-r via-transparent opacity-30"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              HOW IT WORKS
-            </p>
+            <p className="eyebrow">how it works</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               From Query to Insight —{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -256,7 +353,7 @@ export default function RealEstatePage() {
             <ProcessStep
               number="01"
               title="Query Property Data"
-              description="Search by address, location, price range, or custom criteria. Our API understands natural language queries and complex filters for precise results."
+              description="Tell us the addresses, locations, price bands, or custom criteria that matter. We scope the sources and build the feed around them — no query language to learn."
             />
             <ProcessStep
               number="02"
@@ -271,12 +368,12 @@ export default function RealEstatePage() {
           </div>
 
           {/* Timeline */}
-          <div className="text-gray mt-10 flex items-center justify-center gap-4">
+          <div className="text-gray mt-10 flex flex-wrap items-center justify-center gap-4">
             <span className="rounded-full bg-white/5 px-4 py-2 font-medium transition-all duration-300 hover:bg-white/10">
               Request
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
-            <span className="to-green-light bg-green-light/10 animate-pulse rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
+            <span className="to-green-light bg-green-light/10 rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
               &lt;50ms avg
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
@@ -285,16 +382,13 @@ export default function RealEstatePage() {
             </span>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Use Cases Section */}
-      <div className="from-background to-primary/20 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided section-glow-center">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              REAL ESTATE APPLICATIONS
-            </p>
+            <p className="eyebrow">real estate applications</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Power Every Real Estate{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -302,8 +396,8 @@ export default function RealEstatePage() {
               </span>
             </h2>
             <p className="text-gray mx-auto max-w-2xl">
-              From investment analysis to automated underwriting, our API powers
-              the next generation of PropTech.
+              From investment analysis to automated underwriting, our data
+              powers the next generation of PropTech.
             </p>
           </div>
 
@@ -336,7 +430,7 @@ export default function RealEstatePage() {
             <UseCaseCard
               icon={LineChart}
               title="PropTech Innovation"
-              description="Build next-generation real estate applications with comprehensive API access to listings, valuations, and market intelligence."
+              description="Build next-generation real estate applications on a managed feed of listings, valuations, and market intelligence — delivered, not integrated."
             />
           </div>
 
@@ -350,16 +444,13 @@ export default function RealEstatePage() {
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Technology Section */}
-      <div className="from-primary/20 to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="to-green-light/5 absolute inset-0 bg-gradient-to-br from-green-100/5 via-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              TECHNOLOGY
-            </p>
+            <p className="eyebrow">technology</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Enterprise-Grade Infrastructure{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -376,7 +467,7 @@ export default function RealEstatePage() {
             <TechFeatureCard
               icon={Database}
               title="Multi-Source Aggregation"
-              description="Unified API combining MLS feeds, county records, transaction data, and proprietary sources across 50+ markets with real-time synchronization."
+              description="One unified pipeline combining MLS feeds, county records, transaction data, and proprietary sources across 50+ markets with real-time synchronization."
             />
             <TechFeatureCard
               icon={Cpu}
@@ -398,125 +489,131 @@ export default function RealEstatePage() {
             <StatsCard value="20yrs" label="Historical Data" />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Enterprise Section */}
-      <div className="from-background to-primary/10 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      {/* Compliance & Delivery Strip */}
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              ENTERPRISE SOLUTIONS
-            </p>
+            <p className="eyebrow">compliance &amp; delivery</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
-              Built for{' '}
+              Ready for Your{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
-                Enterprise Scale
+                Security Review
               </span>
             </h2>
-            <p className="text-gray mx-auto mb-12 max-w-2xl">
-              Whether you&apos;re a PropTech startup or a national brokerage, we
-              provide the infrastructure and support for mission-critical real
-              estate applications.
+            <p className="text-gray mx-auto max-w-2xl">
+              The questions your procurement and compliance teams will ask,
+              answered before they ask them.
             </p>
           </div>
 
-          <div className="grid gap-10 lg:grid-cols-2">
-            <div className="space-y-6">
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Award className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Custom Data Pipelines
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Dedicated infrastructure with custom filters, webhooks, and
-                  real-time streaming for your enterprise workflows.
-                </p>
-              </div>
-
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Activity className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Priority Support
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  Dedicated account management with SLA guarantees. Direct
-                  engineering access via Slack/Teams integration.
-                </p>
-              </div>
-
-              <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="bg-green-light/10 group-hover:bg-green-light/20 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                    <Lock className="text-green-light h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <h3 className="group-hover:text-green-light text-lg font-semibold text-white transition-colors duration-300">
-                    Compliance & Security
-                  </h3>
-                </div>
-                <p className="text-gray group-hover:text-gray/90 leading-relaxed transition-colors duration-300">
-                  GDPR/CCPA compliant, SOC 2 Type II certified. On-premise
-                  deployment options available for regulated industries.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-4">
-                <Link href="/demo" className={buttonVariants()}>
-                  Schedule Demo
-                </Link>
-                <Link
-                  href="/pricing"
-                  className={buttonVariants({ variant: 'outline' })}
-                >
-                  View Enterprise Pricing
-                </Link>
-              </div>
+          <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="panel p-6">
+              <Shield className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">SOC 2 Type II</h3>
+              <p className="text-gray text-sm leading-relaxed">
+                Independently audited controls covering security, availability,
+                and confidentiality. Report available under NDA.
+              </p>
             </div>
-
-            {/* API Code Example */}
-            <div className="flex items-center">
-              <div className="w-full rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-sm">
-                <div className="mb-4 flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                  <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-                  <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                  <span className="text-gray ml-3 text-sm">
-                    API Request Example
-                  </span>
-                </div>
-                <pre className="overflow-x-auto text-sm">
-                  <code className="text-green-light">
-                    {`GET /api/v1/properties?
-  location=austin,tx&
-  price_min=400000&
-  price_max=600000&
-  beds_min=3&
-  ml_valuation=true&
-  market_trends=true`}
-                  </code>
-                </pre>
-                <div className="text-gray mt-4 text-xs">
-                  <span className="text-green-400">200 OK</span> - 1,247
-                  properties found in 42ms
-                </div>
-              </div>
+            <div className="panel p-6">
+              <Lock className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">GDPR &amp; CCPA</h3>
+              <p className="text-gray text-sm leading-relaxed">
+                DPA available, subprocessor list published, and deletion
+                requests honored across every downstream copy of the data.
+              </p>
+            </div>
+            <div className="panel p-6">
+              <Activity className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">
+                99.9% Uptime SLA
+              </h3>
+              <p className="text-gray text-sm leading-relaxed">
+                Contractual SLA with service credits, a public status page, and
+                incident postmortems for every degradation.
+              </p>
+            </div>
+            <div className="panel p-6">
+              <Globe className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">
+                EU/US Data Residency
+              </h3>
+              <p className="text-gray text-sm leading-relaxed">
+                Choose the region your data is processed and stored in.
+                On-premise deployment available for regulated industries.
+              </p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Enhanced Final CTA */}
-      <div className="from-primary/10 to-primary relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-gradient-to-t via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+          {/* Enterprise capability grid */}
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Award className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Custom Data Pipelines
+                </h3>
+              </div>
+              <p className="text-gray leading-relaxed">
+                Dedicated infrastructure with custom filters, webhooks, and
+                real-time streaming for your enterprise workflows.
+              </p>
+            </div>
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Activity className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Priority Support
+                </h3>
+              </div>
+              <p className="text-gray leading-relaxed">
+                Dedicated account management with SLA guarantees and direct
+                engineering access via a shared Slack or Teams channel.
+              </p>
+            </div>
+            <div className="panel p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="bg-green-light/10 flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <Database className="text-green-light h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  Flexible Delivery
+                </h3>
+              </div>
+              <p className="text-gray leading-relaxed">
+                Webhooks, scheduled bulk snapshots in JSON, CSV, or Parquet, and
+                direct loads into Snowflake or BigQuery — delivered to the stack
+                you already use.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <Link href="/contact" className={buttonVariants()}>
+              Schedule Demo
+            </Link>
+            <Link
+              href="/contact"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              View Enterprise Pricing
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <FAQSection faqs={faqs} accentColor={accentColor} />
+
+      {/* Final CTA */}
+      <section className="section section-divided section-glow">
+        <div className="container">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Transform Property Intelligence Into{' '}
@@ -525,37 +622,33 @@ export default function RealEstatePage() {
               </span>
             </h2>
             <p className="text-gray mb-8 text-lg">
-              Join 500+ real estate professionals leveraging AI-powered market
-              data to make faster, smarter decisions.
+              140M+ property records with ML-powered valuations, comps, and
+              market trends, delivered to your stack. Start with a free sample
+              from your own target markets.
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/request" className={buttonVariants({ size: 'lg' })}>
-                Start Free Trial — 1,000 API Calls
+              <Link href="/contact" className={buttonVariants({ size: 'lg' })}>
+                Request a Sample Dataset →
               </Link>
               <Link
-                href="/demo"
+                href="/contact"
                 className={buttonVariants({ variant: 'outline', size: 'lg' })}
               >
-                Schedule Demo
+                Schedule a Demo
               </Link>
             </div>
 
             {/* Trust Badges */}
-            <div className="mb-4 flex flex-wrap items-center justify-center gap-4">
-              <TrustBadge icon={Shield} text="SOC 2 Certified" />
-              <TrustBadge icon={CheckCircle2} text="GDPR Compliant" />
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <TrustBadge icon={Shield} text="SOC 2 Type II" />
+              <TrustBadge icon={CheckCircle2} text="GDPR & CCPA" />
               <TrustBadge icon={Activity} text="99.9% Uptime SLA" />
               <TrustBadge icon={Database} text="140M+ Properties" />
             </div>
-
-            <p className="text-gray text-sm">
-              Trusted by leading PropTech companies and real estate
-              professionals worldwide
-            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <style jsx>{`
         @keyframes float {
@@ -575,31 +668,30 @@ export default function RealEstatePage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name: 'Real Estate Data API',
+            name: 'Real Estate Market Data',
             description:
-              'Access 140M+ property records with ML-powered insights. Real-time MLS feeds, 94% valuation accuracy, and sub-50ms API response times for investment analysis and automated underwriting.',
+              '140M+ property records with ML-powered insights, delivered to your stack. Real-time MLS feeds, 94% valuation accuracy, and sub-50ms feed latency for investment analysis and automated underwriting.',
             brand: {
               '@type': 'Brand',
               name: 'PandorLabs',
             },
             offers: {
               '@type': 'Offer',
-              price: '0',
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
+              priceSpecification: {
+                '@type': 'PriceSpecification',
+                description:
+                  'Custom quote based on sources, volume, and delivery cadence.',
+              },
               url: `${process.env.NEXT_PUBLIC_APP_URL}/products/real-estate`,
-            },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.9',
-              ratingCount: '87',
             },
             category: 'Real Estate Technology',
             featureList: [
               '140M+ property records',
               'Real-time MLS data feeds',
               '94% valuation accuracy',
-              'Sub-50ms API response',
+              'Sub-50ms feed latency',
               'ML-powered predictive insights',
               '20+ years transaction history',
               'Automated underwriting',

@@ -1,3 +1,4 @@
+import { FAQSection } from '../_components/faq-section'
 import StatsCard from '@/components/custom/stats-card'
 import ProcessStep from '@/components/custom/process-step'
 import UseCaseCard from '@/components/custom/use-case-card'
@@ -28,7 +29,44 @@ import {
   Award,
   Bell,
   Package,
+  Database,
 } from 'lucide-react'
+
+const accentColor = '#F59E0B'
+
+const shoppingFaqs = [
+  {
+    question: 'Which marketplaces and regions do you cover?',
+    answer:
+      'We monitor 30.7M+ storefronts across 50+ marketplaces, including Amazon, Walmart, eBay, Target, and the long tail of Shopify and BigCommerce merchants, in every major retail region. Coverage is by marketplace and locale, so the same product can be tracked separately in each country you sell in. If a marketplace you care about is not yet supported, adding it is part of standard onboarding.',
+  },
+  {
+    question:
+      'How often is pricing refreshed, and how accurate is the matching?',
+    answer:
+      'Tracked products refresh every 15 minutes by default, and high-priority SKUs can be pushed to a faster cadence. Product matching runs on a combination of computer vision and NLP over titles, images, and specifications, resolving to 98% accuracy against our benchmark set. Every matched offer returns a confidence score so you can gate automated repricing on the threshold you trust.',
+  },
+  {
+    question: 'Is this data collection legal and compliant?',
+    answer:
+      'We collect only publicly visible listing data — prices, sellers, availability, and product attributes shown to any shopper without logging in. We do not bypass authentication, we do not collect personal data, and we honour rate limits so target sites are not disrupted. Our infrastructure is SOC 2 Type II certified, our processing is GDPR and CCPA compliant, and we sign DPAs as part of procurement.',
+  },
+  {
+    question: 'How is the data delivered, and what does it integrate with?',
+    answer:
+      'We deliver into the systems you already run. Webhooks push price changes, stockouts, and MAP violations to your endpoints the moment they are detected, and scheduled JSON, CSV, or Parquet exports land in S3, GCS, Azure Blob, Snowflake, or BigQuery on the cadence you set. Native connectors cover Shopify and BigCommerce, and a solutions engineer maps the feed to your ERP or BI stack during onboarding so nothing needs building on your side.',
+  },
+  {
+    question: 'How does pricing work?',
+    answer:
+      'Pricing is based on the number of tracked SKU-per-marketplace combinations and how frequently they refresh, with volume tiers that lower the unit cost as your catalogue grows. Historical backfill and dedicated crawl capacity are quoted separately. Before you commit, we run a free sample against your own catalogue and hand back the matched dataset, so you can validate matching accuracy on SKUs you actually sell.',
+  },
+  {
+    question: 'What happens when a retailer changes its page layout?',
+    answer:
+      'Maintaining extractors is our responsibility, not yours. Layout changes are detected automatically by validation checks that compare each field against expected types and historical ranges, and broken extractors are quarantined rather than allowed to emit bad prices. Our team repairs them upstream, so the schema we deliver stays identical and you never reprice off a parsing error.',
+  },
+]
 
 export default function ShoppingMonitoringPage() {
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
@@ -83,7 +121,11 @@ export default function ShoppingMonitoringPage() {
         }}
       />
       {/* Hero Section */}
-      <div className="from-primary via-primary/95 to-background relative -mt-24 flex min-h-screen items-center overflow-hidden bg-linear-to-b pt-24">
+      <div className="bg-primary relative isolate -mt-24 flex min-h-screen items-center overflow-hidden pt-24">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_70%_20%,rgba(245,158,11,0.10),transparent_70%)]"
+        />
         <div className="container w-full py-20">
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-20">
             {/* Left Column - Content */}
@@ -131,26 +173,26 @@ export default function ShoppingMonitoringPage() {
                 {/* CTA Buttons */}
                 <div className="mb-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
                   <Link
-                    href="/request"
+                    href="/contact"
                     className={buttonVariants({ size: 'lg' })}
                   >
-                    Start Free Trial →
+                    Request a Sample Dataset →
                   </Link>
                   <Link
-                    href="/demo"
+                    href="/contact"
                     className={buttonVariants({
                       variant: 'outline',
                       size: 'lg',
                     })}
                   >
-                    View Documentation
+                    Schedule a Demo
                   </Link>
                 </div>
 
                 {/* Trust Badges */}
                 <div className="mt-20">
-                  <p className="mb-8 text-center text-lg font-semibold text-white/90 uppercase lg:text-left">
-                    Trusted by Leading E-commerce Brands
+                  <p className="eyebrow text-center lg:text-left">
+                    what you get on day one
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-12 lg:justify-start lg:gap-16">
                     <div className="flex items-center gap-2 text-white/60">
@@ -211,10 +253,7 @@ export default function ShoppingMonitoringPage() {
                           y2="100%"
                         >
                           <stop offset="0%" stopColor="rgba(245,158,11,0.4)" />
-                          <stop
-                            offset="100%"
-                            stopColor="rgba(245,158,11,0)"
-                          />
+                          <stop offset="100%" stopColor="rgba(245,158,11,0)" />
                         </linearGradient>
                         <linearGradient
                           id="lineGradient"
@@ -296,7 +335,11 @@ export default function ShoppingMonitoringPage() {
                     </div>
                     <div
                       className="alert-pulse absolute"
-                      style={{ left: '62.5%', top: '30%', animationDelay: '1s' }}
+                      style={{
+                        left: '62.5%',
+                        top: '30%',
+                        animationDelay: '1s',
+                      }}
                     >
                       <div className="h-3 w-3 rounded-full bg-amber-400"></div>
                     </div>
@@ -319,9 +362,7 @@ export default function ShoppingMonitoringPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-8 rounded-full border-2 border-dashed border-amber-400/40"></div>
-                      <span className="text-xs text-white/60">
-                        Competitors
-                      </span>
+                      <span className="text-xs text-white/60">Competitors</span>
                     </div>
                   </div>
                 </div>
@@ -332,14 +373,12 @@ export default function ShoppingMonitoringPage() {
       </div>
 
       {/* Vision Section */}
-      <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
+      <section className="section">
         <div className="container">
           <div className="flex gap-20">
             <div className="w-full">
               <div className="mb-10 text-center">
-                <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-                  WHY PRICE MONITORING
-                </p>
+                <p className="eyebrow">why price monitoring</p>
                 <h2 className="mb-6 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
                   Your Competitive Pricing{' '}
                   <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent">
@@ -382,16 +421,13 @@ export default function ShoppingMonitoringPage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* How It Works Section */}
-      <div className="from-background to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 opacity-30"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              HOW IT WORKS
-            </p>
+            <p className="eyebrow">how it works</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               From Setup to Insights —{' '}
               <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent">
@@ -437,16 +473,17 @@ export default function ShoppingMonitoringPage() {
             </span>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Use Cases Section */}
-      <div className="from-background to-primary/20 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(55%_45%_at_50%_0%,rgba(245,158,11,0.10),transparent_70%)]"
+        />
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              PRICING INTELLIGENCE APPLICATIONS
-            </p>
+            <p className="eyebrow">pricing intelligence applications</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Power Every E-commerce{' '}
               <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent">
@@ -502,16 +539,13 @@ export default function ShoppingMonitoringPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Technology Section */}
-      <div className="from-primary/20 to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-200/5 via-transparent to-amber-500/5"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              TECHNOLOGY
-            </p>
+            <p className="eyebrow">technology</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Built for{' '}
               <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent">
@@ -534,7 +568,7 @@ export default function ShoppingMonitoringPage() {
             <TechFeatureCard
               icon={Zap}
               title="Multi-Marketplace Coverage"
-              description="Monitor Amazon, eBay, Walmart, Shopify, and 50+ marketplaces from a single dashboard. Unified API access means one integration gives you complete market visibility across all channels."
+              description="Monitor Amazon, eBay, Walmart, Shopify, and 50+ marketplaces from a single dashboard. One managed feed, one schema — complete market visibility across every channel without a separate build per marketplace."
             />
             <TechFeatureCard
               icon={Lock}
@@ -551,16 +585,17 @@ export default function ShoppingMonitoringPage() {
             <StatsCard value="30.7M" label="Stores Tracked" />
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Enterprise Section */}
-      <div className="from-background to-primary/10 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_45%_at_85%_0%,rgba(245,158,11,0.10),transparent_70%)]"
+        />
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              FOR BUSINESSES AT SCALE
-            </p>
+            <p className="eyebrow">for businesses at scale</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Trusted by Teams That{' '}
               <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent">
@@ -625,11 +660,11 @@ export default function ShoppingMonitoringPage() {
               </div>
 
               <div className="flex gap-4">
-                <Link href="/demo" className={buttonVariants()}>
+                <Link href="/contact" className={buttonVariants()}>
                   See Platform Demo
                 </Link>
                 <Link
-                  href="/pricing"
+                  href="/contact"
                   className={buttonVariants({ variant: 'outline' })}
                 >
                   View Pricing
@@ -688,79 +723,84 @@ export default function ShoppingMonitoringPage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Testimonials Section */}
-      <div className="from-primary/10 to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="absolute inset-0 bg-gradient-to-t from-amber-500/5 via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      {/* Delivery & Compliance Section */}
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              CUSTOMER SUCCESS
-            </p>
+            <p className="eyebrow">delivery and compliance</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
-              Trusted by{' '}
+              Ready for{' '}
               <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent">
-                E-commerce Leaders
+                Procurement Review
               </span>
             </h2>
+            <p className="text-gray mx-auto max-w-2xl">
+              The details your security, legal, and data teams will ask about
+              before the first dataset changes hands.
+            </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="group rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-amber-400/50 hover:bg-white/10 hover:shadow-2xl hover:shadow-amber-500/20">
-              <div className="mb-4">
-                <div className="mb-2 text-2xl text-amber-400">🛒</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  E-commerce Brand Manager
-                </h4>
-                <p className="text-gray/80 text-sm">
-                  Mid-Market Consumer Electronics
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                Icon: Shield,
+                title: 'SOC 2 Type II',
+                description:
+                  'Audited controls across security, availability, and confidentiality. Report available under NDA.',
+              },
+              {
+                Icon: Lock,
+                title: 'GDPR & CCPA',
+                description:
+                  'Public listing data only. No personal data collected, and a DPA is available on request.',
+              },
+              {
+                Icon: Activity,
+                title: '99.9% Uptime SLA',
+                description:
+                  'Contractual availability with redundant crawlers, automatic retries, and a public status page.',
+              },
+              {
+                Icon: Database,
+                title: 'Data Residency',
+                description:
+                  'Choose EU or US processing and storage regions to match your regulatory obligations.',
+              },
+            ].map(({ Icon, title, description }) => (
+              <div key={title} className="panel p-6">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/10">
+                  <Icon className="h-5 w-5 text-amber-400" />
+                </div>
+                <h3 className="mb-2 font-semibold text-white">{title}</h3>
+                <p className="text-gray text-sm leading-relaxed">
+                  {description}
                 </p>
               </div>
-              <p className="text-gray leading-relaxed">
-                &quot;We increased our profit margins by 18% in the first
-                quarter using PandorLabs. Real-time competitor tracking lets us
-                price optimally while protecting our brand positioning.&quot;
-              </p>
-            </div>
+            ))}
+          </div>
 
-            <div className="group rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-amber-400/50 hover:bg-white/10 hover:shadow-2xl hover:shadow-amber-500/20">
-              <div className="mb-4">
-                <div className="mb-2 text-2xl text-amber-400">📦</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Marketplace Operations Director
-                </h4>
-                <p className="text-gray/80 text-sm">Fortune 500 Retailer</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;Before PandorLabs, we had 5 analysts manually tracking
-                prices. Now we monitor 50K+ SKUs in real-time and our team
-                focuses on strategy, not spreadsheets.&quot;
-              </p>
-            </div>
-
-            <div className="group rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-amber-400/50 hover:bg-white/10 hover:shadow-2xl hover:shadow-amber-500/20">
-              <div className="mb-4">
-                <div className="mb-2 text-2xl text-amber-400">💰</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Pricing Strategy Lead
-                </h4>
-                <p className="text-gray/80 text-sm">DTC Fashion Brand</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;The MAP violation alerts saved our brand. We caught
-                unauthorized sellers within hours instead of weeks, protecting
-                millions in brand equity.&quot;
-              </p>
-            </div>
+          <div className="mt-10 text-center">
+            <Link
+              href="/contact"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Request security documentation
+            </Link>
           </div>
         </div>
-      </div>
+      </section>
+
+      <FAQSection faqs={shoppingFaqs} accentColor={accentColor} />
 
       {/* Final CTA Section */}
-      <div className="from-primary/10 to-primary relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_100%,rgba(245,158,11,0.12),transparent_70%)]"
+        />
+        <div className="container">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Stop Losing Revenue to{' '}
@@ -771,19 +811,19 @@ export default function ShoppingMonitoringPage() {
             <p className="text-gray mb-8 text-lg">
               While your competitors track prices manually with spreadsheets,
               you could be optimizing in real-time with AI-powered intelligence.
-              Start your free trial—get your first competitive insights in the
-              next 15 minutes.
+              Send us your catalogue and we will return a matched sample from
+              your target marketplaces.
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/request" className={buttonVariants({ size: 'lg' })}>
-                Start Free Trial →
+              <Link href="/contact" className={buttonVariants({ size: 'lg' })}>
+                Request a Sample Dataset →
               </Link>
               <Link
-                href="/demo"
+                href="/contact"
                 className={buttonVariants({ variant: 'outline', size: 'lg' })}
               >
-                See 2-Minute Demo
+                Schedule a Demo
               </Link>
             </div>
 
@@ -795,18 +835,14 @@ export default function ShoppingMonitoringPage() {
                 <TrustBadge icon={Activity} text="99.9% Uptime SLA" />
               </div>
               <div className="text-gray space-y-1 text-sm">
-                <p>✓ Free 14-day trial—no credit card required</p>
-                <p>✓ Setup in 15 minutes or less</p>
-                <p>✓ Cancel anytime, no questions asked</p>
+                <p>✓ Free sample dataset from your own catalogue</p>
+                <p>✓ Delivery configured with a solutions engineer</p>
+                <p>✓ No long-term lock-in — cancel at the end of any term</p>
               </div>
             </div>
-
-            <p className="text-gray text-sm">
-              Trusted by 500+ e-commerce brands and retailers worldwide
-            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <script
         type="application/ld+json"
@@ -814,7 +850,7 @@ export default function ShoppingMonitoringPage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name: 'E-commerce Price Monitoring API',
+            name: 'E-commerce Price Monitoring',
             description:
               'Monitor 30.7M+ stores with real-time price tracking. Detect MAP violations, track competitor pricing, and optimize dynamic pricing strategies across all major marketplaces and retailers.',
             brand: {
@@ -823,15 +859,14 @@ export default function ShoppingMonitoringPage() {
             },
             offers: {
               '@type': 'Offer',
-              price: '0',
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
+              priceSpecification: {
+                '@type': 'PriceSpecification',
+                description:
+                  'Custom quote based on sources, volume, and delivery cadence.',
+              },
               url: `${process.env.NEXT_PUBLIC_APP_URL}/products/shopping`,
-            },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.9',
-              ratingCount: '134',
             },
             category: 'E-commerce Technology',
             featureList: [

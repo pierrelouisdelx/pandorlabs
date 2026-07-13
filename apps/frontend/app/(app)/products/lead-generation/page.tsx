@@ -1,10 +1,12 @@
+// Client component: ProductHero takes Lucide icon components as props, which
+// cannot cross a server/client boundary. Metadata lives in layout.tsx.
+'use client'
+
 import StatsCard from '@/components/custom/stats-card'
 import ProcessStep from '@/components/custom/process-step'
 import UseCaseCard from '@/components/custom/use-case-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
-import { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -23,25 +25,59 @@ import {
   MessageSquare,
   CheckCircle2,
   Activity,
-  Award,
   Mail,
   Database,
   BarChart3,
+  Globe,
+  ScrollText,
+  UserMinus,
+  FileCheck,
 } from 'lucide-react'
+import { FAQSection } from '../_components/faq-section'
+import { ProductHero } from '../_components/product-hero'
 
-export const metadata: Metadata = {
-  title: 'Lead Generation Data API | PandorLabs',
-  description:
-    'Access 321M+ verified B2B contacts with 95% email accuracy and GDPR compliance. Scale your sales pipeline with real-time lead enrichment and AI-powered scoring.',
-}
+const accentColor = '#46e695'
+
+const faqs = [
+  {
+    question: 'Where do the 321M+ contacts come from?',
+    answer:
+      'Records are assembled from publicly available business sources — company websites, public professional profiles, corporate registries, press releases, and job postings — plus licensed data partnerships. We do not buy scraped consumer data, and we do not source personal email addresses or personal phone numbers. Every contact is a business-context record: work email, direct dial, title, and employer.',
+  },
+  {
+    question: 'What is your GDPR lawful basis, and how do opt-outs work?',
+    answer:
+      'For EU and UK records we operate on legitimate interest for B2B business-contact processing, with a documented legitimate interest assessment and a first-contact notice you can include in your outreach. Data subjects can object or request erasure through our public privacy portal, and we honor those requests across our index within 30 days. Deleted records are added to a permanent suppression list so they are never re-ingested from a downstream source.',
+  },
+  {
+    question: 'How do suppression lists work for my own outreach?',
+    answer:
+      'You can upload your own suppression list of domains, addresses, and regions, and it is applied server-side to every query and every enrichment call you make — so a suppressed contact simply never comes back in a response. Global suppression (our do-not-contact registry, plus records that objected under GDPR) is always applied on top of yours. Compliance is your obligation as the sender, and the tooling is there to meet it.',
+  },
+  {
+    question: 'What does "95% email accuracy" actually mean?',
+    answer:
+      'It means that across a sample of delivered work-email records, 95% or more accept mail at send time, measured by SMTP verification at the moment of delivery rather than at the moment of ingestion. Every email carries a verification status (valid, risky, catch-all, or unknown) and a verification timestamp, so you can filter to only what you are willing to send to. We do not bill for records returned as invalid.',
+  },
+  {
+    question: 'How does the data get into my CRM and sales tools?',
+    answer:
+      'We deliver into it rather than making you pull from us. Native connectors push contacts and enrichment straight into Salesforce, HubSpot, and Pipedrive; webhooks fire when a contact changes jobs or a company hits a growth trigger; and scheduled JSON, CSV, or Parquet exports land in S3, GCS, Snowflake, or BigQuery for your ops and BI stack. A solutions engineer maps the fields to your CRM schema during onboarding, so records arrive in the shape your reps already work in.',
+  },
+  {
+    question: 'How is it priced?',
+    answer:
+      'Pricing is based on the contacts delivered and enriched, with volume tiers that reduce the unit cost as you scale. Records that fail verification are not billed. Before you commit we run your actual ICP against the index and hand back a free sample of the matching contacts, so you can check accuracy and coverage on the segment you sell into rather than on a demo list.',
+  },
+]
 
 export default function LeadGenerationPage() {
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pandorlabs.com'
 
   const serviceSchema = generateServiceSchema({
-    name: 'Lead Generation Data API',
+    name: 'B2B Lead Generation Data',
     description:
-      'Access 321M+ verified B2B contacts with 95% email accuracy and GDPR compliance. Scale your sales pipeline with real-time lead enrichment and AI-powered scoring.',
+      '321M+ verified B2B contacts with 95% email accuracy and GDPR compliance, delivered into your CRM or warehouse. Scale your sales pipeline with real-time lead enrichment and AI-powered scoring.',
     url: `${siteUrl}/products/lead-generation`,
     provider: {
       name: 'Pandor Labs',
@@ -54,13 +90,16 @@ export default function LeadGenerationPage() {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: siteUrl },
     { name: 'Products', url: `${siteUrl}/products` },
-    { name: 'Lead Generation API', url: `${siteUrl}/products/lead-generation` },
+    {
+      name: 'B2B Lead Generation Data',
+      url: `${siteUrl}/products/lead-generation`,
+    },
   ])
 
   const webPageSchema = generateWebPageSchema(
     `${siteUrl}/products/lead-generation`,
-    'Lead Generation Data API | PandorLabs',
-    'Access 321M+ verified B2B contacts with 95% email accuracy and GDPR compliance. Scale your sales pipeline with real-time lead enrichment.'
+    'B2B Lead Generation Data | PandorLabs',
+    '321M+ verified B2B contacts with 95% email accuracy and GDPR compliance, delivered into your CRM. Scale your sales pipeline with real-time lead enrichment.',
   )
 
   return (
@@ -87,15 +126,82 @@ export default function LeadGenerationPage() {
           __html: stringifyJsonLd(webPageSchema),
         }}
       />
+
+      <ProductHero
+        product="leadGen"
+        headline="B2B Lead Data, Delivered to Your CRM"
+        subheadline="321M+ verified business contacts, sourced compliantly and enriched in real time — so your reps sell instead of researching."
+        valueProps={[
+          '321M+ verified contacts across 40+ data attributes',
+          '95% email accuracy, verified at delivery — invalid records are not billed',
+          'GDPR lawful basis, suppression lists, and a signed DPA before delivery',
+          'Pushed straight into Salesforce, HubSpot, or your warehouse',
+        ]}
+        primaryCTA="Request a Sample List"
+        secondaryCTA="Schedule a Demo"
+        trustIndicators={[
+          { Icon: Shield, text: 'SOC 2 Type II' },
+          { Icon: FileCheck, text: 'GDPR & CCPA' },
+          { Icon: Zap, text: '95% email accuracy' },
+        ]}
+        accentColor={accentColor}
+        accentGlow="rgba(70, 230, 149, 0.15)"
+        accentGradient="from-green-light/20 via-transparent to-transparent"
+        visualElement={
+          <div className="flex flex-col gap-6">
+            {[
+              {
+                width: '100%',
+                label: 'Prospects',
+                count: '10,000',
+                Icon: Users,
+              },
+              {
+                width: '70%',
+                label: 'Qualified',
+                count: '7,000',
+                Icon: UserCheck,
+              },
+              {
+                width: '40%',
+                label: 'Engaged',
+                count: '4,000',
+                Icon: MessageSquare,
+              },
+              {
+                width: '20%',
+                label: 'Converted',
+                count: '2,000',
+                Icon: CheckCircle2,
+              },
+            ].map((stage) => (
+              <div
+                key={stage.label}
+                className="border-green-light/30 from-green-light/20 relative flex items-center justify-between rounded-lg border bg-gradient-to-r to-transparent p-4"
+                style={{ width: stage.width }}
+              >
+                <div className="flex items-center gap-3">
+                  <stage.Icon className="text-green-light h-6 w-6" />
+                  <span className="font-semibold text-white">
+                    {stage.label}
+                  </span>
+                </div>
+                <span className="text-green-light font-bold">
+                  {stage.count}
+                </span>
+              </div>
+            ))}
+          </div>
+        }
+      />
+
       {/* Vision Section */}
-      <div className="from-primary via-primary/95 to-background relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
+      <section className="section section-glow">
         <div className="container">
-          <div className="flex gap-20">
+          <div className="flex flex-col gap-12 lg:flex-row lg:gap-20">
             <div className="w-full lg:w-1/2">
               <div className="mb-10 text-center lg:text-left">
-                <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-                  WHY LEAD GENERATION API
-                </p>
+                <p className="eyebrow">why managed lead data</p>
                 <h2 className="mb-6 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
                   Your Sales Pipeline{' '}
                   <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -117,10 +223,10 @@ export default function LeadGenerationPage() {
                   they deserve?
                 </p>
                 <p>
-                  Our Lead Generation API delivers verified contacts on demand.
-                  321M+ business professionals with direct dials, verified
-                  emails, and enriched profiles. AI-powered scoring helps you
-                  prioritize the best opportunities.
+                  We deliver verified contacts straight into your CRM. 321M+
+                  business professionals with direct dials, verified emails, and
+                  enriched profiles. AI-powered scoring helps you prioritize the
+                  best opportunities.
                 </p>
                 <p>
                   No manual research. No data decay. No wasted outreach. Just
@@ -137,67 +243,26 @@ export default function LeadGenerationPage() {
             </div>
 
             {/* Visual Element */}
-            <div className="relative hidden w-1/2 lg:block">
-              <div className="flex flex-col gap-8">
-                {[
-                  {
-                    width: '100%',
-                    label: 'Prospects',
-                    count: '10,000',
-                    Icon: Users,
-                  },
-                  {
-                    width: '70%',
-                    label: 'Qualified',
-                    count: '7,000',
-                    Icon: UserCheck,
-                  },
-                  {
-                    width: '40%',
-                    label: 'Engaged',
-                    count: '4,000',
-                    Icon: MessageSquare,
-                  },
-                  {
-                    width: '20%',
-                    label: 'Converted',
-                    count: '2,000',
-                    Icon: CheckCircle2,
-                  },
-                ].map((stage, i) => (
-                  <div
-                    key={i}
-                    className="relative flex items-center justify-between rounded-lg border border-emerald-500/30 bg-gradient-to-r from-emerald-500/20 to-transparent p-4 transition-all duration-500 hover:border-emerald-500/50 hover:from-emerald-500/30"
-                    style={{
-                      width: stage.width,
-                      animationDelay: `${i * 0.2}s`,
-                    }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <stage.Icon className="h-6 w-6 text-emerald-400" />
-                      <span className="font-semibold text-white">
-                        {stage.label}
-                      </span>
-                    </div>
-                    <span className="font-bold text-emerald-400">
-                      {stage.count}
-                    </span>
-                  </div>
-                ))}
+            <div className="relative hidden w-1/2 items-center justify-center lg:flex">
+              <div className="relative h-[420px] w-[420px]">
+                <div className="bg-green-light/20 absolute inset-0 animate-pulse rounded-full blur-3xl" />
+                <div className="relative flex h-full w-full items-center justify-center">
+                  <Database
+                    className="text-green-light h-56 w-56"
+                    strokeWidth={1}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* How It Works Section */}
-      <div className="from-background to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/5 to-green-light/5 absolute inset-0 bg-gradient-to-r via-transparent opacity-30"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              HOW IT WORKS
-            </p>
+            <p className="eyebrow">how it works</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               From Query to Qualified Leads —{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -205,7 +270,7 @@ export default function LeadGenerationPage() {
               </span>
             </h2>
             <p className="text-gray mx-auto max-w-2xl">
-              Simple API integration. Real-time verification. Instant lead
+              No integration to build. Real-time verification. Continuous lead
               enrichment. Three steps to supercharge your sales pipeline.
             </p>
           </div>
@@ -224,17 +289,17 @@ export default function LeadGenerationPage() {
             <ProcessStep
               number="03"
               title="Receive Ready-to-Contact Leads"
-              description="Get clean, organized contact data with verified emails, direct dials, LinkedIn profiles, and company intelligence. Integrate directly with your CRM or sales tools."
+              description="Clean, organized contact data with verified emails, direct dials, and company intelligence, delivered straight into your CRM or sales tools on the cadence you choose."
             />
           </div>
 
           {/* Timeline */}
-          <div className="text-gray mt-10 flex items-center justify-center gap-4">
+          <div className="text-gray mt-10 flex flex-wrap items-center justify-center gap-4">
             <span className="rounded-full bg-white/5 px-4 py-2 font-medium transition-all duration-300 hover:bg-white/10">
-              API Request
+              You define the ICP
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
-            <span className="to-green-light bg-green-light/10 animate-pulse rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
+            <span className="to-green-light bg-green-light/10 rounded-full bg-linear-to-l from-green-100 bg-clip-text px-5 py-2.5 font-semibold text-transparent">
               Seconds, not hours
             </span>
             <div className="bg-green-light/30 shadow-green-light/20 h-1 w-20 rounded-full shadow-lg"></div>
@@ -243,16 +308,13 @@ export default function LeadGenerationPage() {
             </span>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Use Cases Section */}
-      <div className="from-background to-primary/20 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided section-glow-center">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              COMPREHENSIVE SOLUTIONS
-            </p>
+            <p className="eyebrow">comprehensive solutions</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Power Every Stage of Your{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -260,8 +322,8 @@ export default function LeadGenerationPage() {
               </span>
             </h2>
             <p className="text-gray mx-auto max-w-2xl">
-              From prospecting to deal closure, our Lead Generation API provides
-              the verified contacts and intelligence your team needs to win.
+              From prospecting to deal closure, our lead data provides the
+              verified contacts and intelligence your team needs to win.
             </p>
           </div>
 
@@ -269,32 +331,32 @@ export default function LeadGenerationPage() {
             <UseCaseCard
               icon={Users}
               title="Verified Contact Database"
-              description="Access 321M+ business contacts with direct dial phones, verified emails, and social profiles across all industries. Real-time email verification with 95% accuracy guarantee reduces bounces and protects sender reputation."
+              description="Access 321M+ business contacts with direct dial phones, verified work emails, and firmographic context across all industries. Real-time verification reduces bounces and protects your sender reputation."
             />
             <UseCaseCard
               icon={Mail}
               title="Email Verification & Validation"
-              description="Ensure deliverability with real-time email verification. Our multi-step validation checks syntax, domain validity, mailbox existence, and risk scoring to guarantee 95%+ accuracy on every contact."
+              description="Ensure deliverability with real-time email verification. Multi-step validation checks syntax, domain validity, mailbox existence, and risk scoring, and every address ships with a status and a timestamp."
             />
             <UseCaseCard
               icon={TrendingUp}
               title="AI Lead Scoring & Prioritization"
-              description="Machine learning models analyze firmographics, technographics, and intent signals to prioritize your best opportunities. Focus your team's efforts on leads most likely to convert."
+              description="Machine learning models analyze firmographics, technographics, and intent signals to prioritize your best opportunities. Focus your team's effort on the leads most likely to convert."
             />
             <UseCaseCard
               icon={Database}
               title="Real-Time Data Enrichment"
-              description="Instantly enrich partial contact data with 40+ attributes including job title, seniority, company size, revenue, technologies used, funding status, and growth signals."
+              description="Instantly enrich partial contact data with 40+ attributes including job title, seniority, company size, revenue band, technologies used, funding status, and growth signals."
             />
             <UseCaseCard
               icon={UserCheck}
               title="Company Intelligence & Insights"
-              description="Deep firmographic data including funding rounds, technologies used, employee count, growth trends, and competitive intelligence. Make informed decisions about which accounts to target."
+              description="Deep firmographic data including funding rounds, tech stack, employee count, and growth trends. Make informed decisions about which accounts deserve your team's time."
             />
             <UseCaseCard
               icon={BarChart3}
               title="CRM Integration & Automation"
-              description="Seamlessly integrate with Salesforce, HubSpot, Pipedrive, and other CRMs. Automatically enrich existing contacts, identify new opportunities, and keep your database up-to-date."
+              description="Integrate with Salesforce, HubSpot, Pipedrive, and other CRMs. Automatically enrich existing contacts, identify new opportunities, and keep your database from decaying."
             />
           </div>
 
@@ -303,20 +365,17 @@ export default function LeadGenerationPage() {
               Ready to transform your sales pipeline with verified B2B contacts?
             </p>
             <Link href="/contact" className={buttonVariants()}>
-              Start Your Free Trial →
+              Request a Sample List →
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Technology Section */}
-      <div className="from-primary/20 to-background relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="to-green-light/5 absolute inset-0 bg-gradient-to-br from-green-100/5 via-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              ENTERPRISE-GRADE TECHNOLOGY
-            </p>
+            <p className="eyebrow">enterprise-grade technology</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Built for{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
@@ -331,45 +390,45 @@ export default function LeadGenerationPage() {
           </div>
 
           <div className="mb-12 grid gap-6 md:grid-cols-3">
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="bg-green-light/10 group-hover:bg-green-light/20 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                <Zap className="text-green-light h-7 w-7 transition-transform duration-300 group-hover:scale-110" />
+            <div className="panel p-7">
+              <div className="bg-green-light/10 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl">
+                <Zap className="text-green-light h-7 w-7" />
               </div>
-              <h3 className="group-hover:text-green-light mb-3 text-lg font-semibold text-white transition-colors duration-300">
+              <h3 className="mb-3 text-lg font-semibold text-white">
                 Real-Time Processing
               </h3>
-              <p className="text-gray group-hover:text-gray/90 text-sm leading-relaxed transition-colors duration-300">
-                Sub-second response times for contact lookups and enrichment.
-                99.9% uptime means your sales team always has access to the data
-                they need.
+              <p className="text-gray text-sm leading-relaxed">
+                Sub-second response times for contact lookups and enrichment. A
+                99.9% uptime SLA means your sales team always has access to the
+                data they need.
               </p>
             </div>
 
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="bg-green-light/10 group-hover:bg-green-light/20 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                <Shield className="text-green-light h-7 w-7 transition-transform duration-300 group-hover:scale-110" />
+            <div className="panel p-7">
+              <div className="bg-green-light/10 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl">
+                <Shield className="text-green-light h-7 w-7" />
               </div>
-              <h3 className="group-hover:text-green-light mb-3 text-lg font-semibold text-white transition-colors duration-300">
-                GDPR & CCPA Compliant
+              <h3 className="mb-3 text-lg font-semibold text-white">
+                GDPR &amp; CCPA Compliant
               </h3>
-              <p className="text-gray group-hover:text-gray/90 text-sm leading-relaxed transition-colors duration-300">
-                All data sourced through compliant methods with consent tracking
-                and right-to-erasure support. Bank-level security that passes
-                your compliance team&apos;s review.
+              <p className="text-gray text-sm leading-relaxed">
+                Business-contact data sourced under documented legitimate
+                interest, with objection and erasure handled through a public
+                privacy portal and a permanent suppression list.
               </p>
             </div>
 
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="bg-green-light/10 group-hover:bg-green-light/20 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                <Target className="text-green-light h-7 w-7 transition-transform duration-300 group-hover:scale-110" />
+            <div className="panel p-7">
+              <div className="bg-green-light/10 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl">
+                <Target className="text-green-light h-7 w-7" />
               </div>
-              <h3 className="group-hover:text-green-light mb-3 text-lg font-semibold text-white transition-colors duration-300">
+              <h3 className="mb-3 text-lg font-semibold text-white">
                 Intelligent Accuracy
               </h3>
-              <p className="text-gray group-hover:text-gray/90 text-sm leading-relaxed transition-colors duration-300">
-                95% email accuracy with continuous verification. AI-powered
-                scoring and enrichment ensures you&apos;re targeting the right
-                prospects with the right data.
+              <p className="text-gray text-sm leading-relaxed">
+                95% email accuracy with verification performed at delivery time,
+                not ingestion time. Every address carries a status, so you
+                decide what you are willing to send to.
               </p>
             </div>
           </div>
@@ -382,89 +441,91 @@ export default function LeadGenerationPage() {
             <StatsCard value="99.9%" label="Uptime SLA" />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Testimonials Section */}
-      <div className="from-background to-primary/10 relative overflow-hidden bg-gradient-to-b py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      {/* Data Compliance Section */}
+      <section className="section section-divided section-glow-right">
+        <div className="container">
           <div className="mb-12 text-center">
-            <p className="text-gray mb-3 text-sm tracking-wider uppercase">
-              CUSTOMER SUCCESS STORIES
-            </p>
+            <p className="eyebrow">data compliance</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
-              Trusted by Sales Teams That{' '}
+              Contact Data You Can{' '}
               <span className="to-green-light bg-linear-to-l from-green-100 bg-clip-text text-transparent">
-                Need to Hit Quota
+                Defend in a Review
               </span>
             </h2>
+            <p className="text-gray mx-auto max-w-2xl">
+              A B2B contact database is only useful if your legal team signs off
+              on it. Here is exactly how the data is sourced and governed.
+            </p>
           </div>
 
-          <div className="mb-12 grid gap-6 md:grid-cols-3">
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">📈</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Enterprise Sales Team
-                </h4>
-                <p className="text-gray/80 text-sm">SaaS Company, Series C</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;Reduced cost-per-lead by 60% and increased pipeline
-                velocity by 40%. Our SDR team is now 3x more productive with
-                verified contacts.&quot;
+          <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="panel p-6">
+              <ScrollText className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">How We Source</h3>
+              <p className="text-gray text-sm leading-relaxed">
+                Publicly available business sources and licensed partnerships
+                only. Work contact details in a business context — never
+                personal email or personal phone numbers.
               </p>
             </div>
-
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🎯</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Marketing Agency
-                </h4>
-                <p className="text-gray/80 text-sm">B2B Lead Generation Firm</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;We replaced 3 data vendors with PandorLabs. Better
-                accuracy, lower costs, and our clients see 25% higher email open
-                rates.&quot;
+            <div className="panel p-6">
+              <FileCheck className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">
+                GDPR Lawful Basis
+              </h3>
+              <p className="text-gray text-sm leading-relaxed">
+                Legitimate interest for B2B processing, backed by a documented
+                legitimate interest assessment and a first-contact notice you
+                can reuse in your outreach.
               </p>
             </div>
-
-            <div className="group hover:border-green-light/50 hover:shadow-green-light/20 rounded-2xl border border-white/10 bg-white/5 p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-2xl">
-              <div className="mb-4">
-                <div className="text-green-light mb-2 text-2xl">🚀</div>
-                <h4 className="mb-1 font-semibold text-white">
-                  Growth Startup
-                </h4>
-                <p className="text-gray/80 text-sm">FinTech, Seed Stage</p>
-              </div>
-              <p className="text-gray leading-relaxed">
-                &quot;Built a 50K contact database in weeks instead of months.
-                The AI scoring helps us focus on leads that actually
-                convert.&quot;
+            <div className="panel p-6">
+              <UserMinus className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">
+                Opt-Out &amp; Suppression
+              </h3>
+              <p className="text-gray text-sm leading-relaxed">
+                Objection and erasure requests honored within 30 days, then
+                permanently suppressed so the record is never re-ingested. Bring
+                your own suppression list too.
+              </p>
+            </div>
+            <div className="panel p-6">
+              <Globe className="text-green-light mb-4 h-6 w-6" />
+              <h3 className="mb-2 font-semibold text-white">
+                EU/US Data Residency
+              </h3>
+              <p className="text-gray text-sm leading-relaxed">
+                Choose where your data is processed and stored. SOC 2 Type II
+                report and DPA available under NDA for your security review.
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col items-center gap-4 lg:flex-row lg:justify-center">
-            <Link href="/demo" className={buttonVariants()}>
-              See How It Works
-            </Link>
+          <div className="text-center">
+            <p className="text-gray mb-4 text-sm">
+              You remain the data controller for your outreach. We give you the
+              provenance, the lawful basis documentation, and the suppression
+              tooling to stay on the right side of it.
+            </p>
             <Link
-              href="/pricing"
+              href="/contact"
               className={buttonVariants({ variant: 'outline' })}
             >
-              View Pricing Plans
+              Request Compliance Documentation
             </Link>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* FAQ */}
+      <FAQSection faqs={faqs} accentColor={accentColor} />
 
       {/* Final CTA Section */}
-      <div className="from-primary/10 to-primary relative overflow-hidden bg-gradient-to-b via-white/5 py-16 lg:py-20">
-        <div className="from-green-light/10 absolute inset-0 bg-gradient-to-t via-transparent to-transparent"></div>
-        <div className="relative z-10 container">
+      <section className="section section-divided section-glow">
+        <div className="container">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Start Generating Qualified Leads{' '}
@@ -473,44 +534,40 @@ export default function LeadGenerationPage() {
               </span>
             </h2>
             <p className="text-gray mb-8 text-lg">
-              Stop wasting time on unverified contacts and dead-end leads. Get
-              instant access to 321M+ verified B2B contacts with AI-powered
-              enrichment. Start free. No credit card required.
+              Stop wasting time on unverified contacts and dead-end leads. Tell
+              us the segment you sell into and we will come back with a sample
+              of verified, compliantly sourced contacts — before you commit to
+              anything.
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/request" className={buttonVariants({ size: 'lg' })}>
-                Start Free Trial →
+              <Link href="/contact" className={buttonVariants({ size: 'lg' })}>
+                Request a Sample List →
               </Link>
               <Link
-                href="/demo"
+                href="/contact"
                 className={buttonVariants({ variant: 'outline', size: 'lg' })}
               >
-                See a 2-Minute Demo
+                Schedule a Demo
               </Link>
             </div>
 
             {/* Trust Elements */}
-            <div className="mb-4 space-y-3">
+            <div className="space-y-3">
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <TrustBadge icon={Shield} text="SOC 2 Type II Certified" />
-                <TrustBadge icon={CheckCircle2} text="GDPR Compliant" />
+                <TrustBadge icon={Shield} text="SOC 2 Type II" />
+                <TrustBadge icon={CheckCircle2} text="GDPR & CCPA" />
                 <TrustBadge icon={Activity} text="99.9% Uptime SLA" />
               </div>
               <div className="text-gray space-y-1 text-sm">
-                <p>✓ Free trial—no credit card required</p>
-                <p>✓ 321M+ verified contacts</p>
-                <p>✓ 95% email accuracy guarantee</p>
+                <p>Free sample list built from your own ICP</p>
+                <p>321M+ verified business contacts</p>
+                <p>Verification at delivery, not at ingestion</p>
               </div>
             </div>
-
-            <p className="text-gray text-sm">
-              Join 500+ sales teams using PandorLabs to accelerate their
-              pipeline
-            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <script
         type="application/ld+json"
@@ -518,35 +575,34 @@ export default function LeadGenerationPage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name: 'Lead Generation Data API',
+            name: 'B2B Lead Generation Data',
             description:
-              'Access 321M+ verified B2B contacts with 95% email accuracy. Enrich CRM data, build sales pipelines, and accelerate outreach with real-time verification and comprehensive contact intelligence.',
+              'Access 321M+ verified B2B contacts with 95% email accuracy. Enrich CRM data, build sales pipelines, and accelerate outreach with real-time verification and compliant sourcing.',
             brand: {
               '@type': 'Brand',
               name: 'PandorLabs',
             },
             offers: {
               '@type': 'Offer',
-              price: '0',
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
+              priceSpecification: {
+                '@type': 'PriceSpecification',
+                description:
+                  'Custom quote based on sources, volume, and delivery cadence.',
+              },
               url: `${process.env.NEXT_PUBLIC_APP_URL}/products/lead-generation`,
-            },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.8',
-              ratingCount: '201',
             },
             category: 'Sales Technology',
             featureList: [
               '321M+ verified contacts',
-              '95% email accuracy guarantee',
+              '95% email accuracy',
               'Real-time email verification',
+              'GDPR-compliant sourcing and suppression',
               'CRM enrichment',
-              'Sales pipeline building',
               'Contact intelligence',
               'B2B lead generation',
-              'Automated outreach support',
+              'Bulk and webhook delivery',
             ],
           }),
         }}

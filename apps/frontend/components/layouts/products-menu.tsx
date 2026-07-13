@@ -76,6 +76,16 @@ export default function ProductsMenu() {
                   {product.description}
                 </ListItem>
               ))}
+              <li className="md:col-span-2">
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/products"
+                    className="text-green-light hover:bg-green-light/10 block rounded-lg p-3 text-sm font-medium no-underline transition-colors"
+                  >
+                    Browse all products →
+                  </Link>
+                </NavigationMenuLink>
+              </li>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

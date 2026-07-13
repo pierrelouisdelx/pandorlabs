@@ -16,11 +16,40 @@
   --color-black: #160041;
   --color-black-dark: #1d1c2d;
   --color-primary: #010a22;
+  /* Page canvas. Kept identical to --color-primary so sections never seam. */
+  --color-background: #010a22;
+  /* Raised panels (cards, code blocks) — the only surface allowed to differ. */
+  --color-surface: #061029;
   --color-secondary: #38009b;
   --color-green: #44f126;
   --color-green-light: #46e695;
   --color-green-100: #65ff4b;
   --color-gray: #a9acac;
+
+  /*
+   * Per-product accent scales.
+   *
+   * `--color-*: initial` above wipes Tailwind's default palette, so every
+   * accent shade a page uses has to be declared here or the class compiles to
+   * nothing — which silently turned `bg-clip-text text-transparent` headlines
+   * on the product pages invisible. Only the shades actually in use are listed;
+   * add a shade here before using it.
+   */
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+  --color-amber-200: #fde68a;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-purple-400: #c084fc;
+  --color-purple-500: #a855f7;
+  --color-pink-400: #f472b6;
+  --color-pink-500: #ec4899;
+  --color-blue-400: #60a5fa;
+  --color-emerald-400: #34d399;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
 
   --breakpoint-*: initial;
   --breakpoint-2xl: 1472px;
@@ -185,6 +214,77 @@
     &.active {
       @apply text-green;
     }
+  }
+
+  /*
+   * Section system.
+   *
+   * Every section paints the same flat canvas (--color-primary), so adjacent
+   * sections can never produce a visible band where they meet. Depth comes from
+   * glows that fade to fully transparent inside the section, plus an optional
+   * hairline rule at the top edge — never from a background color change.
+   */
+  .section {
+    @apply bg-primary relative isolate overflow-hidden py-16 lg:py-24;
+  }
+
+  /* Hairline top edge: the only deliberate mark between two sections. */
+  .section-divided::before {
+    content: '';
+    @apply absolute inset-x-0 top-0 h-px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgb(255 255 255 / 0.1) 20%,
+      rgb(255 255 255 / 0.1) 80%,
+      transparent
+    );
+  }
+
+  /*
+   * Ambient glows. Each fades to fully transparent well inside the section box,
+   * which is what lets adjacent sections meet without a visible band.
+   * The -center / -right variants stand alone or override the default position.
+   */
+  .section-glow::after,
+  .section-glow-center::after,
+  .section-glow-right::after {
+    content: '';
+    @apply pointer-events-none absolute inset-0 -z-10;
+    background: radial-gradient(
+      60% 50% at 50% 0%,
+      color-mix(in oklab, var(--color-green-light) 8%, transparent),
+      transparent 70%
+    );
+  }
+
+  .section-glow-center::after {
+    background: radial-gradient(
+      55% 45% at 50% 50%,
+      color-mix(in oklab, var(--color-green-light) 7%, transparent),
+      transparent 70%
+    );
+  }
+
+  .section-glow-right::after {
+    background: radial-gradient(
+      50% 50% at 85% 15%,
+      color-mix(in oklab, var(--color-green-light) 9%, transparent),
+      transparent 70%
+    );
+  }
+
+  /*
+   * Eyebrow labels. Source text stays lowercase; the display casing is a
+   * presentation concern and belongs here, not in the copy.
+   */
+  .eyebrow {
+    @apply text-gray mb-3 text-sm font-medium tracking-[0.2em] uppercase;
+  }
+
+  /* Raised panel shared by cards across marketing pages. */
+  .panel {
+    @apply hover:border-green-light/40 hover:shadow-green-light/10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white/[0.07] hover:shadow-2xl;
   }
 }
 

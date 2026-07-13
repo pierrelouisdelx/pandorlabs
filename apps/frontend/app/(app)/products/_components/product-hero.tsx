@@ -3,6 +3,7 @@
 import { type ReactNode } from 'react'
 
 import { type LucideIcon } from 'lucide-react'
+import Link from 'next/link'
 
 import { cn } from '@/lib/utils'
 
@@ -41,10 +42,10 @@ export function ProductHero({
   accentGlow,
 }: ProductHeroProps) {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden">
+    <section className="bg-primary relative -mt-24 flex min-h-screen items-center overflow-hidden pt-24">
       {/* Animated Grid Background */}
-      <div className="absolute inset-0 bg-[#0A0A0A]">
-        <div className="absolute inset-0 animate-[pulse_8s_ease-in-out_infinite] bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 animate-[pulse_8s_ease-in-out_infinite] bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]" />
         <div
           className="absolute top-1/4 left-1/2 h-[800px] w-[800px] -translate-x-1/2 animate-[pulse_4s_ease-in-out_infinite] rounded-full blur-[120px]"
           style={{ backgroundColor: accentGlow }}
@@ -61,10 +62,10 @@ export function ProductHero({
                 className="h-2 w-2 animate-pulse rounded-full"
                 style={{ backgroundColor: accentColor }}
               />
-              <span className="text-sm text-white/70">Live API Access</span>
+              <span className="text-sm text-white/70">managed data service</span>
             </div>
 
-            <h1 className="text-6xl font-bold tracking-tight md:text-7xl lg:text-8xl">
+            <h1 className="text-[32px]/tight font-bold tracking-tight sm:text-5xl lg:text-6xl/tight">
               {headline}
             </h1>
 
@@ -97,11 +98,12 @@ export function ProductHero({
 
             {/* CTA Buttons */}
             <div className="flex flex-col gap-4 sm:flex-row">
-              <button
+              <Link
+                href="/contact"
                 className={cn(
-                  'rounded-lg px-8 py-4 text-lg font-semibold',
+                  'text-primary rounded-full px-8 py-4 text-center text-lg font-semibold',
                   'transition-all duration-300',
-                  'hover:scale-105 hover:shadow-2xl',
+                  'hover:-translate-y-0.5 hover:shadow-2xl',
                 )}
                 style={{
                   backgroundColor: accentColor,
@@ -109,16 +111,17 @@ export function ProductHero({
                 }}
               >
                 {primaryCTA}
-              </button>
+              </Link>
 
-              <button
+              <Link
+                href="/contact"
                 className={cn(
-                  'rounded-lg border border-white/20 px-8 py-4 text-lg font-semibold',
+                  'rounded-full border border-white/20 px-8 py-4 text-center text-lg font-semibold',
                   'transition-all duration-300 hover:border-white/40 hover:bg-white/5',
                 )}
               >
                 {secondaryCTA}
-              </button>
+              </Link>
             </div>
 
             {/* Trust Indicators */}

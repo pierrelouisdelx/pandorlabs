@@ -120,6 +120,27 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
 }
 
 /**
+ * Generates FAQPage schema. Eligible for FAQ rich results in Google, so the
+ * questions must match the ones actually rendered on the page.
+ */
+export function generateFAQSchema(
+  faqs: Array<{ question: string; answer: string }>
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
+/**
  * Generates WebPage schema
  */
 export function generateWebPageSchema(

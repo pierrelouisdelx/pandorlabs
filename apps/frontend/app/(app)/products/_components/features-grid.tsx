@@ -29,17 +29,14 @@ export function FeaturesGrid({
   accentGlow,
 }: FeaturesGridProps) {
   return (
-    <section className="relative overflow-hidden py-32">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F0F0F] to-transparent" />
-
+    <section className="section section-divided">
       <div className="relative z-10 container mx-auto px-6 md:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="mx-auto mb-20 max-w-3xl text-center">
-          <h2 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
             {title}
           </h2>
-          <p className="text-xl text-white/60">{subtitle}</p>
+          <p className="text-gray text-lg">{subtitle}</p>
         </div>
 
         {/* Features Grid */}
