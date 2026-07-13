@@ -3,15 +3,16 @@ import Link from 'next/link'
 
 const COMPANIES = [
   { logo: 'avian', href: 'https://avian.io', name: 'avian' },
-  { logo: 'cryptoautos', href: 'https://www.cryptoautos.com', name: 'cryptoautos' },
-  { logo: 'joinmassive', href: 'https://www.joinmassive.com', name: 'massive' },
-  { logo: 'maxai', href: 'https://www.maxcare.ai', name: 'max ai' },
   { logo: 'nvidia', href: 'https://www.nvidia.com', name: 'nvidia' },
+  { logo: 'maxai', href: 'https://www.maxcare.ai', name: 'max ai' },
+  { logo: 'palantir', href: 'https://www.palantir.com', name: 'palantir' },
+  { logo: 'joinmassive', href: 'https://www.joinmassive.com', name: 'massive' },
   {
     logo: 'siemens-healthineers',
     href: 'https://www.siemens-healthineers.com',
     name: 'siemens healthineers',
   },
+  { logo: 'cryptoautos', href: 'https://www.cryptoautos.com', name: 'cryptoautos' },
 ] as const
 
 function formatAlt(name: string) {

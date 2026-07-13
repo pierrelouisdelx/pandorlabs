@@ -9,7 +9,7 @@ export default function DefaultLayout({
   return (
     <>
       <Header />
-      <div className="grow pb-20">{children}</div>
+      <main>{children}</main>
       <Footer />
     </>
   )
