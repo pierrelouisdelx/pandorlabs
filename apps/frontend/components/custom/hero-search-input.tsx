@@ -11,22 +11,34 @@ interface ExampleQuery {
   icon: string
 }
 
+/**
+ * Phrased the way buyers actually describe the job — each maps to a product
+ * page, so the copy doubles as internal keyword coverage.
+ */
 const exampleQueries: ExampleQuery[] = [
   {
-    text: 'Which VCs are investing in startups in Europe?',
-    icon: '💰',
+    text: 'Track competitor prices on Amazon every day',
+    icon: '🛒',
   },
   {
-    text: 'What are the latest houses for sale in London?',
+    text: 'Scrape every property listing in Miami with price history',
     icon: '🏠',
   },
   {
-    text: 'List all the food influencers in Mexico City',
-    icon: '🍔',
+    text: 'Find decision-makers at SaaS companies hiring in Berlin',
+    icon: '🎯',
   },
   {
-    text: 'What are the latest news about the crypto market?',
+    text: 'Monitor brand mentions across social media in real time',
+    icon: '📣',
+  },
+  {
+    text: 'Pull crypto prices from every major exchange',
     icon: '📈',
+  },
+  {
+    text: 'Build a training dataset from public product reviews',
+    icon: '🧠',
   },
 ]
 
@@ -37,9 +49,7 @@ export default function HeroSearchInput() {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (query.trim()) {
-      // Open the demo request modal
       setIsModalOpen(true)
-      console.log('Opening demo request modal for query:', query)
     }
   }
 
@@ -66,13 +76,13 @@ export default function HeroSearchInput() {
         <div className="flex flex-col gap-3 md:flex-row">
           <Input
             type="text"
-            placeholder="Search for market data..."
+            placeholder="Describe the data you need, in plain english…"
             className="flex-1"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           <button type="submit" className={buttonVariants()}>
-            Get Started
+            Get this data
           </button>
         </div>
       </form>
@@ -83,7 +93,7 @@ export default function HeroSearchInput() {
           <Sparkles className="text-green-light/80 h-4 w-4" />
           <span className="font-medium">Try an example:</span>
         </div>
-        <div className="flex w-full flex-wrap items-center justify-center gap-3">
+        <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-center gap-3">
           {exampleQueries.map((example, index) => (
             <button
               key={index}
@@ -100,7 +110,11 @@ export default function HeroSearchInput() {
         </div>
       </div>
 
-      <DemoRequestModal open={isModalOpen} onOpenChange={setIsModalOpen} />
+      <DemoRequestModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        query={query}
+      />
     </>
   )
 }
