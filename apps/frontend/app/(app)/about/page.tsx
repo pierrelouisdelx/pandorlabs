@@ -289,7 +289,10 @@ export default function AboutUs() {
             {howWeWork.map(({ icon: Icon, title, description }) => (
               <div key={title} className="panel group p-7">
                 <div className="bg-green-light/10 group-hover:bg-green-light/20 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                  <Icon className="text-green-light h-7 w-7" strokeWidth={1.5} />
+                  <Icon
+                    className="text-green-light h-7 w-7"
+                    strokeWidth={1.5}
+                  />
                 </div>
                 <h3 className="group-hover:text-green-light mb-3 text-lg font-semibold text-white transition-colors duration-300">
                   {title}

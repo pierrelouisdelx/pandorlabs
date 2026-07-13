@@ -4,20 +4,20 @@
  */
 
 export interface BreadcrumbItem {
-  name: string;
-  url: string;
+  name: string
+  url: string
 }
 
 export interface ServiceSchemaProps {
-  name: string;
-  description: string;
-  url: string;
+  name: string
+  description: string
+  url: string
   provider: {
-    name: string;
-    url: string;
-  };
-  areaServed?: string;
-  serviceType?: string;
+    name: string
+    url: string
+  }
+  areaServed?: string
+  serviceType?: string
 }
 
 /**
@@ -37,7 +37,7 @@ export function generateWebSiteSchema(siteUrl: string, siteName: string) {
       },
       'query-input': 'required name=search_term_string',
     },
-  };
+  }
 }
 
 /**
@@ -72,7 +72,7 @@ export function generateOrganizationSchema(siteUrl: string) {
       '@type': 'PostalAddress',
       addressCountry: 'US',
     },
-  };
+  }
 }
 
 /**
@@ -100,7 +100,7 @@ export function generateServiceSchema(props: ServiceSchemaProps) {
         priceCurrency: 'USD',
       },
     },
-  };
+  }
 }
 
 /**
@@ -116,7 +116,7 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
       name: item.name,
       item: item.url,
     })),
-  };
+  }
 }
 
 /**
@@ -124,7 +124,7 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
  * questions must match the ones actually rendered on the page.
  */
 export function generateFAQSchema(
-  faqs: Array<{ question: string; answer: string }>
+  faqs: Array<{ question: string; answer: string }>,
 ) {
   return {
     '@context': 'https://schema.org',
@@ -137,7 +137,7 @@ export function generateFAQSchema(
         text: faq.answer,
       },
     })),
-  };
+  }
 }
 
 /**
@@ -146,7 +146,7 @@ export function generateFAQSchema(
 export function generateWebPageSchema(
   url: string,
   name: string,
-  description: string
+  description: string,
 ) {
   return {
     '@context': 'https://schema.org',
@@ -158,7 +158,7 @@ export function generateWebPageSchema(
       '@type': 'WebSite',
       url: url.split('/').slice(0, 3).join('/'),
     },
-  };
+  }
 }
 
 /**
@@ -167,7 +167,7 @@ export function generateWebPageSchema(
 export function generateSoftwareApplicationSchema(
   siteUrl: string,
   appName: string,
-  description: string
+  description: string,
 ) {
   return {
     '@context': 'https://schema.org',
@@ -176,22 +176,27 @@ export function generateSoftwareApplicationSchema(
     applicationCategory: 'BusinessApplication',
     description,
     operatingSystem: 'Web',
+    // No self-serve price: engagements are quoted. Advertising price: '0' would
+    // claim a free tier that does not exist.
     offers: {
       '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'USD',
+      },
     },
     provider: {
       '@type': 'Organization',
       name: 'Pandor Labs',
       url: siteUrl,
     },
-  };
+  }
 }
 
 /**
  * Helper to safely stringify JSON-LD for Next.js Script component
  */
 export function stringifyJsonLd(data: any): string {
-  return JSON.stringify(data);
+  return JSON.stringify(data)
 }

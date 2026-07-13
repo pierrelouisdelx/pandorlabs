@@ -374,7 +374,11 @@ export default function Home() {
             {[
               { icon: Shield, label: 'SOC 2 Type II', sub: 'Audited annually' },
               { icon: Scale, label: 'GDPR & CCPA', sub: 'DPA on request' },
-              { icon: Activity, label: '99.9% uptime SLA', sub: 'Credit-backed' },
+              {
+                icon: Activity,
+                label: '99.9% uptime SLA',
+                sub: 'Credit-backed',
+              },
               { icon: Lock, label: 'Data residency', sub: 'EU & US regions' },
             ].map(({ icon: Icon, label, sub }) => (
               <div
@@ -453,9 +457,9 @@ export default function Home() {
                 </div>
                 <p className="text-gray leading-relaxed">
                   A solutions engineer scopes your sources, designs the schema,
-                  and stays in a shared Slack or Teams channel. Security reviews,
-                  DPAs, and custom contracts handled by people, not a help
-                  center.
+                  and stays in a shared Slack or Teams channel. Security
+                  reviews, DPAs, and custom contracts handled by people, not a
+                  help center.
                 </p>
               </div>
 

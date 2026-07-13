@@ -45,7 +45,7 @@ export function ProductHero({
     <section className="bg-primary relative -mt-24 flex min-h-screen items-center overflow-hidden pt-24">
       {/* Animated Grid Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 animate-[pulse_8s_ease-in-out_infinite] bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]" />
+        <div className="absolute inset-0 animate-[pulse_8s_ease-in-out_infinite] bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)] bg-[size:4rem_4rem]" />
         <div
           className="absolute top-1/4 left-1/2 h-[800px] w-[800px] -translate-x-1/2 animate-[pulse_4s_ease-in-out_infinite] rounded-full blur-[120px]"
           style={{ backgroundColor: accentGlow }}
@@ -62,7 +62,9 @@ export function ProductHero({
                 className="h-2 w-2 animate-pulse rounded-full"
                 style={{ backgroundColor: accentColor }}
               />
-              <span className="text-sm text-white/70">managed data service</span>
+              <span className="text-sm text-white/70">
+                managed data service
+              </span>
             </div>
 
             <h1 className="text-[32px]/tight font-bold tracking-tight sm:text-5xl lg:text-6xl/tight">

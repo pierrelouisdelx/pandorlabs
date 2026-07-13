@@ -27,7 +27,7 @@ import {
 export const metadata: Metadata = {
   title: 'Products | Web Scraping & Web Data APIs | PandorLabs',
   description:
-    'Ready-to-use web data products: real estate, lead generation, e-commerce price monitoring, crypto market data, AI training datasets, and social media intelligence. Delivered as clean datasets or APIs.',
+    'Ready-to-use web data products: real estate, lead generation, e-commerce price monitoring, crypto market data, AI training datasets, and social media intelligence. Delivered as clean datasets to your warehouse.',
   keywords: [
     'web scraping api',
     'web data api',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     ...helper.openGraphData,
     title: 'Products | Web Scraping & Web Data APIs | PandorLabs',
     description:
-      'Ready-to-use web data products across real estate, lead generation, e-commerce, crypto, AI datasets, and social media — delivered as clean datasets or APIs.',
+      'Ready-to-use web data products across real estate, lead generation, e-commerce, crypto, AI datasets, and social media — delivered as clean datasets to your stack.',
     url: `${process.env.NEXT_PUBLIC_APP_URL}/products`,
     type: 'website',
     siteName: 'PandorLabs',
@@ -134,7 +134,7 @@ const guarantees = [
     icon: Globe,
     title: 'Any delivery target',
     description:
-      'REST API, webhooks, S3, GCS, Snowflake, BigQuery. JSON, CSV, or Parquet.',
+      'Webhooks, S3, GCS, Snowflake, BigQuery. JSON, CSV, or Parquet, on your schedule.',
   },
 ]
 
@@ -223,24 +223,30 @@ export default function ProductsPage() {
       <section className="section section-divided section-glow">
         <div className="relative z-10 container">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {products.map(({ icon: Icon, title, href, tagline, description }) => (
-              <Link key={href} href={href} className="panel group flex flex-col p-7">
-                <div className="bg-green-light/10 group-hover:bg-green-light/20 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
-                  <Icon className="text-green-light h-7 w-7" />
-                </div>
-                <h2 className="group-hover:text-green-light mb-2 text-lg font-semibold text-white transition-colors duration-300">
-                  {title}
-                </h2>
-                <p className="text-green-light/80 mb-3 text-sm">{tagline}</p>
-                <p className="text-gray mb-6 flex-1 text-sm leading-relaxed">
-                  {description}
-                </p>
-                <span className="text-green-light inline-flex items-center gap-2 text-sm font-medium">
-                  Explore {title}
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </Link>
-            ))}
+            {products.map(
+              ({ icon: Icon, title, href, tagline, description }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="panel group flex flex-col p-7"
+                >
+                  <div className="bg-green-light/10 group-hover:bg-green-light/20 mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110">
+                    <Icon className="text-green-light h-7 w-7" />
+                  </div>
+                  <h2 className="group-hover:text-green-light mb-2 text-lg font-semibold text-white transition-colors duration-300">
+                    {title}
+                  </h2>
+                  <p className="text-green-light/80 mb-3 text-sm">{tagline}</p>
+                  <p className="text-gray mb-6 flex-1 text-sm leading-relaxed">
+                    {description}
+                  </p>
+                  <span className="text-green-light inline-flex items-center gap-2 text-sm font-medium">
+                    Explore {title}
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              ),
+            )}
           </div>
         </div>
       </section>
