@@ -31,6 +31,7 @@
 
   --animate-marquee: marquee 30s linear infinite;
   --animate-marquee2: marquee2 20s linear infinite;
+  --animate-marquee-scroll: marquee-scroll 40s linear infinite;
   --animate-rounded: borderRotate 2s linear infinite;
   --animate-right-left: rightLeft 30s linear infinite;
   --animate-zoom-in-zoom-out: zoomInZoomOut 10s linear infinite;
@@ -78,6 +79,15 @@
     }
     100% {
       transform: translateX(100%);
+    }
+  }
+
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
     }
   }
 

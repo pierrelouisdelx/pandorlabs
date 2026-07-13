@@ -7,7 +7,7 @@ import { buttonVariants } from '@/components/ui/button'
 import HeroSearchInput from '@/components/custom/hero-search-input'
 import helper from '@/lib/helper'
 import { Metadata } from 'next'
-import Image from 'next/image'
+import CompanyLogoMarquee from '@/components/custom/company-logo-marquee'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -128,29 +128,7 @@ export default function Home() {
               <p className="mb-8 text-center text-lg font-semibold text-white/90 uppercase">
                 Trusted by Industry Leaders
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16">
-                <Image
-                  src="/images/companies/avian.svg"
-                  alt="SIEMENS"
-                  width={198}
-                  height={79}
-                  className="h-auto w-24 sm:w-32 md:w-40 lg:w-48"
-                />
-                <Image
-                  src="/images/companies/nvidia.svg"
-                  alt="NVIDIA"
-                  width={198}
-                  height={79}
-                  className="h-auto w-24 sm:w-32 md:w-40 lg:w-48"
-                />
-                <Image
-                  src="/images/companies/siemens-healthineers.svg"
-                  alt="SIEMENS Healthineers"
-                  width={198}
-                  height={79}
-                  className="h-auto w-24 sm:w-32 md:w-40 lg:w-48"
-                />
-              </div>
+              <CompanyLogoMarquee />
             </div>
           </div>
         </div>
