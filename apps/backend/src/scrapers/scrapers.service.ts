@@ -123,6 +123,13 @@ export class ScrapersService {
       );
       const result = await scraper.execute();
 
+      // Persist the run metadata (per-scraper stats: linksFound, itemsFailed,
+      // fetchErrors, …) regardless of outcome, so partial failures are visible
+      // on the execution row even when the run is ultimately marked FAILED.
+      if (result?.metadata && typeof result.metadata === 'object') {
+        execution.metadata = result.metadata as Record<string, any>;
+      }
+
       // `execute()` resolves even when the scrape itself failed — it reports
       // that in `success`, so a rejected promise is not the only failure path.
       // `error` comes back as a bare string from BaseScraper.
@@ -263,7 +270,12 @@ export class ScrapersService {
       : {};
 
     const [data, total] = await Promise.all([
-      model.find(filter).sort({ created_at: -1 }).skip(skip).limit(limit).lean(),
+      model
+        .find(filter)
+        .sort({ created_at: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
       model.countDocuments(filter),
     ]);
 

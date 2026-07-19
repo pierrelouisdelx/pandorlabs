@@ -13,6 +13,20 @@ export enum ScraperCategory {
   SOCIAL_MEDIA = 'social_media',
 }
 
+/**
+ * Top-level product categories for scraped shopping items.
+ *
+ * Ported from the fynd-scraper `ProductCategory` enum. Shared so the frontend
+ * `products/shopping` views and the backend scrapers agree on the values.
+ */
+export enum ProductCategory {
+  CLOTHING = 'CLOTHING',
+  ACCESSORIES = 'ACCESSORIES',
+  SHOES = 'SHOES',
+  BAGS = 'BAGS',
+  JEWELRY = 'JEWELRY',
+}
+
 /** Status states for scraper executions. */
 export enum ScraperStatus {
   IDLE = 'idle',

@@ -166,6 +166,7 @@ export abstract class BaseScraper implements IScraper {
           executionTime,
           itemsScraped: Array.isArray(data) ? data.length : 1,
           timestamp: new Date(),
+          ...this.getRunMetadata(),
         },
       };
     } catch (error) {
@@ -184,9 +185,19 @@ export abstract class BaseScraper implements IScraper {
           executionTime,
           itemsScraped: 0,
           timestamp: new Date(),
+          ...this.getRunMetadata(),
         },
       };
     }
+  }
+
+  /**
+   * Extra per-run metrics to fold into the execution `metadata` (both on
+   * success and failure). Scrapers that track partial-failure stats override
+   * this; the default adds nothing, keeping existing scrapers unchanged.
+   */
+  protected getRunMetadata(): Record<string, unknown> {
+    return {};
   }
 
   async cancel(): Promise<void> {
