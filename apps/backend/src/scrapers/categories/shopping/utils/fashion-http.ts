@@ -18,6 +18,11 @@ export interface FashionRequestOptions {
   retries?: number;
   /** Base backoff in ms between retries. Default 2000. */
   backoffMs?: number;
+  /**
+   * Per-request timeout in ms. Default 30000. Aborts a request that hangs so a
+   * single unresponsive host can never stall a whole scrape run indefinitely.
+   */
+  timeoutMs?: number;
 }
 
 const USER_AGENTS = [
@@ -47,7 +52,12 @@ export class FashionHttp {
     url: string,
     options: FashionRequestOptions = {},
   ): Promise<string> {
-    const { retries = 2, backoffMs = 2000, headers = {} } = options;
+    const {
+      retries = 2,
+      backoffMs = 2000,
+      headers = {},
+      timeoutMs = 30000,
+    } = options;
     let lastError: unknown;
 
     for (let attempt = 0; attempt <= retries; attempt++) {
@@ -60,6 +70,7 @@ export class FashionHttp {
             'Accept-Language': 'en-US,en;q=0.9',
             ...headers,
           },
+          signal: AbortSignal.timeout(timeoutMs),
         });
 
         if (response.status >= 500) {
