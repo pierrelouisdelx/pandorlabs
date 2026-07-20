@@ -6,6 +6,7 @@ import {
   Menu,
   Play,
   Settings,
+  Users,
   Waypoints,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
+// The everyday nav, shown to every signed-in user.
 const NAV = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/scrapers', label: 'Scrapers', icon: Waypoints },
@@ -30,10 +32,14 @@ const NAV = [
   { href: '/dashboard/account', label: 'Account', icon: Settings },
 ] as const
 
-// Admin-only entries appended to the nav when the signed-in user is an admin.
+// Admin-only entries, rendered under their own "Admin" heading so it is clear
+// which links are elevated. Only shown when the signed-in user is an admin.
 const ADMIN_NAV = [
+  { href: '/dashboard/users', label: 'Users', icon: Users },
   { href: '/dashboard/emails', label: 'Emails', icon: Mail },
 ] as const
+
+type NavItem = { href: string; label: string; icon: typeof LayoutDashboard }
 
 type Props = {
   user: { name: string; email: string }
@@ -79,7 +85,30 @@ function SidebarBody({
   onNavigate,
 }: Props & { onNavigate?: () => void }) {
   const pathname = usePathname()
-  const items = isAdmin ? [...NAV, ...ADMIN_NAV] : NAV
+
+  const renderItem = ({ href, label, icon: Icon }: NavItem) => {
+    // `/dashboard` would otherwise match every child route.
+    const active =
+      href === '/dashboard' ? pathname === href : pathname.startsWith(href)
+
+    return (
+      <Link
+        key={href}
+        href={href}
+        onClick={onNavigate}
+        aria-current={active ? 'page' : undefined}
+        className={cn(
+          'flex items-center gap-3 rounded-full px-4 py-2.5 text-sm transition-colors',
+          active
+            ? 'bg-green-light/10 text-green-light'
+            : 'text-white/70 hover:bg-white/10 hover:text-white',
+        )}
+      >
+        <Icon className="size-4 shrink-0" />
+        {label}
+      </Link>
+    )
+  }
 
   return (
     <div className="flex h-full flex-col">
@@ -97,31 +126,16 @@ function SidebarBody({
       </div>
 
       <nav className="flex-1 space-y-1 p-4">
-        {items.map(({ href, label, icon: Icon }) => {
-          // `/dashboard` would otherwise match every child route.
-          const active =
-            href === '/dashboard'
-              ? pathname === href
-              : pathname.startsWith(href)
+        {NAV.map(renderItem)}
 
-          return (
-            <Link
-              key={href}
-              href={href}
-              onClick={onNavigate}
-              aria-current={active ? 'page' : undefined}
-              className={cn(
-                'flex items-center gap-3 rounded-full px-4 py-2.5 text-sm transition-colors',
-                active
-                  ? 'bg-green-light/10 text-green-light'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white',
-              )}
-            >
-              <Icon className="size-4 shrink-0" />
-              {label}
-            </Link>
-          )
-        })}
+        {isAdmin && (
+          <div className="border-gray/20 mt-4 space-y-1 border-t pt-4">
+            <p className="text-gray px-4 pb-1 text-xs font-medium tracking-[2px] uppercase">
+              Admin
+            </p>
+            {ADMIN_NAV.map(renderItem)}
+          </div>
+        )}
       </nav>
 
       <div className="border-gray/20 space-y-3 border-t p-4">
