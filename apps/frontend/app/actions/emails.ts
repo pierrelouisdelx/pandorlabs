@@ -77,7 +77,7 @@ export async function sendReply(input: ReplyInput): Promise<ActionResponse> {
         .where(eq(emails.id, target.id))
     })
 
-    revalidatePath('/admin/emails')
+    revalidatePath('/dashboard/emails')
     return { success: true, message: `Reply sent to ${target.email}.` }
   } catch (error) {
     console.error('Failed to send reply:', error)
@@ -103,7 +103,7 @@ export async function markAsRead(emailId: string): Promise<ActionResponse> {
       .set({ status: 'read' })
       .where(and(eq(emails.id, emailId), eq(emails.status, 'unread')))
 
-    revalidatePath('/admin/emails')
+    revalidatePath('/dashboard/emails')
     return { success: true, message: 'Marked as read.' }
   } catch (error) {
     console.error('Failed to mark email as read:', error)

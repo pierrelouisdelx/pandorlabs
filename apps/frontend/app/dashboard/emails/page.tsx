@@ -11,6 +11,8 @@ import EmailsView from './emails-view'
 export const dynamic = 'force-dynamic'
 
 export default async function EmailsPage() {
+  // Lives under the dashboard layout, which only guarantees a signed-in user.
+  // Emails are admin-only, so this page re-checks the role itself.
   await requireAdmin()
 
   const [rows, replies] = await Promise.all([

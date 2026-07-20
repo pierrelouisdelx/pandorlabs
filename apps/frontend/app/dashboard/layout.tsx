@@ -20,7 +20,10 @@ export default async function DashboardLayout({
 
   return (
     <div className="lg:flex lg:min-h-screen">
-      <Sidebar user={{ name: session.user.name, email: session.user.email }} />
+      <Sidebar
+        user={{ name: session.user.name, email: session.user.email }}
+        isAdmin={session.user.role === 'admin'}
+      />
 
       <main className="min-w-0 grow px-6 py-8 lg:px-10">{children}</main>
     </div>

@@ -48,7 +48,8 @@ function validate(data: ContactFormData) {
  * Persist a contact-form submission, then forward it.
  *
  * The DB write happens first and deliberately gates the response: if Resend is
- * down we still have the message and the admin can read it at /admin/emails, so
+ * down we still have the message and the admin can read it at /dashboard/emails,
+ * so
  * the visitor is told it went through. The forward failure is recorded on the
  * row instead of being thrown away.
  */

@@ -18,12 +18,10 @@ export default async function LoginPage({
   const { next, error } = await searchParams
   const session = await getSession()
 
-  // Already signed in? Skip the form — but only send them somewhere they are
-  // actually allowed to be, or they bounce straight back here.
+  // Already signed in? Skip the form. Everyone — admins included — lands on the
+  // dashboard; admins get the extra Emails section in the sidebar there.
   if (session) {
-    const home =
-      session.user.role === 'admin' ? '/admin/emails' : '/dashboard'
-    redirect(safeNext(next) ?? home)
+    redirect(safeNext(next) ?? '/dashboard')
   }
 
   return (

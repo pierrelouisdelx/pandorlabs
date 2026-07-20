@@ -1,6 +1,13 @@
 'use client'
 
-import { LayoutDashboard, Menu, Play, Settings, Waypoints } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Mail,
+  Menu,
+  Play,
+  Settings,
+  Waypoints,
+} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -23,11 +30,17 @@ const NAV = [
   { href: '/dashboard/account', label: 'Account', icon: Settings },
 ] as const
 
+// Admin-only entries appended to the nav when the signed-in user is an admin.
+const ADMIN_NAV = [
+  { href: '/dashboard/emails', label: 'Emails', icon: Mail },
+] as const
+
 type Props = {
   user: { name: string; email: string }
+  isAdmin: boolean
 }
 
-export default function Sidebar({ user }: Props) {
+export default function Sidebar({ user, isAdmin }: Props) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -42,7 +55,11 @@ export default function Sidebar({ user }: Props) {
           </SheetTrigger>
           <SheetContent side="left" className="w-72 p-0">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <SidebarBody user={user} onNavigate={() => setOpen(false)} />
+            <SidebarBody
+              user={user}
+              isAdmin={isAdmin}
+              onNavigate={() => setOpen(false)}
+            />
           </SheetContent>
         </Sheet>
         <Logo />
@@ -50,7 +67,7 @@ export default function Sidebar({ user }: Props) {
 
       {/* Desktop: a column that stays put while the main pane scrolls. */}
       <aside className="border-gray/20 sticky top-0 hidden h-screen w-64 shrink-0 border-r bg-white/5 backdrop-blur-md lg:block">
-        <SidebarBody user={user} />
+        <SidebarBody user={user} isAdmin={isAdmin} />
       </aside>
     </>
   )
@@ -58,9 +75,11 @@ export default function Sidebar({ user }: Props) {
 
 function SidebarBody({
   user,
+  isAdmin,
   onNavigate,
 }: Props & { onNavigate?: () => void }) {
   const pathname = usePathname()
+  const items = isAdmin ? [...NAV, ...ADMIN_NAV] : NAV
 
   return (
     <div className="flex h-full flex-col">
@@ -78,7 +97,7 @@ function SidebarBody({
       </div>
 
       <nav className="flex-1 space-y-1 p-4">
-        {NAV.map(({ href, label, icon: Icon }) => {
+        {items.map(({ href, label, icon: Icon }) => {
           // `/dashboard` would otherwise match every child route.
           const active =
             href === '/dashboard'

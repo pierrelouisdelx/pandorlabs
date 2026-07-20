@@ -20,7 +20,7 @@ export default function LoginForm({ next }: { next?: string }) {
     setError(null)
     setPending(true)
 
-    const { data, error: signInError } = await signIn.email({ email, password })
+    const { error: signInError } = await signIn.email({ email, password })
 
     if (signInError) {
       // Better Auth returns the same error for unknown email and bad password,
@@ -30,12 +30,10 @@ export default function LoginForm({ next }: { next?: string }) {
       return
     }
 
-    // Where "home" is depends on the role: sending a plain user to /admin would
-    // bounce them straight back here with ?error=forbidden.
-    const home = data?.user.role === 'admin' ? '/admin/emails' : '/dashboard'
-
+    // Everyone lands on the dashboard; admins get the extra Emails section in
+    // the sidebar there, so there is no separate destination by role.
     // The session cookie is set; refresh so the server re-reads it, then go.
-    router.replace(next ?? home)
+    router.replace(next ?? '/dashboard')
     router.refresh()
   }
 
