@@ -28,6 +28,18 @@ export const serverEnv = {
   get contactFromEmail() {
     return required('CONTACT_FROM_EMAIL')
   },
+  /**
+   * Svix signing secret for the Resend inbound webhook (`whsec_...`), found
+   * in the Resend dashboard next to the webhook. Used to verify that an
+   * inbound POST genuinely came from Resend.
+   */
+  get resendWebhookSecret() {
+    return required('RESEND_WEBHOOK_SECRET')
+  },
+  /** Mailbox that inbound emails are forwarded on to as they arrive. */
+  get inboundForwardEmail() {
+    return required('INBOUND_FORWARD_EMAIL')
+  },
 }
 
 export const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'

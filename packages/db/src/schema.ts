@@ -192,3 +192,47 @@ export type Email = typeof emails.$inferSelect
 export type NewEmail = typeof emails.$inferInsert
 export type EmailReply = typeof emailReplies.$inferSelect
 export type NewEmailReply = typeof emailReplies.$inferInsert
+
+/* -------------------------------------------------------------------------- */
+/*                               Inbound email                                */
+/* -------------------------------------------------------------------------- */
+
+export const INBOUND_EMAIL_STATUSES = ['unread', 'read'] as const
+export type InboundEmailStatus = (typeof INBOUND_EMAIL_STATUSES)[number]
+
+// One row per email Resend pushes to us via the inbound webhook. Kept separate
+// from `emails` (contact-form submissions) because the shape is different — an
+// inbound message has a subject, both a text and an HTML body, and no notion of
+// a "name" field. `providerMessageId` is unique so a webhook retry (Resend
+// re-delivers on non-2xx) upserts instead of duplicating the row.
+export const inboundEmails = pgTable(
+  'inbound_emails',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    // Provider's message id — the idempotency key for retried deliveries.
+    providerMessageId: text('provider_message_id').notNull().unique(),
+    fromAddress: text('from_address').notNull(),
+    // Display name parsed from the `From` header, when present.
+    fromName: text('from_name'),
+    toAddress: text('to_address').notNull(),
+    subject: text('subject'),
+    text: text('text'),
+    html: text('html'),
+    status: text('status')
+      .$type<InboundEmailStatus>()
+      .default('unread')
+      .notNull(),
+    // When Resend received the message, not when we stored it.
+    receivedAt: timestamp('received_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_inbound_emails_created_at').on(table.createdAt.desc()),
+    index('idx_inbound_emails_status').on(table.status),
+  ],
+)
+
+export type InboundEmail = typeof inboundEmails.$inferSelect
+export type NewInboundEmail = typeof inboundEmails.$inferInsert
