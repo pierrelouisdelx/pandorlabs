@@ -31,6 +31,14 @@ export default function Footer() {
               </Link>
             </li>
             <li>
+              <Link
+                href="/products/shopping/sources"
+                className="hover:text-green"
+              >
+                Data sources
+              </Link>
+            </li>
+            <li>
               <Link href="/privacy-policy" className="hover:text-green">
                 Privacy Policy
               </Link>

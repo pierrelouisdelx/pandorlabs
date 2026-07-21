@@ -27,6 +27,7 @@ import UseCaseCard from '@/components/custom/use-case-card'
 import TechFeatureCard from '@/components/custom/tech-feature-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
+import { SOCIAL_SOURCES } from '@/lib/social-sources'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -668,6 +669,42 @@ export default function SocialMediaPage() {
             >
               Get an Enterprise Quote
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Per-platform pages — each covers the objects, fields, and legal
+          scope that are specific to that network. */}
+      <section className="section section-divided">
+        <div className="container">
+          <div className="mb-12 text-center">
+            <p className="eyebrow">by platform</p>
+            <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
+              Coverage,{' '}
+              <span className="bg-linear-to-l from-violet-400 to-violet-600 bg-clip-text text-transparent">
+                platform by platform
+              </span>
+            </h2>
+            <p className="text-gray mx-auto max-w-2xl">
+              Every network exposes a different surface. These pages set out
+              exactly which objects and fields you can rely on for each one.
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+            {SOCIAL_SOURCES.map((source) => (
+              <Link
+                key={source.slug}
+                href={`/products/social-media/${source.slug}`}
+                className="panel group p-6 transition-colors hover:border-white/20"
+              >
+                <h3 className="mb-2 font-semibold text-white">{source.name}</h3>
+                <p className="text-gray text-sm">{source.tagline}</p>
+                <p className="text-gray/70 mt-3 text-xs">
+                  {source.objectTypes.slice(0, 3).join(' · ')}
+                </p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

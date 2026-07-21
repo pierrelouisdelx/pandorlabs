@@ -5,6 +5,7 @@ import UseCaseCard from '@/components/custom/use-case-card'
 import TechFeatureCard from '@/components/custom/tech-feature-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
+import { BRANDS } from '@/lib/brands'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -787,6 +788,48 @@ export default function ShoppingMonitoringPage() {
               className={buttonVariants({ variant: 'outline' })}
             >
               Request security documentation
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Dedicated sources — each brand has its own page with the fields,
+          method, and quirks of that specific catalogue. */}
+      <section className="section section-divided">
+        <div className="container">
+          <div className="mb-12 text-center">
+            <p className="eyebrow">dedicated collectors</p>
+            <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
+              {BRANDS.length} fashion sources,{' '}
+              <span className="bg-linear-to-l from-amber-400 to-amber-500 bg-clip-text text-transparent">
+                built one at a time
+              </span>
+            </h2>
+            <p className="text-gray mx-auto max-w-2xl">
+              Beyond the marketplace-wide monitoring, these brands each get a
+              purpose-built collector — because the attributes that make retail
+              data useful only survive extraction designed for the source.
+            </p>
+          </div>
+
+          <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-3">
+            {BRANDS.map((brand) => (
+              <Link
+                key={brand.slug}
+                href={`/products/shopping/${brand.slug}`}
+                className="rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm transition-colors hover:border-amber-500/40 hover:bg-white/10"
+              >
+                {brand.name}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link
+              href="/products/shopping/sources"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Browse all sources by segment
             </Link>
           </div>
         </div>
