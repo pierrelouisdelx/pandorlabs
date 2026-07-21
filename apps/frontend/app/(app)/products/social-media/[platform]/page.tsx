@@ -27,15 +27,13 @@ import {
   type SocialSource,
 } from '@/lib/social-sources'
 import { BRANDS } from '@/lib/brands'
+import { accentTextGradient, accentTokens } from '@/lib/accent'
 import {
   generateBreadcrumbSchema,
   generateServiceSchema,
   generateWebPageSchema,
   stringifyJsonLd,
 } from '@/lib/schema-generator'
-
-const accentColor = '#8B5CF6'
-const accentGlow = 'rgba(139, 92, 246, 0.15)'
 
 function siteUrl() {
   return process.env.NEXT_PUBLIC_APP_URL || 'https://www.pandorlabs.com'
@@ -129,6 +127,8 @@ export default async function SocialSourcePage({
   if (!source) notFound()
 
   const url = pageUrl(source)
+  const accent = accentTokens(source.accent)
+  const headlineGradient = accentTextGradient(accent)
   const related = relatedSocialSources(source)
   const faqs = [...source.faqs, ...sharedFaqs(source)]
 
@@ -178,7 +178,7 @@ export default async function SocialSourcePage({
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_35%,black,transparent)] bg-[size:4rem_4rem]" />
           <div
             className="absolute top-0 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full blur-[140px]"
-            style={{ backgroundColor: accentGlow }}
+            style={{ backgroundColor: accent.glow }}
           />
         </div>
 
@@ -207,14 +207,17 @@ export default async function SocialSourcePage({
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2">
                 <div
                   className="h-2 w-2 rounded-full"
-                  style={{ backgroundColor: accentColor }}
+                  style={{ backgroundColor: accent.text }}
                 />
                 <span className="text-sm text-white/70">{source.tagline}</span>
               </div>
 
               <h1 className="text-[32px]/tight font-bold tracking-tight sm:text-5xl lg:text-6xl/tight">
                 {source.name}{' '}
-                <span className="bg-linear-to-l from-violet-400 to-violet-600 bg-clip-text text-transparent">
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: headlineGradient }}
+                >
                   Data, Delivered
                 </span>
               </h1>
@@ -228,10 +231,11 @@ export default async function SocialSourcePage({
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/contact"
-                  className="text-primary rounded-full px-8 py-4 text-center font-semibold transition-all duration-300 hover:-translate-y-0.5"
+                  className="rounded-full px-8 py-4 text-center font-semibold transition-all duration-300 hover:-translate-y-0.5"
                   style={{
-                    backgroundColor: accentColor,
-                    boxShadow: `0 0 60px ${accentGlow}`,
+                    backgroundColor: accent.base,
+                    color: accent.on,
+                    boxShadow: `0 0 60px ${accent.glow}`,
                   }}
                 >
                   Request a {source.name} sample
@@ -331,14 +335,20 @@ export default async function SocialSourcePage({
       <section className="section section-divided">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(55%_45%_at_50%_0%,rgba(139,92,246,0.10),transparent_70%)]"
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            backgroundImage: `radial-gradient(55% 45% at 50% 0%, ${accent.tint}, transparent 70%)`,
+          }}
         />
         <div className="container">
           <div className="mb-12 text-center">
             <p className="eyebrow">applications</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               What teams build on{' '}
-              <span className="bg-linear-to-l from-violet-400 to-violet-600 bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: headlineGradient }}
+              >
                 {source.name} data
               </span>
             </h2>
@@ -364,7 +374,10 @@ export default async function SocialSourcePage({
             <p className="eyebrow">what you get back</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Fields in the{' '}
-              <span className="bg-linear-to-l from-violet-400 to-violet-600 bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: headlineGradient }}
+              >
                 {source.name} feed
               </span>
             </h2>
@@ -381,7 +394,7 @@ export default async function SocialSourcePage({
                 <li key={field} className="text-gray flex gap-3 text-sm">
                   <span
                     className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
-                    style={{ backgroundColor: accentColor }}
+                    style={{ backgroundColor: accent.text }}
                   />
                   {field}
                 </li>
@@ -423,7 +436,10 @@ export default async function SocialSourcePage({
             <p className="eyebrow">related sources</p>
             <h2 className="mb-4 text-[26px]/8 font-semibold sm:text-3xl lg:text-5xl/[60px]">
               Tracked alongside{' '}
-              <span className="bg-linear-to-l from-violet-400 to-violet-600 bg-clip-text text-transparent">
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: headlineGradient }}
+              >
                 {source.name}
               </span>
             </h2>
@@ -501,9 +517,13 @@ export default async function SocialSourcePage({
         </div>
       </section>
 
-      <FAQSection faqs={faqs} accentColor={accentColor} />
+      <FAQSection faqs={faqs} accentColor={accent.text} />
 
-      <FinalCTASection accentColor={accentColor} accentGlow={accentGlow} />
+      <FinalCTASection
+        accentColor={accent.base}
+        accentGlow={accent.glow}
+        accentTextColor={accent.on}
+      />
     </div>
   )
 }

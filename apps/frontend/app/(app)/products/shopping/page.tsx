@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 import { FAQSection } from '../_components/faq-section'
 import StatsCard from '@/components/custom/stats-card'
 import ProcessStep from '@/components/custom/process-step'
@@ -6,6 +8,7 @@ import TechFeatureCard from '@/components/custom/tech-feature-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
 import { BRANDS } from '@/lib/brands'
+import { accentTokens } from '@/lib/accent'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -817,8 +820,20 @@ export default function ShoppingMonitoringPage() {
               <Link
                 key={brand.slug}
                 href={`/products/shopping/${brand.slug}`}
-                className="rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm transition-colors hover:border-amber-500/40 hover:bg-white/10"
+                // Hover picks up the brand's own colour rather than the
+                // category accent, matching the page it links to.
+                className="flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm transition-colors hover:border-(--brand-accent) hover:bg-white/10"
+                style={
+                  {
+                    '--brand-accent': accentTokens(brand.accent).border,
+                  } as CSSProperties
+                }
               >
+                <span
+                  aria-hidden
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: accentTokens(brand.accent).text }}
+                />
                 {brand.name}
               </Link>
             ))}

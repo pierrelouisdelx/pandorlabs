@@ -14,6 +14,8 @@ export interface SocialSourceFaq {
 export interface SocialSource {
   /** URL segment: /products/social-media/<slug> */
   slug: string
+  /** The platform's official brand colour. Run through `accentTokens()`. */
+  accent: string
   name: string
   siteUrl: string
   domain: string
@@ -35,6 +37,9 @@ export interface SocialSource {
 export const SOCIAL_SOURCES: SocialSource[] = [
   {
     slug: 'linkedin',
+    // LinkedIn corporate blue. Too dark for text on our canvas, so
+    // `accentTokens()` lifts it for type and icons and keeps it for fills.
+    accent: '#0A66C2',
     name: 'LinkedIn',
     siteUrl: 'https://www.linkedin.com',
     domain: 'linkedin.com',
@@ -114,6 +119,8 @@ export const SOCIAL_SOURCES: SocialSource[] = [
   },
   {
     slug: 'reddit',
+    // Reddit OrangeRed, the platform's primary brand colour.
+    accent: '#FF4500',
     name: 'Reddit',
     siteUrl: 'https://www.reddit.com',
     domain: 'reddit.com',

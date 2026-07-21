@@ -8,6 +8,7 @@ import StatsCard from '@/components/custom/stats-card'
 import TechFeatureCard from '@/components/custom/tech-feature-card'
 import { buttonVariants } from '@/components/ui/button'
 import { BRANDS, brandsBySegment } from '@/lib/brands'
+import { accentTokens } from '@/lib/accent'
 import {
   generateBreadcrumbSchema,
   generateWebPageSchema,
@@ -210,7 +211,18 @@ export default function ShoppingSourcesPage() {
                   className="panel group flex flex-col gap-2 p-6 transition-colors hover:border-white/20"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <h3 className="font-semibold text-white">{brand.name}</h3>
+                    <h3 className="flex items-center gap-2.5 font-semibold text-white">
+                      {/* Each source carries its own colour through to its
+                          page, so the swatch previews where the link goes. */}
+                      <span
+                        aria-hidden
+                        className="h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{
+                          backgroundColor: accentTokens(brand.accent).text,
+                        }}
+                      />
+                      {brand.name}
+                    </h3>
                     <ArrowUpRight className="text-gray h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </div>
                   <p className="text-gray text-sm">{brand.origin}</p>

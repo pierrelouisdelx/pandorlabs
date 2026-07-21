@@ -3,14 +3,23 @@
 import { Lock, Shield, Zap } from 'lucide-react'
 import Link from 'next/link'
 
+import { cn } from '@/lib/utils'
+
 interface FinalCTASectionProps {
   accentColor: string
   accentGlow: string
+  /**
+   * Foreground for the solid CTA. Product pages use light accents where the
+   * default dark label works; brand pages pass this because a brand's own
+   * colour is often dark enough to need a white label instead.
+   */
+  accentTextColor?: string
 }
 
 export function FinalCTASection({
   accentColor,
   accentGlow,
+  accentTextColor,
 }: FinalCTASectionProps) {
   return (
     <section className="section section-divided">
@@ -32,9 +41,13 @@ export function FinalCTASection({
         <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
           <Link
             href="/contact"
-            className="text-primary rounded-full px-12 py-5 text-lg font-semibold transition-all duration-300 hover:-translate-y-0.5"
+            className={cn(
+              'rounded-full px-12 py-5 text-lg font-semibold transition-all duration-300 hover:-translate-y-0.5',
+              !accentTextColor && 'text-primary',
+            )}
             style={{
               backgroundColor: accentColor,
+              color: accentTextColor,
               boxShadow: `0 0 60px ${accentGlow}`,
             }}
           >

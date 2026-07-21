@@ -25,6 +25,13 @@ export interface BrandFaq {
 export interface Brand {
   /** URL segment: /products/shopping/<slug> */
   slug: string
+  /**
+   * The brand's own colour, used to theme its page. Where the identity is
+   * monochrome — most of luxury — this is the neutral the brand actually
+   * presents in rather than an invented hue. Run through `accentTokens()`
+   * before use: several of these are too dark or too light to apply directly.
+   */
+  accent: string
   /** Backend scraper id (`categories/shopping/scrapers/<id>`) */
   scraperId: string
   name: string
@@ -67,6 +74,7 @@ export const BRAND_SEGMENT_ORDER: BrandSegment[] = [
 export const BRANDS: Brand[] = [
   {
     slug: 'zara',
+    accent: '#D8D2C8',
     scraperId: 'zara',
     name: 'Zara',
     siteUrl: 'https://www.zara.com/us/en/',
@@ -101,6 +109,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'hm',
+    accent: '#F5474F',
     scraperId: 'hm',
     name: 'H&M',
     siteUrl: 'https://www2.hm.com/en_us/women.html',
@@ -135,6 +144,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'mango',
+    accent: '#F2A93B',
     scraperId: 'mango',
     name: 'Mango',
     siteUrl: 'https://shop.mango.com/us',
@@ -169,6 +179,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'massimo-dutti',
+    accent: '#C8A96A',
     scraperId: 'massimodutti',
     name: 'Massimo Dutti',
     siteUrl: 'https://www.massimodutti.com/us/',
@@ -203,6 +214,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'cos',
+    accent: '#D6D2CB',
     scraperId: 'cos',
     name: 'COS',
     siteUrl: 'https://www.cos.com/en-us/women',
@@ -237,6 +249,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'arket',
+    accent: '#E0A98F',
     scraperId: 'arket',
     name: 'Arket',
     siteUrl: 'https://www.arket.com/en-ww/women/',
@@ -271,6 +284,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'stefanel',
+    accent: '#C9B79C',
     scraperId: 'stefanel',
     name: 'Stefanel',
     siteUrl: 'https://www.stefanel.com/ie/women',
@@ -305,6 +319,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'falconeri',
+    accent: '#D2B48C',
     scraperId: 'falconeri',
     name: 'Falconeri',
     siteUrl: 'https://www.falconeri.com',
@@ -339,6 +354,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'intimissimi',
+    accent: '#EE8CA6',
     scraperId: 'intimissimi',
     name: 'Intimissimi',
     siteUrl: 'https://www.intimissimi.com/en-us/',
@@ -373,6 +389,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'j-crew',
+    accent: '#E15A5A',
     scraperId: 'jcrew',
     name: 'J.Crew',
     siteUrl: 'https://www.jcrew.com',
@@ -407,6 +424,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'madewell',
+    accent: '#6D93CC',
     scraperId: 'madewell',
     name: 'Madewell',
     siteUrl: 'https://www.madewell.com',
@@ -441,6 +459,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'quince',
+    accent: '#9FB292',
     scraperId: 'quince',
     name: 'Quince',
     siteUrl: 'https://www.quince.com',
@@ -475,6 +494,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'reformation',
+    accent: '#E4655C',
     scraperId: 'thereformation',
     name: 'Reformation',
     siteUrl: 'https://www.thereformation.com',
@@ -509,6 +529,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'filippa-k',
+    accent: '#CDD4D8',
     scraperId: 'filippa_k',
     name: 'Filippa K',
     siteUrl: 'https://www.filippa-k.com/us/en/woman/',
@@ -543,6 +564,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'sezane',
+    accent: '#E05548',
     scraperId: 'sezane',
     name: 'Sézane',
     siteUrl: 'https://www.sezane.com/us-en',
@@ -577,6 +599,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'lilysilk',
+    accent: '#DCC28E',
     scraperId: 'lilysilk',
     name: 'LILYSILK',
     siteUrl: 'https://www.lilysilk.com',
@@ -611,6 +634,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'stand-studio',
+    accent: '#C9D0D8',
     scraperId: 'standstudio',
     name: 'Stand Studio',
     siteUrl: 'https://www.standstudio.com/eu',
@@ -645,6 +669,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'la-doublej',
+    accent: '#FF62A8',
     scraperId: 'la_doublej',
     name: 'La DoubleJ',
     siteUrl: 'https://www.ladoublej.com/en',
@@ -679,6 +704,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'dunst-studio',
+    accent: '#A9B7A2',
     scraperId: 'dunststudio',
     name: 'Dunst Studio',
     siteUrl: 'https://en.dunststudio.com',
@@ -713,6 +739,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'atorie',
+    accent: '#BFB2DD',
     scraperId: 'atorie',
     name: 'Atorie',
     siteUrl: 'https://shopatorie.com',
@@ -747,6 +774,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'farfetch',
+    accent: '#C9D4E0',
     scraperId: 'farfetch',
     name: 'Farfetch',
     siteUrl: 'https://www.farfetch.com',
@@ -781,6 +809,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'net-a-porter',
+    accent: '#EFE6D8',
     scraperId: 'net_a_porter',
     name: 'NET-A-PORTER',
     siteUrl: 'https://www.net-a-porter.com',
@@ -815,6 +844,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'the-outnet',
+    accent: '#F2836B',
     scraperId: 'the_outnet',
     name: 'THE OUTNET',
     siteUrl: 'https://www.theoutnet.com',
@@ -849,6 +879,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'mytheresa',
+    accent: '#D8CFC4',
     scraperId: 'my_theresa',
     name: 'Mytheresa',
     siteUrl: 'https://www.mytheresa.com',
@@ -883,6 +914,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'ssense',
+    accent: '#E9ECEF',
     scraperId: 'ssense',
     name: 'SSENSE',
     siteUrl: 'https://www.ssense.com/en-us',
@@ -917,6 +949,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'cettire',
+    accent: '#AFC3DB',
     scraperId: 'cettire',
     name: 'Cettire',
     siteUrl: 'https://www.cettire.com',
@@ -951,6 +984,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'luisaviaroma',
+    accent: '#D9C7A8',
     scraperId: 'luisaviaroma',
     name: 'LuisaViaRoma',
     siteUrl: 'https://www.luisaviaroma.com',
@@ -985,6 +1019,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'italist',
+    accent: '#8FC7A5',
     scraperId: 'italist',
     name: 'Italist',
     siteUrl: 'https://www.italist.com/us',
@@ -1019,6 +1054,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'moda-operandi',
+    accent: '#E3AFB8',
     scraperId: 'modaoperandi',
     name: 'Moda Operandi',
     siteUrl: 'https://www.modaoperandi.com',
@@ -1053,6 +1089,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'revolve',
+    accent: '#F2A07E',
     scraperId: 'revolve',
     name: 'Revolve',
     siteUrl: 'https://www.revolve.com',
@@ -1087,6 +1124,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'fwrd',
+    accent: '#B9C2CC',
     scraperId: 'fwrd',
     name: 'FWRD',
     siteUrl: 'https://www.fwrd.com',
@@ -1121,6 +1159,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'shopbop',
+    accent: '#86C5D8',
     scraperId: 'shopbop',
     name: 'Shopbop',
     siteUrl: 'https://www.shopbop.com',
@@ -1155,6 +1194,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'louis-vuitton',
+    accent: '#C9A227',
     scraperId: 'louis_vuitton',
     name: 'Louis Vuitton',
     siteUrl: 'https://us.louisvuitton.com/eng-us',
@@ -1189,6 +1229,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'ralph-lauren',
+    accent: '#87A9D6',
     scraperId: 'ralphlauren',
     name: 'Ralph Lauren',
     siteUrl: 'https://www.ralphlauren.com',
@@ -1223,6 +1264,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'casadei',
+    accent: '#E24B4B',
     scraperId: 'casadei',
     name: 'Casadei',
     siteUrl: 'https://www.casadei.com/en-us/',
@@ -1257,6 +1299,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'senso',
+    accent: '#F08CA0',
     scraperId: 'senso',
     name: 'Senso',
     siteUrl: 'https://senso.com.au',
@@ -1291,6 +1334,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'k-jacques',
+    accent: '#C89A6B',
     scraperId: 'kjacques',
     name: 'K.Jacques',
     siteUrl: 'https://www.kjacques.fr/en',
@@ -1325,6 +1369,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'anniel',
+    accent: '#D9AE8E',
     scraperId: 'anniel',
     name: 'Anniel',
     siteUrl: 'https://www.annielshop.com',
@@ -1359,6 +1404,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'vibi-venezia',
+    accent: '#A08CD6',
     scraperId: 'vibivenezia',
     name: 'Vibi Venezia',
     siteUrl: 'https://www.vibivenezia.com',
@@ -1393,6 +1439,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'muun',
+    accent: '#D9C08C',
     scraperId: 'muun',
     name: 'Muun',
     siteUrl: 'https://www.muun-collection.com',
@@ -1427,6 +1474,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'meher-kakalia',
+    accent: '#E08A4F',
     scraperId: 'meher_kakalia',
     name: 'Meher Kakalia',
     siteUrl: 'https://www.meherkakalia.com',
@@ -1461,6 +1509,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'faliero-sarti',
+    accent: '#C6ABAF',
     scraperId: 'falierosarti',
     name: 'Faliero Sarti',
     siteUrl: 'https://www.falierosarti.com/en/',
@@ -1495,6 +1544,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'inoui-editions',
+    accent: '#5FBFB0',
     scraperId: 'inoui_editions',
     name: 'Inouï Éditions',
     siteUrl: 'https://inoui-editions.com',
@@ -1529,6 +1579,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'drogheria-crivellini',
+    accent: '#8FA8E0',
     scraperId: 'drogheriacrivellini',
     name: 'Drogheria Crivellini',
     siteUrl: 'https://drogheriacrivellini.com/en/',
@@ -1563,6 +1614,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'emanuela-caruso',
+    accent: '#63C3D0',
     scraperId: 'emanuela_carouso',
     name: 'Emanuela Caruso',
     siteUrl: 'https://emanuelacaruso.com/us/',
@@ -1597,6 +1649,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'rivecour',
+    accent: '#B9C4B0',
     scraperId: 'rivecour',
     name: 'Rivecour',
     siteUrl: 'https://www.rivecour.com/en',
@@ -1631,6 +1684,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'hvoya',
+    accent: '#6FBF8F',
     scraperId: 'hvoya',
     name: 'Hvoya',
     siteUrl: 'https://hvoya.ua/en',
@@ -1665,6 +1719,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'home-of-hai',
+    accent: '#D4A5C9',
     scraperId: 'homeofhai',
     name: 'Home of Hai',
     siteUrl: 'https://www.homeofhai.com',
@@ -1699,6 +1754,7 @@ export const BRANDS: Brand[] = [
   },
   {
     slug: 'apointetc',
+    accent: '#BFCBA8',
     scraperId: 'apointetc',
     name: 'A Pointe Etc',
     siteUrl: 'https://www.apointetc.com',

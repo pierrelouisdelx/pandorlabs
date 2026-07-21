@@ -28,6 +28,7 @@ import TechFeatureCard from '@/components/custom/tech-feature-card'
 import TrustBadge from '@/components/custom/trust-badge'
 import { buttonVariants } from '@/components/ui/button'
 import { SOCIAL_SOURCES } from '@/lib/social-sources'
+import { accentTokens } from '@/lib/accent'
 import Link from 'next/link'
 import Script from 'next/script'
 import {
@@ -698,7 +699,17 @@ export default function SocialMediaPage() {
                 href={`/products/social-media/${source.slug}`}
                 className="panel group p-6 transition-colors hover:border-white/20"
               >
-                <h3 className="mb-2 font-semibold text-white">{source.name}</h3>
+                <h3 className="mb-2 flex items-center gap-2.5 font-semibold text-white">
+                  {/* Platform's own colour, matching the page it links to. */}
+                  <span
+                    aria-hidden
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{
+                      backgroundColor: accentTokens(source.accent).text,
+                    }}
+                  />
+                  {source.name}
+                </h3>
                 <p className="text-gray text-sm">{source.tagline}</p>
                 <p className="text-gray/70 mt-3 text-xs">
                   {source.objectTypes.slice(0, 3).join(' · ')}
